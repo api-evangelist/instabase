@@ -1,0 +1,36 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/instabase-aihub-openapi.yaml
+docs: https://docs.instabase.com/api-sdk/authorization.md
+summary:
+  types:
+  - http
+  api_key_in: [header]
+  bearer: true
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: auth-scheme
+  description: >-
+    Bearer HTTP authentication. Users create AI Hub API tokens under
+    Settings > APIs > AI Hub tokens (named, with an expiration); the token
+    value is shown once. Passed as `Authorization: Bearer ${API_TOKEN}`.
+    A token grants the same access/permissions as its creating user or
+    service account.
+  sources:
+  - openapi/instabase-aihub-openapi.yaml
+context_header:
+  name: IB-Context
+  required: true
+  values: >-
+    Organization ID (organization and service accounts) or User ID
+    (community accounts, deprecated). Identifies the request context and
+    where files are accessed.
+external_oauth:
+  supported: true
+  tier: enterprise
+  note: >-
+    External IdP/OIDC tokens can be used for API access
+    (ENABLE_EXTERNAL_IDP_TOKENS_FOR_API_ACCESS); if the token carries a
+    valid scope claim, AI Hub authorizes based on the roles in that scope.

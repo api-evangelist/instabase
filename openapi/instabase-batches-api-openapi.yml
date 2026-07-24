@@ -1,0 +1,758 @@
+openapi: 3.0.0
+info:
+  title: AI Hub Audit Batches API
+  version: '0.1'
+  description: The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.
+  termsOfService: https://www.instabase.com/terms-of-service/
+  contact:
+    name: Instabase Support
+    url: https://help.instabase.com/
+  license:
+    name: MIT
+    url: https://github.com/instabase/aihub-python/blob/master/LICENSE
+servers:
+- url: https://aihub.instabase.com/api
+security:
+- bearerAuth: []
+tags:
+- name: Batches
+paths:
+  /v2/batches:
+    post:
+      operationId: createBatch
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: Create batch
+      description: 'Create a new batch.
+
+
+        <Note>[Upload files to the batch](/api-sdk/api-reference/batches/add-file-to-batch) in a separate request.</Note>
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the batch. Maximum length is 255 characters.
+                workspace:
+                  type: string
+                  description: 'The name of the workspace in which to add the batch. If not specified, the default location is your personal workspace.
+
+
+                    When making this call from a service account, you must specify a workspace.
+
+
+                    <Info>For organization members, if the default drive changes but is still connected, you can still use the batch as input for running an app. However, you can''t upload any additional files to the batch. If the default drive is disconnected, you can''t use batches stored on that drive as input for any app run.</Info>
+
+                    '
+              required:
+              - name
+      responses:
+        '200':
+          description: Batch created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/batch'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/batches\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\": \"test\"}'\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nresponse = client.batches.create(\n    name=\"MyBatch\",\n    workspace=\"MyWorkspace\"\n)\n\nprint(f\"batch_id: {response.id}\")\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\nurl = \"https://aihub.instabase.com/api/v2/batches\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# create the request payload\ndata = {\n    \"name\": \"MyBatch\",\n    \"workspace\": \"MyWorkspace\"\n}\n\n# make the POST request\nresponse = requests.post(url, headers=headers, json=data)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Batch created with ID: {response.json()['id']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+    get:
+      operationId: listBatches
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: List batches
+      description: Return a list of batches. Use query parameters to filter results.
+      parameters:
+      - in: query
+        name: workspace
+        schema:
+          type: string
+        description: Filter to batches in the specified workspace.
+      - in: query
+        name: username
+        schema:
+          type: string
+        description: Filter to batches created by the specified username (user ID).
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: If paginating results, specify how many batches to return.
+      - in: query
+        name: offset
+        schema:
+          type: integer
+        description: If paginating results, specify the offset of the returned list.
+      - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: Request successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  batches:
+                    type: array
+                    description: List of batches. See response schema for each batch object.
+                    items:
+                      $ref: '#/components/schemas/batchInfo'
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/batches\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\" \\\n  -G \\\n  --data-urlencode \"workspace=my-workspace\" \\\n  --data-urlencode \"limit=100\"\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nresponse = client.batches.list(\n    workspace=\"MyWorkspace\",\n    username=\"john.doe_acme.com\",\n    limit=3,\n    offset=6\n)\n\nfor batch in response.batches:\n    print(f\"id: {batch.id}\")\n    print(f\"name: {batch.name}\")\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\nurl = \"https://aihub.instabase.com/api/v2/batches\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# create query parameters\nparams = {\n    \"workspace\": \"MyWorkspace\",\n    \"limit\": 3,\n    \"offset\": 6\n}\n\n# make the GET request\nresponse = requests.get(url, headers=headers, params=params)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Retrieved {len(response.json()['batches'])} batches\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+  /v2/batches/{batch_id}:
+    get:
+      operationId: getBatch
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: Get batch information
+      description: Retrieve information about a batch.
+      parameters:
+      - $ref: '#/components/parameters/batch_id'
+      - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: Batch successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/batchInfo'
+        '404':
+          description: Batch does not exist, or denied access.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/batches/<BATCH-ID>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nbatch_info = client.batches.get(batch_id=12345)\n\nprint(f\"id: {batch_info.id}\")\nprint(f\"name: {batch_info.name}\")\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\nbatch_id = 12345\nurl = f\"https://aihub.instabase.com/api/v2/batches/{batch_id}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the GET request\nresponse = requests.get(url, headers=headers)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"id: {response.json()['id']}\")\n    print(f\"name: {response.json()['name']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+    delete:
+      operationId: deleteBatch
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: Delete batch
+      description: Delete a batch and all its files. This is an asynchronous operation that must be [checked for completion](/api-sdk/api-reference/batches/poll-batches-job).
+      parameters:
+      - $ref: '#/components/parameters/batch_id'
+      - $ref: '#/components/parameters/ib_context'
+      responses:
+        '202':
+          description: Batch deletion request accepted. [Poll the job ID](/api-sdk/api-reference/batches/poll-batches-job) to check completion status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/batchDeletionJobResponse'
+        '404':
+          description: Batch does not exist.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl -X DELETE \"${API_ROOT}/v2/batches/<BATCH-ID>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: with SDK
+          code: "import time\nfrom aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\ndelete_response = client.batches.delete(batch_id=12345)\n\n# check delete job status until done\nwhile True:\n    poll_response = client.batches.poll_job(\n                        job_id=delete_response.job_id\n                    )\n    if poll_response.state not in [\"PENDING\", \"RUNNING\"]:\n        break\n    time.sleep(3)  # pause before polling the status again\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\nbatch_id = 12345\nurl = f\"https://aihub.instabase.com/api/v2/batches/{batch_id}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the DELETE request\nresponse = requests.delete(url, headers=headers)\n\n# handle the response\nif response.status_code == 202:\n    print(\"Batch deletion job started with ID: \"\n          f\"{response.json()['job_id']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n\n# not included here: check status of deletion job until it's done\n"
+  /v2/batches/{batch_id}/files:
+    get:
+      operationId: listFiles
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: List files in a batch
+      description: Return a list of files in a batch.
+      parameters:
+      - $ref: '#/components/parameters/batch_id'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: The number of files to return in each page.
+      - in: query
+        name: start_token
+        schema:
+          type: string
+        description: The token to start the list from.
+      - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: Request successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listBatchFilesResponse'
+              example:
+                nodes:
+                - full_path: /path/to/document1.pdf
+                  metadata:
+                    node_type: file
+                    size: 1024
+                    modified_timestamp: 1647532800
+                  perms:
+                    can_read: true
+                    can_write: true
+                    can_delete: true
+                  name: document1.pdf
+                - full_path: /path/to/document2.pdf
+                  metadata:
+                    node_type: file
+                    size: 2048
+                    modified_timestamp: 1647619200
+                  perms:
+                    can_read: true
+                    can_write: false
+                    can_delete: false
+                  name: document2.pdf
+                next_page_token: eyJwYWdlIjogMn0=
+                has_more: true
+        '404':
+          description: Batch does not exist, or denied access.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/batches/<BATCH-ID>/files\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nresponse = client.batches.list_files(\n    batch_id=12345,\n    page_size=2,\n    start_token=\"abcd...<snip>...1234\"\n)\n\nprint(f\"Has more files? {response.has_more}\")\nfor node in response.nodes:\n    print(f\"File name: {node.name}\")\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\nbatch_id = 12345\nurl = f\"https://aihub.instabase.com/api/v2/batches/{batch_id}/files\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\npage_size = 2\nstart_token = None\n\n# make repeated calls to fetch more files until there are no more\nwhile True:\n    params = {\n        \"page_size\": page_size,\n        \"start_token\": start_token\n    }\n    # make the GET request\n    response = requests.get(url, headers=headers, params=params)\n\n    # handle the response\n    if response.status_code != 200:\n        print(f\"Error: {response.status_code} - {response.text}\")\n        break\n\n    for node in response.json()['nodes']:\n        print(f\"File name: {node['name']}\")\n\n    if not response.json().get(\"has_more\"):\n        break\n\n    start_token = response.json().get(\"next_page_token\")\n"
+  /v2/batches/{batch_id}/files/{filename}:
+    put:
+      operationId: addFileToBatch
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: Upload file to batch
+      description: 'Upload a file to a batch or update the contents of a previously uploaded file in a batch.
+
+
+        <Info>Files can be uploaded one at a time and the suggested max size for each file is 10 MB. For larger files, see [Multipart file upload](/api-sdk/api-reference/batches/create-multipart-upload-session).</Info>
+
+
+        <Note>If you upload a password-protected PDF, provide the password when you process the PDF with an AI Hub app. See instructions for configuring the `settings.runtime_config.instabase.pdf.passwords` property for the [Run deployment](/api-sdk/api-reference/runs/run-deployment#request.body.settings.runtime_config.instabase.pdf.passwords) or [Run app](/api-sdk/api-reference/runs/run-app#request.body.settings.runtime_config.instabase.pdf.passwords) operations.</Note>
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/batch_id'
+      - name: filename
+        in: path
+        required: true
+        description: A user-defined name for the file on the Instabase filesystem. Include the file extension. This doesn't need to be the same as its name on your local filesystem.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              description: The raw contents of the file to upload. See the example request, being sure to define the `<LOCAL_FILEPATH>` with the full path to the file in the machine running the script.
+              type: string
+              format: binary
+      responses:
+        '204':
+          description: File uploaded successfully.
+        '404':
+          description: Batch with ID <BATCH-ID> does not exist.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl -X PUT \"${API_ROOT}/v2/batches/<BATCH-ID>/files/<FILENAME>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\" \\\n  -H \"Content-Type: application/octet-stream\" \\\n  --upload-file '<LOCAL_FILEPATH>' # Full path to the file in the machine that's making the request\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nlocal_filepath = \"/local/path/to/file1.pdf\"\n\n# returns None\nwith open(local_filepath, \"rb\") as local_file:\n    client.batches.add_file(\n        batch_id=12345,\n        file_name=\"MyFile1.pdf\",  # AI Hub filesystem\n        file=local_file  # local filesystem\n    )\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\nbatch_id = 12345\nai_hub_filename = \"MyFile1.pdf\"\nurl = f\"https://aihub.instabase.com/api/v2/batches/{batch_id}/files/{ai_hub_filename}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\",\n    \"Content-Type\": \"application/octet-stream\"\n}\n\nlocal_filepath = \"/local/path/to/file1.pdf\"\n\n# read the file contents\nwith open(local_filepath, \"rb\") as local_file:\n    file_content = local_file.read()\n\n# make the PUT request\nresponse = requests.put(url, headers=headers, data=file_content)\n\n# handle the response\nif response.status_code == 204:\n    print(\"File uploaded successfully\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+    delete:
+      operationId: deleteFileFromBatch
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: Delete file from batch
+      description: Delete a file from a batch.
+      parameters:
+      - $ref: '#/components/parameters/batch_id'
+      - name: filename
+        in: path
+        required: true
+        description: The name of the file.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/ib_context'
+      responses:
+        '202':
+          description: File deletion request accepted. Poll the deletion job for completion status.
+        '404':
+          description: Batch does not exist.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl -X DELETE \"${API_ROOT}/v2/batches/<BATCH-ID>/files/<FILENAME>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\n# returns None\nclient.batches.delete_file(\n    batch_id=12345,\n    file_name=\"MyFile.txt\"\n)\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\nbatch_id = 12345\nai_hub_filename = \"MyFile.txt\"\nurl = f\"https://aihub.instabase.com/api/v2/batches/{batch_id}/files/{ai_hub_filename}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the DELETE request\nresponse = requests.delete(url, headers=headers)\n\n# handle the response\nif response.status_code == 202:\n    print(\"File deletion request accepted\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+  /v2/batches/multipart-upload:
+    post:
+      operationId: createMultipartUploadSession
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: Start multipart upload session
+      description: 'Start a multipart upload session. Use this endpoint when you need to upload a file larger than 10 MB to a batch.
+
+
+        The multipart upload process consists of three steps:
+
+        1. Create a multipart upload session (this endpoint)
+
+        2. [Upload file parts](/api-sdk/api-reference/batches/upload-multipart-part) to the session
+
+        3. [Commit the session](/api-sdk/api-reference/batches/commit-multipart-upload-session) to finalize the upload
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batch_id:
+                  type: integer
+                  description: The batch ID to upload the file to.
+                filename:
+                  type: string
+                  description: A file name for the uploaded file on the AI Hub filesystem, including the file extension. Maximum of 255 characters.
+                file_size:
+                  type: integer
+                  description: The file size, in bytes. Can be an integer or a string.
+              required:
+              - batch_id
+              - filename
+              - file_size
+      responses:
+        '201':
+          description: The multipart upload session was initiated.
+          headers:
+            Location:
+              schema:
+                type: string
+              description: The session endpoint URL to use in subsequent multipart upload requests, in the form `<API-ROOT>/v2/batches/multipart-upload/sessions/<SESSION-ID>`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/multipartUploadSessionResponse'
+        '404':
+          description: Batch with the specified ID doesn't exist.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/batches/multipart-upload\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n        \"batch_id\": <BATCH-ID>,\n        \"filename\": \"large-file.pdf\",\n        \"file_size\": 15728640\n      }'\n"
+        - sdk: python
+          name: with SDK
+          code: "import os\nfrom aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nai_hub_filename = \"large-file.pdf\"\n\n# get file size\nlocal_filepath = \"/local/path/to/large-file.pdf\"\nfile_size = os.path.getsize(local_filepath)\n\n# create multipart upload session\nresponse = client.batches.create_multipart_upload_session(\n    batch_id=12345,\n    filename=ai_hub_filename,\n    file_size=file_size\n)\n\nprint(f\"Session ID: {response.session_id}\")\nprint(f\"Part size: {response.part_size}\")\n"
+        - sdk: python
+          name: without SDK
+          code: "import os\nimport requests\n\nai_hub_filename = \"large-file.pdf\"\n\n# get file size\nlocal_filepath = \"/local/path/to/large-file.pdf\"\nfile_size = os.path.getsize(local_filepath)\n\nurl = \"https://aihub.instabase.com/api/v2/batches/multipart-upload\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# create the request payload\ndata = {\n    \"batch_id\": 12345,\n    \"filename\": ai_hub_filename,\n    \"file_size\": file_size\n}\n\n# make the POST request\nresponse = requests.post(url, headers=headers, json=data)\n\n# handle the response\nif response.status_code == 201:\n    print(f\"Session ID: {response.json()['session_id']}\")\n    print(f\"Part size: {response.json()['part_size']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+  /v2/batches/multipart-upload/sessions/{session_id}/parts/{part_num}:
+    put:
+      operationId: uploadMultipartPart
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: Upload part to multipart session
+      description: 'Upload part of a file to the multipart upload session. The size of each part must match the `part_size` returned by the [Start multipart upload session](/api-sdk/api-reference/batches/create-multipart-upload-session) call, except for the final part, which can be smaller.
+
+
+        Parts must be uploaded with consecutive part numbers starting at 1.
+
+        '
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The session ID obtained from the Start multipart upload session response.
+      - name: part_num
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: The part number, starting at 1 and increasing consecutively for each part.
+      - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+              description: Raw content of the part to be uploaded.
+      responses:
+        '201':
+          description: The part was successfully uploaded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/multipartUploadPartResponse'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl -X PUT \"${API_ROOT}/v2/batches/multipart-upload/sessions/<SESSION_ID>/parts/1\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\" \\\n  -H \"Content-Type: application/octet-stream\" \\\n  --data-binary \"@part1.bin\"\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nparts = []\npart_num = 1\n\n# use `session_id` and `part_size` variables set by \n# the \"Start multipart upload session\" API/SDK operation,\n# which must be run before running this operation\n\nlocal_filepath = \"/local/path/to/large-file.pdf\"\nwith open(local_filepath, \"rb\") as local_file:\n    while True:\n        part_data = local_file.read(part_size)\n        if not part_data:\n            break\n        \n        # upload this part using SDK\n        response = client.batches.upload_multipart_part(\n            session_id=session_id,\n            part_num=part_num,\n            part_data=part_data\n        )\n\n        parts.append(\n            {\n                \"part_num\": part_num,\n                \"part_id\": response.part_id\n            }\n        )\n        print(f\"Uploaded part {part_num}\")\n        \n        part_num += 1\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\n# use `session_id` and `part_size` variables set by\n# the \"Start multipart upload session\" API/SDK operation,\n# which must be run before running this operation\nsession_endpoint = f\"https://aihub.instabase.com/api/v2/batches/multipart-upload/sessions/{session_id}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\nparts = []\npart_num = 1\n\nlocal_filepath = \"/local/path/to/large-file.pdf\"\nwith open(local_filepath, \"rb\") as input_file:\n    part = input_file.read(part_size)\n    while part:\n        # upload this part\n        part_url = f\"{session_endpoint}/parts/{part_num}\"\n        part_response = requests.put(part_url, headers=headers, data=part)\n\n        if part_response.status_code == 201:\n            parts.append(\n                {\n                    \"part_num\": part_num,\n                    \"part_id\": part_response.json()[\"part_id\"]\n                }\n            )\n            print(f\"Uploaded part {part_num}\")\n        else:\n            print(f\"Error uploading part {part_num}: {part_response.status_code}\")\n            break\n\n        # read next part\n        part = input_file.read(part_size)\n        part_num += 1\n"
+  /v2/batches/multipart-upload/sessions/{session_id}:
+    post:
+      operationId: commitMultipartUploadSession
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: Commit or abort multipart session
+      description: 'After uploading all parts to a multipart upload session, use this endpoint to commit and close the session, or abort the session.
+
+
+        When committing, provide all the uploaded parts in the correct order. When aborting, the session and all uploaded parts are discarded.
+
+        '
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The session ID obtained from the Start multipart upload session response.
+      - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum:
+                  - commit
+                  - abort
+                  description: Set to `commit` to finalize the upload or `abort` to cancel it.
+                parts:
+                  type: array
+                  description: Required when action is `commit`. List of all uploaded parts in order.
+                  items:
+                    type: object
+                    properties:
+                      part_num:
+                        type: integer
+                        description: The part number of the uploaded part.
+                      part_id:
+                        type: string
+                        description: The part ID returned when the part was uploaded.
+                    required:
+                    - part_num
+                    - part_id
+              required:
+              - action
+      responses:
+        '201':
+          description: The multipart upload session was successfully committed or aborted.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl -X POST \"${API_ROOT}/v2/batches/multipart-upload/sessions/<SESSION-ID>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n        \"action\": \"commit\",\n        \"parts\": [\n             {\"part_num\": 1, \"part_id\": \"12345\"},\n             {\"part_num\": 2, \"part_id\": \"12346\"},\n             {\"part_num\": 3, \"part_id\": \"12347\"}\n        ]\n      }'\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\n# This assumes the `session_id` variable was set when the\n# \"Start multipart upload session\" API/SDK operation was called earlier.\nparts = [\n    {\"part_num\": 1, \"part_id\": \"12345\"},\n    {\"part_num\": 2, \"part_id\": \"12346\"},\n    {\"part_num\": 3, \"part_id\": \"12347\"}\n]\n\n# commit the session\nclient.batches.commit_multipart_upload_session(\n    session_id=session_id,\n    action=\"commit\",\n    parts=parts\n)\nprint(\"Multipart upload completed successfully\")\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\n# This assumes the `session_id` and `parts` variables were set when the\n# \"Start multipart upload session\" API/SDK operation was called earlier.\nsession_endpoint = f\"https://aihub.instabase.com/api/v2/batches/multipart-upload/sessions/{session_id}\"\nparts = [\n    {\"part_num\": 1, \"part_id\": \"12345\"},\n    {\"part_num\": 2, \"part_id\": \"12346\"},\n    {\"part_num\": 3, \"part_id\": \"12347\"}\n]\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# commit the session\ndata = {\n    \"action\": \"commit\",\n    \"parts\": parts\n}\n\nresponse = requests.post(session_endpoint, headers=headers, json=data)\n\nif response.status_code == 201:\n    print(\"Multipart upload completed successfully\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+        - sdk: python
+          name: with SDK - Complete Workflow
+          code: "import os\nfrom aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nbatch_id = 12345\nlocal_filename = \"large-file.pdf\"\nlocal_file_path = f\"/local/path/to/{local_filename}\"\nfile_size = os.path.getsize(local_file_path)\n\n# Step 1: Create session\nai_hub_filename = \"upload.pdf\"\nresponse = client.batches.create_multipart_upload_session(\n    batch_id=batch_id,\n    filename=ai_hub_filename,\n    file_size=file_size\n)\n\nsession_id = response.session_id\npart_size = response.part_size\n\n# Step 2: Upload parts\nparts = []\npart_num = 1\n\nwith open(local_file_path, \"rb\") as local_file:\n    while True:\n        part_data = local_file.read(part_size)\n        if not part_data:\n            break\n\n        response = client.batches.upload_multipart_part(\n            session_id=session_id,\n            part_num=part_num,\n            part_data=part_data)\n\n        parts.append({\n            \"part_num\": part_num,\n            \"part_id\": response.part_id\n        })\n        part_num += 1\n\n# Step 3: Commit session\nclient.batches.commit_multipart_upload_session(\n    session_id=session_id,\n    action=\"commit\",\n    parts=parts\n)\nprint(\"Multipart upload completed successfully\")\n"
+  /v2/batches/jobs/{job_id}:
+    get:
+      operationId: pollBatchesJob
+      x-fern-audiences:
+      - public
+      tags:
+      - Batches
+      summary: Poll batches job
+      description: 'Poll the asynchronous job created when deleting a batch.
+
+
+        <Info>This API operation and SDK method are maintained for backward compatibility, but the functionally identical API operation [poll file operation job status](/api-sdk/api-reference/jobs/job-status) and its corresponding SDK method [client.jobs.status()](/api-sdk/api-reference/jobs/job-status) are preferred.</Info>
+
+        '
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The job ID returned by a [Delete batch](/api-sdk/api-reference/batches/delete-batch) request.
+      - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/jobStatusResponse'
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/batches/jobs/<JOB-ID>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: with SDK
+          code: "import time\nfrom aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\n# poll the status of a job until it's done\nwhile True:\n    response = client.batches.poll_job(\n        job_id=\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\")\n    if response.state not in [\"PENDING\", \"RUNNING\"]:\n        break\n    time.sleep(3)  # pause before polling the status again\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\njob_id = \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\nurl = f\"https://aihub.instabase.com/api/v2/batches/jobs/{job_id}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the GET request\nresponse = requests.get(url, headers=headers)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Job status: {response.json()['state']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+components:
+  schemas:
+    listBatchFilesResponse:
+      type: object
+      properties:
+        nodes:
+          type: array
+          description: List of files in the batch.
+          items:
+            type: object
+            properties:
+              full_path:
+                type: string
+                description: Complete path to the file in the storage system.
+              metadata:
+                type: object
+                description: Metadata information about the file.
+                properties:
+                  node_type:
+                    type: string
+                    description: Type of the node (e.g., 'file').
+                  size:
+                    type: integer
+                    description: Size of the file in bytes.
+                  modified_timestamp:
+                    type: integer
+                    description: Last modification timestamp of the file, in Unix time seconds.
+              perms:
+                type: object
+                description: Permission settings for the file.
+                properties:
+                  can_read:
+                    type: boolean
+                    description: Whether the user has read permission.
+                  can_write:
+                    type: boolean
+                    description: Whether the user has write permission.
+                  can_delete:
+                    type: boolean
+                    description: Whether the user has delete permission.
+              name:
+                type: string
+                description: Name of the file, including optional extension.
+        next_page_token:
+          type: string
+          description: Token for retrieving the next page of results.
+        has_more:
+          type: boolean
+          description: Indicates whether there are more files to be retrieved.
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+    batch:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the batch.
+      required:
+      - id
+    jobStatusResponse:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The status of the job.
+          enum:
+          - COMPLETE
+          - FAILED
+          - CANCELLED
+          - RUNNING
+          - PENDING
+        message:
+          type: string
+          description: Job status message.
+    batchInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The batch ID.
+        name:
+          type: string
+          description: The batch name.
+        workspace:
+          type: string
+          description: The name of the workspace in which the batch exists.
+        mount_point:
+          type: string
+          description: The name of the connected drive in which the batch is stored.
+        repo_owner:
+          type: string
+          description: The owner of the workspace (also known as the repo) in which the batch exists.
+        batch_owner:
+          type: string
+          description: Username of the user that created the batch.
+        created_at_ms:
+          type: integer
+          format: int64
+          description: When the batch was created, in Unix time milliseconds.
+        updated_at_ms:
+          type: integer
+          format: int64
+          description: When the batch was last updated, in Unix time milliseconds.
+        path_suffix:
+          type: string
+          description: Batch path suffix from the mount point.
+      required:
+      - id
+      - name
+    multipartUploadSessionResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: ID of the multipart upload session.
+          example: yGLRzUtS2vHm9IdxMrsKaMEOXG7hGBU7KEuvm2JujgBuO9ZAwtqTYmAYauf1RHI8bgEq7qm_UnCE5YNdMg7.1Lv_lrKRVPQ4fZpNVgF3wD5dbvz_bgbmx50a2.kcDZN7XjOI1z.NQ8_9JfOLhtYIgA6xMGLv5U0p6FitSDtFgW4-
+        part_size:
+          type: integer
+          description: The number of bytes each part should be when uploading to the session. Each part should match the part_size, except for the final part, which can be smaller than the part_size.
+          example: 10485760
+      required:
+      - part_size
+      - session_id
+    batchDeletionJobResponse:
+      type: object
+      properties:
+        job_id:
+          type: string
+          description: The job ID of the operation. Use the job ID with the [Poll batches job endpoint](/api-sdk/api-reference/batches/poll-batches-job) to check batch deletion status.
+      required:
+      - job_id
+    multipartUploadPartResponse:
+      type: object
+      properties:
+        part_id:
+          type: string
+          description: ID of the uploaded part.
+        part_num:
+          type: integer
+          description: The part number of the uploaded part, indicating upload order. Identical to the part number in the request URL.
+      required:
+      - part_id
+      - part_num
+  parameters:
+    batch_id:
+      in: path
+      name: batch_id
+      required: true
+      schema:
+        type: integer
+      description: The batch ID.
+    ib_context:
+      in: header
+      name: IB-Context
+      schema:
+        type: string
+      required: false
+      description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: auth-scheme
+      description: Bearer HTTP authentication.
+      scheme: bearer
+      type: http

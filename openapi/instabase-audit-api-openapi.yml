@@ -1,0 +1,158 @@
+openapi: 3.0.0
+info:
+  title: AI Hub Audit API
+  version: '0.1'
+  description: The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.
+  termsOfService: https://www.instabase.com/terms-of-service/
+  contact:
+    name: Instabase Support
+    url: https://help.instabase.com/
+  license:
+    name: MIT
+    url: https://github.com/instabase/aihub-python/blob/master/LICENSE
+servers:
+- url: https://aihub.instabase.com/api
+security:
+- bearerAuth: []
+tags:
+- name: Audit
+paths:
+  /v1/auditlogs:
+    post:
+      operationId: getAuditLogs
+      x-fern-audiences:
+      - public
+      tags:
+      - Audit
+      summary: Get audit logs
+      description: 'Retrieve audit logs based on specified filters. Returns a paginated list of audit log entries.
+
+
+        <Note>This API operation is available for Enterprise-tier organizations with single-tenant environments. To use it you must have audit log access permissions. Contact Instabase Support to request access to audit logs for your organization.</Note>
+
+
+        <Note>This API operation is not supported by the SDK but you can access it from Python by making direct REST calls, as shown in the sample code.</Note>
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start:
+                  type: integer
+                  description: Number of results to skip for pagination
+                  nullable: true
+                size:
+                  type: integer
+                  description: Maximum number of results to return
+                  nullable: true
+                log_type:
+                  type: string
+                  description: 'Type of audit log to filter by. Valid values include:
+
+                    - `account_v2`: User account creation logs
+
+                    - `api_v2`: API request logs
+
+                    - `app_deployment_run_v2`: Deployment run operation logs
+
+                    - `app_deployment_v2`: Deployment operation logs
+
+                    - `app_v2`: Automation app operation logs
+
+                    - `datasource_v2`: Data connection operation logs
+
+                    - `login_v2`: User login and authentication logs
+
+                    - `oauth2_v2`: OAuth token operation logs
+
+                    - `org_v2`: Organization role change logs
+
+                    - `org_secrets_v2`: Organization secrets operation logs
+
+                    - `perms_v2`: Membership and role change logs, for the organization, workspaces, and groups
+
+                    - `projects_v2`: Automation project operation logs
+
+                    - `review_v2`: Human review operation logs
+
+                    - `workspace_v2`: Workspace management operation logs
+
+
+                    For details about tracked operations, see [Viewing audit logs](/admin/audit-logs/).
+
+                    '
+                  nullable: true
+                email:
+                  type: string
+                  description: Filter logs by user email
+                  nullable: true
+                start_time:
+                  type: string
+                  description: Start time in epoch milliseconds
+                  nullable: true
+                end_time:
+                  type: string
+                  description: End time in epoch milliseconds
+                  nullable: true
+      responses:
+        '200':
+          description: Successfully retrieved audit logs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            timestamp_millis:
+                              type: string
+                              description: Timestamp in epoch milliseconds
+                            email:
+                              type: string
+                              description: User email associated with the log entry
+                            user_ip:
+                              type: string
+                              description: IP address of the user
+                            log_type:
+                              type: string
+                              description: Type of the audit log
+                          additionalProperties: true
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v1/auditlogs\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n        \"log_type\": \"org_secret\",\n        \"size\": 50,\n        \"start_time\": \"1749139277810\",\n        \"start\": 200\n      }'\n"
+        - sdk: python
+          name: without SDK
+          code: "# SDK does not support this operation, so you\n# must make REST calls using \"requests\" module\nimport requests\n\nurl = \"https://aihub.instabase.com/api/v1/auditlogs\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# create the request payload\ndata = {\n    \"log_type\": \"org_secret\",\n    \"size\": 50,\n    \"start_time\": \"1749139277810\",\n    \"start\": 200\n}\n\n# make the POST request\nresponse = requests.post(url, headers=headers, json=data)\n\n# handle the response\nif response.status_code == 200:\n    audit_logs = response.json()\n    print(f\"Retrieved {len(audit_logs['data']['results'])} audit logs\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+components:
+  schemas:
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: auth-scheme
+      description: Bearer HTTP authentication.
+      scheme: bearer
+      type: http

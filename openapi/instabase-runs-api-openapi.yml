@@ -1,0 +1,1401 @@
+openapi: 3.0.0
+info:
+  title: AI Hub Audit Runs API
+  version: '0.1'
+  description: The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.
+  termsOfService: https://www.instabase.com/terms-of-service/
+  contact:
+    name: Instabase Support
+    url: https://help.instabase.com/
+  license:
+    name: MIT
+    url: https://github.com/instabase/aihub-python/blob/master/LICENSE
+servers:
+- url: https://aihub.instabase.com/api
+security:
+- bearerAuth: []
+tags:
+- name: Runs
+paths:
+  /v2/apps/runs:
+    post:
+      operationId: runApp
+      x-fern-audiences:
+      - public
+      tags:
+      - Runs
+      summary: Run app
+      description: 'Run an automation app by its name or app ID. The input for the run can be a batch ID or an input file path.
+
+
+        <Tip>
+
+
+        <span class="badge">Commercial & Enterprise</span>
+
+
+        Running an automation app via a deployment is generally preferred over running an app directly.
+
+
+        Deployments offer additional features including upstream and downstream integrations, deployment metrics, human review workflows, and secret and configuration management.
+
+
+        Learn more about [deployments](/automate/deployments) to decide if you''d rather use the [Run deployment](/api-sdk/api-reference/runs/run-deployment) API operation.
+
+
+        </Tip>
+
+
+        <Note>Any specified input or output is validated against the context set by the `IB-Context` header. For example, if the context is set to your community account, but the batch ID used as input for the run is stored in your organization, the call fails.</Note>
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                app_name:
+                  type: string
+                  description: Required unless using `app_id`. The name of the app to run.
+                app_id:
+                  type: string
+                  description: 'Required unless using `app_name`. The app ID of the app to run.
+
+
+                    <Tip>You can find an app ID in the app URL, such as http<span>s://</span>aihub.instabase.com/hub/apps/**528c36e8-ac5b-490d-a41b-7eec9c404b87**.</Tip>
+
+                    '
+                owner:
+                  type: string
+                  description: 'The account that generated the app. If not specified, defaults to your AI Hub username.
+
+
+                    For custom apps belonging to you, accept the default. For AI Hub Marketplace apps published by Instabase, specify `instabase`.
+
+                    '
+                batch_id:
+                  type: integer
+                  description: Required unless using `input_dir`. The batch ID of a batch created with the [Batches endpoint](/api-sdk/api-reference/batches/create-batch/). All files uploaded to the batch are used as input for the run.
+                input_dir:
+                  type: string
+                  description: Required unless using `batch_id`. The path of the input folder in a connected drive or Instabase Drive. See [Specifying file paths](/api-sdk/api-reference/run-reference/).
+                version:
+                  type: string
+                  description: Version of the app to use. If not specified, defaults to the latest production version.
+                output_workspace:
+                  type: string
+                  description: 'The workspace in which to run the app. Output saves to the specified workspace. If not defined, the default is your personal workspace.
+
+
+                    <Note>Service accounts don''t have personal workspaces. If making this call from a service account, you must specify a value for either `output_workspace` or `output_dir`.</Note>
+
+                    '
+                output_dir:
+                  type: string
+                  description: Defines a specific location for the output to be saved in a connected drive or Instabase Drive. If defined, overrides the `output_workspace` value. See [Specifying file paths](/api-sdk/api-reference/run-reference/).
+                settings:
+                  type: object
+                  description: JSON object containing settings for the app run.
+                  properties:
+                    keys:
+                      type: object
+                      description: 'Configure runtime values for any custom and secret keys referenced in the app. Undefined keys run without a value.
+
+                        '
+                      properties:
+                        custom:
+                          type: object
+                          description: 'Configure any custom keys, using key/value pairs. In the key/value pair, define the key as the name of an existing key used in your app, and define the value as any custom value.
+
+
+                            <Note>Any keys being defined by API should correspond to keys listed on the app **Overview** page, on the **Keys** tab.</Note>
+
+                            '
+                          additionalProperties: true
+                        secret:
+                          type: object
+                          description: 'Configure any secret keys, using key/value pairs. In the key/value pair, define the key as the name of an existing secret key used in your app, and define the value as any secret in the organization''s secrets vault. For guidance on managing secrets, see [Managing secrets](/admin/secret-management/) or refer to the [Secrets endpoints](/api-sdk/api-reference/secrets/).
+
+
+                            <Note>Any keys being defined by API should correspond to keys listed on the app **Overview** page, on the **Keys** tab.</Note>
+
+                            '
+                          additionalProperties:
+                            type: string
+                    runtime_config:
+                      type: object
+                      description: A dictionary supporting select runtime configurations, such as generating retrievable PDFs of processed documents. For all other runtime configurations, use the `keys` parameter.
+                      properties:
+                        generate_post_process_pdf:
+                          type: boolean
+                          description: 'Set to `true` to generate a retrievable PDF for each document the app processes, including separate PDFs for each document created by split classification. PDF generation is supported only for documents less than 100 pages in length.
+
+
+                            <Note>When getting run results, use the [`include_source_info` query parameter](/api-sdk/api-reference/runs/get-run-results#request.query.include_source_info.include_source_info) to return the file path for any generated PDFs in your results. File paths are returned under `files/documents/post_processed_pdf_path`.</Note>
+
+                            '
+                        instabase:
+                          type: object
+                          description: A dictionary supporting select runtime configurations.
+                          properties:
+                            pdf:
+                              type: object
+                              description: A dictionary supporting select runtime configurations dealing with PDF input documents.
+                              properties:
+                                passwords:
+                                  type: object
+                                  description: A dictionary with titles of encrypted PDF documents as keys and passwords for those documents as values.
+                                  additionalProperties:
+                                    type: string
+                    tags:
+                      type: array
+                      items:
+                        type: string
+                      description: 'List of string tags to attach to this run. Combined length of all tags must not exceed 500 characters.
+
+                        '
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/run'
+          description: Run started successfully.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          name: Simple request
+          code: "curl \"${API_ROOT}/v2/apps/runs\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n        \"batch_id\": <BATCH-ID>,\n        \"app_name\": \"<APP-NAME>\"\n      }'\n"
+        - sdk: python
+          name: Simple request with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nrun = client.apps.runs.create(\n    app_name=\"MyApp\",\n    batch_id=12345\n)\n\nprint(f\"Run ID: {run.id}\")\n"
+        - sdk: python
+          name: Simple request without SDK
+          code: "import requests\n\nurl = \"https://aihub.instabase.com/api/v2/apps/runs\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# create the request payload\ndata = {\n    \"batch_id\": 12345,\n    \"app_name\": \"My App\"\n}\n\n# make the POST request\nresponse = requests.post(url, headers=headers, json=data)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Run started with ID: {response.json()['id']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+        - sdk: curl
+          name: Complex request
+          code: "curl \"${API_ROOT}/v2/apps/runs\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n        \"batch_id\": \"<BATCH-ID>\",\n        \"app_name\": \"<APP-NAME>\",\n        \"settings\": {\n          \"runtime_config\": {\n            \"generate_post_process_pdf\": true,\n            \"instabase\": {\n              \"pdf\": {\n                \"passwords\": {\n                  \"test1.pdf\": \"abc123\",\n                  \"scott.pdf\": \"tiger\"\n                }\n              }\n            }\n          }\n        }\n      }'\n"
+        - sdk: python
+          name: Complex request with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nrun = client.apps.runs.create(\n    app_name=\"MyApp\",\n    batch_id=12345,\n    settings={\n        \"runtime_config\": {\n            \"generate_post_process_pdf\": True,\n            \"instabase\": {\n                \"pdf\": {\n                    \"passwords\": {\n                        \"test1.pdf\": \"abc123\",\n                        \"scott.pdf\": \"tiger\"\n                    }\n                }\n            }\n        }\n    }\n)\nprint(f\"Run ID: {run.id}\")\n"
+        - sdk: python
+          name: Complex request without SDK
+          code: "import requests\n\nurl = \"https://aihub.instabase.com/api/v2/apps/runs\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# create the request payload\ndata = {\n    \"batch_id\": 12345,\n    \"app_name\": \"My App\",\n    \"settings\": {\n        \"runtime_config\": {\n            \"generate_post_process_pdf\": True,\n            \"instabase\": {\n                \"pdf\": {\n                    \"passwords\": {\n                        \"test1.pdf\": \"abc123\",\n                        \"scott.pdf\": \"tiger\"\n                    }\n                }\n            }\n        }\n    }\n}\n\n# make the POST request\nresponse = requests.post(url, headers=headers, json=data)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Run started with ID: {response.json()['id']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+    get:
+      operationId: listRuns
+      x-fern-audiences:
+      - public
+      tags:
+      - Runs
+      summary: List runs
+      description: Return a list of runs. Use query parameters to filter results.
+      parameters:
+      - $ref: '#/components/parameters/ib_context'
+      - in: query
+        name: app_id
+        schema:
+          type: string
+        description: Filter runs by app ID.
+      - in: query
+        name: app_name
+        schema:
+          type: string
+        description: Filter runs by app name.
+      - in: query
+        name: deployment_id
+        schema:
+          type: string
+        description: Filter runs by deployment ID.
+      - in: query
+        name: username
+        schema:
+          type: string
+        description: Filter runs initiated by the specified user (username).
+      - in: query
+        name: run_id
+        schema:
+          type: string
+        description: Filter specific run by run ID.
+      - in: query
+        name: status
+        schema:
+          type: array
+          items:
+            type: string
+        description: Filter jobs by status, such as COMPLETE, RUNNING, or FAILED.
+      - in: query
+        name: output_workspaces
+        schema:
+          type: array
+          items:
+            type: string
+        description: Filter runs by the run's output workspace. By default, all runs across all workspaces you have access to are returned, use this query parameter to filter by specific workspace names. You must have access to the named workspaces.
+      - in: query
+        name: from_timestamp
+        schema:
+          type: integer
+        description: Filter runs starting from this timestamp. Timestamp in Unix time in seconds. Defaults to 24 hours before the current time.
+      - in: query
+        name: to_timestamp
+        schema:
+          type: integer
+        description: Filter runs up to this timestamp. Timestamp in Unix time in seconds. Defaults to the current time.
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: Number of results to return.
+      - in: query
+        name: offset
+        schema:
+          type: integer
+        description: Offset of the first result to return.
+      - in: query
+        name: sort_by
+        schema:
+          type: string
+          enum:
+          - start_timestamp
+          - status
+        description: Field to sort results by.
+      - in: query
+        name: order
+        schema:
+          type: string
+          enum:
+          - ASCENDING
+          - DESCENDING
+        description: Order of sorting, such as ASCENDING or DESCENDING.
+      responses:
+        '200':
+          description: A list of all runs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/run'
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/apps/runs\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nresponse = client.apps.runs.list()\n\nprint(f\"third run ID: {response.runs[2].id}\")  # 0-based indexing\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\nurl = \"https://aihub.instabase.com/api/v2/apps/runs\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the GET request\nresponse = requests.get(url, headers=headers)\n\n# handle the response\nif response.status_code == 200:\n    # the next line assumes the call returned at least 3 runs\n    print(f\"third run ID: {response.json()['runs'][2]['id']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+  /v2/apps/deployments/{deployment-id}/runs:
+    post:
+      operationId: runDeployment
+      x-fern-audiences:
+      - public
+      tags:
+      - Runs
+      summary: Run deployment
+      description: '<span class="badge">Commercial & Enterprise</span>
+
+
+        Run an AI Hub deployment by its deployment ID. The input for the run is specified using a batch ID or file path.
+
+
+        <Info>Use the UI to optionally [configure email notifications or webhooks](/automate/deployments#configuring-notifications) for certain events within the deployed app''s lifecycle.</Info>
+
+
+        <Note>Any specified input or output is validated against the context set by the `IB-Context` header. For example, if the context is set to your community account, but the batch ID used as input for the run is stored in your organization, the call fails.</Note>
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/ib_context'
+      - in: path
+        name: deployment-id
+        schema:
+          type: string
+          default: false
+        required: true
+        description: 'The deployment ID.
+
+
+          <Tip>Find the deployment ID by opening the deployment in AI Hub and looking at the site URL, such as https<span>://</span>aihub.instabase.com/deployments/**01902d6f-bb35-74cb-bd27-c09b38bbf20a**/runs.</Tip>
+
+          '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batch_id:
+                  type: integer
+                  description: Required unless using `input_dir` or `manual_upstream_integration`. The batch ID of a batch created with the [Batches endpoint](/api-sdk/api-reference/batches/create-batch/). All files uploaded to the batch are used as input for the run.
+                input_dir:
+                  type: string
+                  description: Required unless using `batch_id` or `manual_upstream_integration`. The path of the input folder in a connected drive or Instabase Drive. See [Specifying file paths](/api-sdk/api-reference/run-reference/).
+                manual_upstream_integration:
+                  type: boolean
+                  description: Use the deployment's upstream integration as a source rather than a `batch_id` or `input_dir`. Requires an upstream integration to be configured for the deployment.
+                from_timestamp:
+                  type: number
+                  description: Required if `manual_upstream_integration` is true and the upstream integration is a mailbox integration. Specifies the earliest date in Unix time milliseconds from which to pull emails.
+                to_timestamp:
+                  type: number
+                  description: Required if `manual_upstream_integration` is true and the upstream integration is a mailbox integration. Specifies the latest date in Unix time milliseconds from which to pull emails.
+                version:
+                  type: string
+                  description: Version of the app to use. If not specified, defaults to the latest production version.
+                output_dir:
+                  type: string
+                  description: Defines a specific location for the output to be saved in a connected drive or Instabase Drive. If defined, overrides the output workspace configured for the deployment. See [Specifying file paths](/api-sdk/api-reference/run-reference).
+                settings:
+                  type: object
+                  description: JSON object containing settings for the deployment run.
+                  properties:
+                    keys:
+                      type: object
+                      description: 'Define the values for any custom or secret keys configured under your deployment''s *Runtime configurations* settings. Key values passed via API override any key values defined in the deployment configuration.
+
+                        '
+                      properties:
+                        custom:
+                          type: object
+                          description: 'Configure any custom keys, using key/value pairs. In the key/value pair, define the key as the name of an existing key used in your deployment, and define the value as any custom value.
+
+
+                            <Note>Any keys being defined by API should correspond to keys listed under your deployment''s *Runtime configuration* settings. For keys included in the `custom` object, match against the keys listed on the **Custom keys** tab of the runtime configuration.</Note>
+
+                            '
+                          additionalProperties: true
+                        secret:
+                          type: object
+                          description: 'Configure any secret keys, using key/value pairs. In the key/value pair, define the key as the name of an existing secret key used in your deployment, and define the value as any secret in the organization''s secrets vault. For guidance on managing secrets, see [Managing secrets](/admin/secret-management/) or refer to the [Secrets endpoints](/api-sdk/api-reference/secrets/).
+
+
+                            <Note>Any keys being defined by API should correspond to keys listed under your deployment''s *Runtime configuration* settings. For keys included in the `secret` object, match against the keys listed on the **Secret keys** tab of the runtime configuration.</Note>
+
+                            '
+                          additionalProperties:
+                            type: string
+                    runtime_config:
+                      type: object
+                      description: A dictionary supporting select runtime configurations, such as generating retrievable PDFs of processed documents. For all other runtime configurations, use the `keys` parameter.
+                      properties:
+                        generate_post_process_pdf:
+                          type: boolean
+                          description: 'Set to `true` to generate a retrievable PDF for each document the app processes, including separate PDFs for each document created by split classification.
+
+
+                            <Note>When getting run results, use the [`include_source_info` query parameter](/api-sdk/api-reference/runs/get-run-results#request.query.include_source_info.include_source_info) to return the file path for any generated PDFs in your results. File paths are returned under `files/documents/post_processed_pdf_path`.</Note>
+
+                            '
+                        instabase:
+                          type: object
+                          description: A dictionary supporting select runtime configurations.
+                          properties:
+                            pdf:
+                              type: object
+                              description: A dictionary supporting select runtime configurations dealing with PDF input documents.
+                              properties:
+                                passwords:
+                                  type: object
+                                  description: A dictionary with titles of encrypted PDF documents as keys and passwords for those documents as values.
+                                  additionalProperties:
+                                    type: string
+                    tags:
+                      type: array
+                      items:
+                        type: string
+                      description: 'List of string tags to attach to this run. Combined length of all tags must not exceed 500 characters.
+
+                        '
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/run'
+          description: Successfully initiated an asynchronous operation to run the deployment.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/apps/deployments/<DEPLOYMENT-ID>/runs\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n        \"batch_id\": <BATCH-ID>,\n      }'\n"
+        - sdk: python
+          name: Use batch ID with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nrun = client.apps.deployments.runs.create(\n    deployment_id=\"12345678-abcde-1234-abcd-123456789012\",\n    batch_id=12345\n)\n\nprint(f\"run ID: {run.id}\")\n"
+        - sdk: python
+          name: Use batch ID without SDK
+          code: "import requests\n\ndeployment_id = \"12345678-abcde-1234-abcd-123456789012\"\nurl = f\"https://aihub.instabase.com/api/v2/apps/deployments/{deployment_id}/runs\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# create the request payload\ndata = {\"batch_id\": 12345}\n\n# make the POST request\nresponse = requests.post(url, headers=headers, json=data)\n\n# handle the response\nif response.status_code == 202:\n    print(f\"Deployment run started with ID: {response.json()['id']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+        - sdk: python
+          name: Use input dir with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\norganization_id = \"acme\"\nworkspace = \"MyWorkspace\"\ndrive_name = \"My Google Drive\"\nfolder = \"My Drive/input_files/documents/\"\ninput_dir = f\"{organization_id}/{workspace}/fs/{drive_name}/{folder}\"\n\nrun = client.apps.deployments.runs.create(\n    deployment_id=\"12345678-abcde-1234-abcd-123456789012\",\n    input_dir=input_dir\n)\n\nprint(f\"run ID: {run.id}\")\n"
+        - sdk: python
+          name: Use input dir without SDK
+          code: "import requests\n\ndeployment_id = \"12345678-abcde-1234-abcd-123456789012\"\nurl = f\"https://aihub.instabase.com/api/v2/apps/deployments/{deployment_id}/runs\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\norganization_id = \"acme\"\nworkspace = \"MyWorkspace\"\ndrive_name = \"My Google Drive\"\nfolder = \"My Drive/input_files/documents/\"\ninput_dir = f\"{organization_id}/{workspace}/fs/{drive_name}/{folder}\"\n\n# create the request payload\ndata = {\"input_dir\": input_dir}\n\n# make the POST request\nresponse = requests.post(url, headers=headers, json=data)\n\n# handle the response\nif response.status_code == 202:\n    print(f\"Deployment run started with ID: {response.json()['id']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+  /v2/apps/runs/{run_id}:
+    get:
+      operationId: getRunStatus
+      x-fern-audiences:
+      - public
+      tags:
+      - Runs
+      summary: Get run status
+      description: Get the status of a run.
+      parameters:
+      - $ref: '#/components/parameters/run_id'
+      - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/run'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/apps/runs/<RUN-ID>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nresponse = client.apps.runs.status(\n    run_id=\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\n)\n\nprint(f\"Run status: {response.status}\")\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\nrun_id = \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\nurl = f\"https://aihub.instabase.com/api/v2/apps/runs/{run_id}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the GET request\nresponse = requests.get(url, headers=headers)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Run status: {response.json()['status']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+    delete:
+      operationId: deleteRun
+      x-fern-audiences:
+      - public
+      tags:
+      - Runs
+      summary: Delete run
+      description: 'Deletes a specified automation app run and optionally its associated database data, input files, output files, and logs. This is an asynchronous operation that must be [checked for completion](/api-sdk/api-reference/jobs/job-status).
+
+
+        <Warning>Deleting the run''s input files also deletes the batch that the run processed.</Warning>
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/run_id'
+      - $ref: '#/components/parameters/ib_context'
+      - in: query
+        name: delete_db_data
+        schema:
+          type: boolean
+          default: true
+        description: Delete the run's database data.
+      - in: query
+        name: delete_input
+        schema:
+          type: boolean
+          default: true
+        description: Delete the run's input files.
+      - in: query
+        name: delete_output
+        schema:
+          type: boolean
+          default: true
+        description: Delete the run's output files.
+      - in: query
+        name: delete_logs
+        schema:
+          type: boolean
+          default: true
+        description: Delete the run's logs.
+      responses:
+        '202':
+          description: Run deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  delete_input_dir_job_id:
+                    type: string
+                    description: Job ID for deleting the input directory.
+                    nullable: true
+                  delete_output_dir_job_id:
+                    type: string
+                    description: Job ID for deleting the output directory.
+                    nullable: true
+                  delete_log_dir_job_id:
+                    type: string
+                    description: Job ID for deleting the log directory.
+                    nullable: true
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl -X DELETE \"${API_ROOT}/v2/apps/runs/<RUN-ID>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: with SDK
+          code: "import time\nfrom aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nresponse = client.apps.runs.delete(\n    run_id=\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\n)\n\njob_ids = [\n    response.delete_input_dir_job_id,\n    response.delete_output_dir_job_id,\n    response.delete_log_dir_job_id\n]\n\n# remove empty job IDs\njob_ids = [job_id for job_id in job_ids if job_id]\n\n# poll for job completion\nwhile job_ids:\n    for job_id in job_ids[:]:\n        job_status = client.jobs.status(job_id)\n        if job_status.state == \"COMPLETE\":\n            job_ids.remove(job_id)\n    time.sleep(5)\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\nrun_id = \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\nurl = f\"https://aihub.instabase.com/api/v2/apps/runs/{run_id}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the DELETE request\nresponse = requests.delete(url, headers=headers)\n\n# handle the response\nif response.status_code == 202:\n    print(\"Run deletion request accepted\")\n    print(f\"Delete input dir job ID: {response.json()['delete_input_dir_job_id']}\")\n    print(f\"Delete output dir job ID: {response.json()['delete_output_dir_job_id']}\")\n    print(f\"Delete log dir job ID: {response.json()['delete_log_dir_job_id']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+  /v2/apps/runs/{run_id}/results:
+    get:
+      operationId: getRunResults
+      x-fern-audiences:
+      - public
+      tags:
+      - Runs
+      summary: Get run results
+      description: 'Get the results of a completed automation app run.
+
+
+        <Note>
+
+        The results from this endpoint are paginated. The `has_more` field in the response indicates if there are more results to fetch and the `file_offset` query parameter can be used to specify the starting point for the next set of results.
+
+
+        For an example of using `file_offset` to fetch all results, see the *Retrieving paginated results* code sample.
+
+        </Note>
+
+
+        <Info>
+
+
+        This API operation might return field names that differ from those in the automation project.
+
+        The operation converts field names to valid Python variable names by:
+
+
+        * Allowing only letters, numbers, and underscores
+
+        * Requiring names to start with a letter or underscore
+
+        * Replacing invalid characters with underscores
+
+        * Converting single underscores to double underscores
+
+
+        Examples:
+
+        * `due date` → `due_date`
+
+        * `driver''s license` → `driver_s_license`
+
+        * `3rd category` → `_3rd_category`
+
+        * `secret_id` → `secret__id`
+
+
+        These changes apply only to field names in the API response. The field names in the automation project are not changed.
+
+
+        </Info>
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/run_id'
+      - in: query
+        name: include_review_results
+        schema:
+          type: boolean
+          default: false
+        description: 'Whether to include human review details in the results. When set to `true`, various human review details are returned.
+
+
+          <Note>The review process can include manually correcting values. This endpoint doesn''t support returning the original and corrected values.</Note>
+
+
+          The following values are returned at the document level (`files/documents/...`):
+
+
+          - `review_completed`
+
+          - `class_edit_history`
+
+          - `class_edit_history/timestamp`
+
+          - `class_edit_history/user_id`
+
+          - `class_edit_history/modifications`
+
+          - `class_edit_history/modifications/message`
+
+
+          The following values are returned at the field level (`files/documents/fields/...`):
+
+
+          - `edit_history`
+
+          - `edit_history/timestamp`
+
+          - `edit_history/user_id`
+
+          - `edit_history/modifications`
+
+          - `edit_history/modifications/message`
+
+
+          The following values are returned at the packet level (also known as case level) (`case_info/fields/...`):
+
+
+          - `edit_history`
+
+          - `edit_history/timestamp`
+
+          - `edit_history/user_id`
+
+          - `edit_history/modifications`
+
+          - `edit_history/modifications/message`
+
+
+          See the response schema for details and descriptions.
+
+          '
+      - in: query
+        name: include_confidence_scores
+        schema:
+          type: boolean
+          default: false
+        description: 'Whether to include confidence scores in the results. When set to `true`, various confidence scores are returned.
+
+
+          The following values are returned at the document level (`files/documents/...`):
+
+
+          - `classification_confidence`
+
+
+          The following values are returned at the field level (`files/documents/fields/...`):
+
+
+          - `confidence/model`
+
+          - `confidence/ocr`
+
+
+          See the response schema for details and descriptions.
+
+          '
+      - in: query
+        name: include_validation_results
+        schema:
+          type: boolean
+          default: false
+        description: 'Whether to include validation status in the results. When set to `true`, various validation results are returned.
+
+
+          The following values are returned at the document level (`files/documents/...`):
+
+
+          - `validations/final_result_pass`
+
+
+          The following values are returned at the field level (`files/documents/fields/...`):
+
+
+          - `validations/valid`
+
+          - `validations/alerts`
+
+
+          The following values are returned at the packet level (also known as case level) (`case_info/fields/...`):
+
+
+          - `validations/valid`
+
+          - `validations/failures`
+
+
+          Cross-class validation ensures data quality and consistency across documents within a packet.
+
+
+          See the response schema for details and descriptions.
+
+          '
+      - in: query
+        name: include_source_info
+        schema:
+          type: boolean
+          default: false
+        description: "Whether to include source information in the results. When set to `true`, various source details are returned.\n\nThe following values are returned at the document level (`files/documents/...`):\n\n- `post_processed_paths`\n- `post_processed_pdf_path`\n\n   <Note>\n   A `post_processed_pdf_path` is populated when `settings/runtime_config/generate_post_process_pdf=true`. Paths to PDFs are generated from each document, with separate PDF paths for documents split during classification.\n   </Note>\n\n- `page_layouts`\n\nThe following values are returned at the field level (`files/documents/fields/...`):\n\n- `source_coordinates/top_x`\n- `source_coordinates/top_y`\n- `source_coordinates/bottom_x`\n- `source_coordinates/bottom_y`\n- `source_coordinates/page_number`\n\nSee the response schema for details and descriptions.\n"
+      - in: query
+        name: file_offset
+        schema:
+          type: integer
+          default: 0
+        description: The initial file index to start returning results from. Defaults to `0`.
+      - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: 'Run results retrieved successfully.
+
+
+            <Note>
+
+
+            If errors occur at the class, field, or document levels, the response status code is `200` and the response body includes error details.
+
+
+            </Note>
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resultsResponse'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - path-parameters:
+          run_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        response:
+          body:
+            id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+            status: COMPLETE
+            message: Completed single_flow
+            start_timestamp: 1765912514238248673
+            finish_timestamp: 1765912529614833939
+            batch_id: '1235'
+            files:
+            - original_file_name: test.png
+              input_file_path: instabase-sandbox-org/test-org/fs/Instabase Drive/app-runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890/input/test.png
+              documents:
+              - class_name: Wage And Tax Statement
+                page_numbers:
+                - 1
+                - 2
+                fields:
+                - value: 123 STREET RD ANYWHERE, USA,12345
+                  type: TEXT
+                  field_name: employers_address_and_ZIP_code
+            - original_file_name: test2.png
+              input_file_path: instabase-sandbox-org/test-org/fs/Instabase Drive/app-runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890/input/test2.png
+              documents:
+              - class_name: Driver License
+                page_numbers:
+                - 1
+                fields:
+                - value: Male
+                  type: TEXT
+                  field_name: sex
+            keys:
+            - custom: {}
+            case_info:
+              fields:
+              - name: Employee_Address
+                value: 123 STREET RD ANYWHERE, USA,12345
+                input_fields:
+                - record_index: 0
+                  refined_phrase_name: employers_address_and_ZIP_code
+                chosen_field:
+                  record_index: 0
+                  refined_phrase_name: employers_address_and_ZIP_code
+                edit_history:
+                - timestamp: 08/27/2025 00:58:39
+                  user_id: john.doe_instabase.com
+                  modifications:
+                  - message: Edited to "123 STREET RD ANYWHERE, USA,12345"
+              - name: Sex
+                value: Male
+                input_fields:
+                - record_index: 0
+                  refined_phrase_name: sex
+                chosen_field:
+                  record_index: 0
+                  refined_phrase_name: sex
+            has_more: false
+        code-samples:
+        - sdk: curl
+          name: Simple request
+          code: 'curl "${API_ROOT}/v2/apps/runs/<RUN-ID>/results" \
+
+            -H "Authorization: Bearer ${API_TOKEN}" \
+
+            -H "IB-Context: ${IB_CONTEXT}"
+
+            '
+        - sdk: python
+          name: Simple request with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nresults = client.apps.runs.results(\n    run_id=\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\n)\n\nprint(f\"Retrieved results from {len(results.files)} files\")\n"
+        - sdk: python
+          name: Simple request without SDK
+          code: "import requests\n\nrun_id = \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\nurl = f\"https://aihub.instabase.com/api/v2/apps/runs/{run_id}/results\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the GET request\nresponse = requests.get(url, headers=headers)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Retrieved results from {len(response.json()['files'])} files\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+      - path-parameters:
+          run_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        response:
+          body:
+            id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+            status: COMPLETE
+            message: Completed single_flow
+            start_timestamp: 1765912514238248673
+            finish_timestamp: 1765912529614833939
+            batch_id: '9706'
+            files:
+            - original_file_name: test.png
+              documents:
+              - class_name: Wage And Tax Statement
+                page_layouts:
+                - page_number: 0
+                  width: 1012.0
+                  height: 639.0
+                fields:
+                - value: 123 STREET RD ANYWHERE, USA,12345
+                  type: TEXT
+                  confidence:
+                    model: 0.5900550516
+                    ocr: 0.6900550516
+                  source_coordinates:
+                  - top_x: 36.0
+                    top_y: 181.0
+                    bottom_x: 84.0
+                    bottom_y: 212.0
+                    page_number: 0
+                  - top_x: 90.0
+                    top_y: 182.0
+                    bottom_x: 198.0
+                    bottom_y: 211.0
+                    page_number: 0
+                  field_name: employers_address_and_ZIP_code
+                post_processed_paths:
+                - instabase-org/orguser/fs/S3 Drive/app-runs/dd97-42cb-8b8e-28a63066887e/4180-8508-b103afb67185/s1_process_files/images/test.png.PNG
+            - original_file_name: test2.png
+              documents:
+              - class_name: Driver License
+                page_layouts:
+                - page_number: 0
+                  width: 1012.0
+                  height: 639.0
+                fields:
+                - value: Male
+                  type: TEXT
+                  confidence:
+                    model: 0.6915
+                    ocr: 0.7915
+                  source_coordinates: []
+                  field_name: sex
+                post_processed_paths:
+                - instabase-org/orguser/fs/S3 Drive/app-runs/dd97-42cb-8b8e-28a63066887e/4180-8508-b103afb67185/s1_process_files/images/test2.png.PNG
+            case_info:
+              fields:
+              - name: Employee_Address
+                value: 123 STREET RD ANYWHERE, USA,12345
+                input_fields:
+                - record_index: 0
+                  refined_phrase_name: employers_address_and_ZIP_code
+                chosen_field:
+                  record_index: 0
+                  refined_phrase_name: employers_address_and_ZIP_code
+                edit_history:
+                - timestamp: 08/27/2025 00:58:39
+                  user_id: john.doe_instabase.com
+                  modifications:
+                  - message: Edited to "123 STREET RD ANYWHERE, USA,12345"
+              - name: Sex
+                value: Male
+                input_fields:
+                - record_index: 0
+                  refined_phrase_name: sex
+                chosen_field:
+                  record_index: 0
+                  refined_phrase_name: sex
+            review_completed: false
+            has_more: false
+        code-samples:
+        - sdk: curl
+          name: Using query parameters with SDK
+          code: "curl \"${API_ROOT}/v2/apps/runs/<RUN-ID>/results?include_confidence_scores=true&include_source_info=true\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\"\n"
+        - sdk: python
+          name: Using query parameters with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nresults = client.apps.runs.results(\n    run_id=\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    include_confidence_scores=True,\n    include_source_info=True\n)\n\nprint(f\"Retrieved results from {len(results.files)} files\")\n"
+        - sdk: python
+          name: Using query parameters without SDK
+          code: "import requests\n\nrun_id = \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\nurl = f\"https://aihub.instabase.com/api/v2/apps/runs/{run_id}/results\" \n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\nparams = {\n    \"include_confidence_scores\": True,\n    \"include_source_info\": True\n}\n\n# make the GET request\nresponse = requests.get(url, headers=headers, params=params)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Retrieved results for {len(response.json()['files'])} files\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+        - sdk: python
+          name: Retrieving paginated results with SDK
+          code: "# The results from this endpoint are paginated.\n# The `has_more` field in the response indicates whether there are more results to fetch,\n# and `file_offset` specifies the starting point for the next set of results.\n# This example retrieves all results.\nfrom aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\nall_files_results = []\ncurrent_offset = 0\nrun_id = \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\n\nwhile True:\n    # fetch results with the current offset\n    response = client.apps.runs.results(\n        run_id=run_id, \n        file_offset=current_offset\n    )\n\n    # extend the list with the files from the current response\n    all_files_results.extend(response.files)\n\n    # check if there are more results to fetch\n    if not response.has_more:\n        break\n\n    # increment the offset by the number of files received in the current response\n    current_offset += len(response.files)\n\nprint(f\"Retrieved results from {len(all_files_results)} total files\")\n"
+        - sdk: python
+          name: Retrieving paginated results without SDK
+          code: "# The results from this endpoint are paginated.\n# The `has_more` field in the response indicates whether there are more results to fetch,\n# and `file_offset` specifies the starting point for the next set of results.\n# This example retrieves all results.\nimport requests\n\nrun_id = \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\nurl = f\"https://aihub.instabase.com/api/v2/apps/runs/{run_id}/results\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\nfile_offset = 0\nall_files_results = []\n\nwhile True:\n    params = {\"file_offset\": file_offset}\n    \n    # make the GET request\n    response = requests.get(url, headers=headers, params=params)\n\n    # handle the response\n    if response.status_code == 200:\n        print(f\"Retrieved results for {len(response.json()['files'])} files\")\n        all_files_results.extend(response.json()['files'])\n        if response.json()['has_more']:\n            file_offset += len(response.json()['files'])\n        else:\n            break\n    else:\n        print(f\"Error: {response.status_code} - {response.text}\")\n        break\n\nprint(f\"Retrieved results from {len(all_files_results)} total files\")\n"
+components:
+  schemas:
+    documentField:
+      type: object
+      properties:
+        field_name:
+          type: string
+          description: The name of the field.
+        value:
+          type: string
+          description: The extracted value of the field.
+        type:
+          type: string
+          description: The type of the field.
+        error_msg:
+          type: string
+          description: The error message for the field.
+        source_coordinates:
+          type: array
+          items:
+            $ref: '#/components/schemas/fieldSourceCoordinates'
+        edit_history:
+          type: array
+          description: An array containing the history of edits to the field.
+          items:
+            $ref: '#/components/schemas/modificationObject'
+        confidence:
+          type: object
+          properties:
+            model:
+              type: number
+              format: float
+              nullable: true
+              description: Field confidence. Indicates the model's certainty in predicting results for a given field.
+            ocr:
+              type: number
+              format: float
+              nullable: true
+              description: OCR confidence. Indicates the OCR processor's certainty in digitization accuracy.
+        validations:
+          type: object
+          properties:
+            valid:
+              type: boolean
+              description: Indicates whether the document has passed validation rules pertaining to this field.
+            alerts:
+              type: array
+              description: Alerts for field-level validation rules. Populated only if the `validations/valid` value is `false`.
+              items:
+                type: object
+                properties:
+                  alert_level:
+                    type: string
+                    description: Alert level of the validation failure. Always set to `FAILURE`.
+                  msg:
+                    type: string
+                    description: Description of alert.
+                  blocked:
+                    type: boolean
+                    description: If this validation failure is blocking.
+                  type:
+                    type: string
+                    description: Type of validation alert.
+                  locations:
+                    type: array
+                    items:
+                      type: object
+    pageLayout:
+      type: object
+      properties:
+        page_number:
+          type: integer
+          description: Zero-indexed page number.
+        width:
+          type: number
+          format: float
+          description: Width of the page.
+        height:
+          type: number
+          format: float
+          description: Height of the page.
+      required:
+      - page_number
+      - width
+      - height
+    caseInfoField:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the cross-class field.
+        value:
+          type: string
+          description: The value of the cross-class field.
+        input_fields:
+          type: array
+          description: 'Only applicable for ranked cross-class fields. Input options the user can choose from
+
+            when determining the value of this ranked field.
+
+            '
+          items:
+            $ref: '#/components/schemas/caseInputField'
+        chosen_field:
+          $ref: '#/components/schemas/caseInputField'
+          nullable: true
+          description: 'Only applicable for ranked cross-class fields. The input option from `input_fields` that was
+
+            selected for the ranked field''s value.
+
+            '
+        error_msg:
+          type: string
+          description: Error message for the cross-class field, if any.
+        edit_history:
+          type: array
+          description: The history of edits to the cross-class field. Returned when `include_review_results=true`.
+          items:
+            $ref: '#/components/schemas/modificationObject'
+        validations:
+          type: object
+          description: 'Validation results for the cross-class field. Returned when `include_validation_results` is `true` and field has cross-class validation results.
+
+
+            Cross-class validation ensures data quality and consistency across documents within a packet.
+
+            '
+          properties:
+            valid:
+              type: boolean
+              description: Indicates whether the cross-class field has passed all validation rules.
+            failures:
+              type: array
+              description: Array of validation failures for the cross-class field. Populated only if the `validations/valid` value is `false`.
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of validation failure (for example, "lambda_code", "all_inputs_match").
+                  msg:
+                    type: string
+                    description: Message describing the validation failure.
+                required:
+                - type
+                - msg
+          required:
+          - valid
+      required:
+      - name
+      - value
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+    caseInfo:
+      type: object
+      properties:
+        fields:
+          type: array
+          description: 'A list of cross-class fields captured for this run. Cross-class fields consolidate data extracted from standard fields within a packet.
+
+            '
+          items:
+            $ref: '#/components/schemas/caseInfoField'
+    document:
+      type: object
+      properties:
+        fields:
+          type: array
+          description: A list containing the extracted fields from the document, each with its field name, extracted value, and type. See `<DOCUMENT-FIELD>` structure for details.
+          items:
+            $ref: '#/components/schemas/documentField'
+        review_completed:
+          type: boolean
+          description: Indicates whether the document has been marked as reviewed.
+        class_name:
+          type: string
+          nullable: true
+          description: The classification label of the document. `null` if classification is not applicable.
+        page_numbers:
+          type: array
+          description: An array of the document's page numbers.
+          items:
+            type: integer
+        page_layouts:
+          type: array
+          description: An array with one entry per page, containing page layout information including page number, width, and height.
+          items:
+            $ref: '#/components/schemas/pageLayout'
+        post_processed_paths:
+          type: array
+          description: An array of strings, each representing a path to post-processed documents.
+          items:
+            type: string
+        post_processed_pdf_path:
+          type: string
+          description: Path to post-processed PDF.
+        class_edit_history:
+          type: array
+          description: An array containing the history of edits to the document class.
+          items:
+            $ref: '#/components/schemas/modificationObject'
+        validations:
+          type: object
+          properties:
+            final_result_pass:
+              type: boolean
+              description: Indicates whether the document has passed all validation rules.
+        classification_confidence:
+          type: object
+          properties:
+            model:
+              type: number
+              format: float
+              nullable: true
+              description: Classification confidence. Indicates the model's certainty in predicting the class of a document.
+    resultsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Run ID of the run.
+        status:
+          type: string
+          description: 'Status of the run. Possible values and meanings:
+
+            - `CANCELLED` -- A user cancelled the run
+
+            - `COMPLETE` -- The run successfully completed. A human review completed if it was required. Results are retrievable, but some fields may have failed and have the value `ERROR`.
+
+            - `FAILED` -- The run failed to complete
+
+            - `PAUSED` -- This status is reserved for future use
+
+            - `RUNNING` -- The run is in progress and is not paused
+
+            - `STOPPED_AT_CHECKPOINT` -- A validation error has paused the run for human review
+
+            '
+          enum:
+          - CANCELLED
+          - COMPLETE
+          - FAILED
+          - PAUSED
+          - RUNNING
+          - STOPPED_AT_CHECKPOINT
+        message:
+          type: string
+          description: Message about the run.
+          nullable: true
+        start_timestamp:
+          type: integer
+          format: int64
+          description: When the run started, in Unix time nanoseconds.
+        finish_timestamp:
+          type: integer
+          format: int64
+          description: When the run finished, in Unix time nanoseconds. `null` if run is still in progress.
+          nullable: true
+        batch_id:
+          type: string
+          description: The batch ID used as input for this run, if run using a batch.
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/fileWithDocuments'
+        keys:
+          type: object
+          properties:
+            custom:
+              type: object
+              description: Key/value pairs representing non-secret custom keys set for the run.
+        case_info:
+          $ref: '#/components/schemas/caseInfo'
+          description: 'Packet-level information (also known as case-level information) captured for the run, including optional edit history per cross-class field when `include_review_results=true`.
+
+
+            Cross-class fields consolidate data extracted from standard fields within a packet. For more information about packets and cross-class fields, see [Extracting data from packets](/automate/packet-schema).
+
+            '
+        review_completed:
+          type: boolean
+          description: Indicates whether the run or document has completed review.
+        has_more:
+          type: boolean
+          description: Indicates whether additional results are available beyond those included in the current response. Use the `file_offset` query parameter to specify the starting point when fetching the next set of results.
+    run:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Run ID of the run.
+        status:
+          type: string
+          description: 'Status of the run. Possible values and meanings:
+
+            - `CANCELLED` -- A user cancelled the run
+
+            - `COMPLETE` -- The run successfully completed. A human review completed if it was required. Results are retrievable, but some fields may have failed and have the value `ERROR`.
+
+            - `FAILED` -- The run failed to complete
+
+            - `PAUSED` -- This status is reserved for future use
+
+            - `RUNNING` -- The run is in progress and is not paused
+
+            - `STOPPED_AT_CHECKPOINT` -- A validation error has paused the run for human review
+
+            '
+          enum:
+          - CANCELLED
+          - COMPLETE
+          - FAILED
+          - PAUSED
+          - RUNNING
+          - STOPPED_AT_CHECKPOINT
+        start_timestamp:
+          type: integer
+          format: int64
+          description: When the run started, in Unix time nanoseconds.
+        finish_timestamp:
+          type: integer
+          format: int64
+          description: When the run finished, in Unix time nanoseconds. `null` if run is still in progress.
+          nullable: true
+        msg:
+          type: string
+          description: Message about the run.
+          nullable: true
+        batch_id:
+          type: integer
+          description: The batch ID used as input for this run.
+          nullable: true
+        input_dir:
+          type: string
+          description: The path of the input folder used for this run.
+          nullable: true
+        app_id:
+          type: string
+          description: The app ID of the app that was run.
+          nullable: true
+        deployment_id:
+          type: string
+          description: The deployment ID used for this run.
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          description: List of string tags attached to this run.
+          nullable: true
+    fileWithDocuments:
+      type: object
+      properties:
+        original_file_name:
+          type: string
+          description: The original name of the file processed.
+        input_file_path:
+          type: string
+          description: The file path of the input file.
+        documents:
+          type: array
+          description: An array containing each document within the file.
+          items:
+            $ref: '#/components/schemas/document'
+    caseInputField:
+      type: object
+      description: Input option for ranked cross-class fields.
+      properties:
+        record_index:
+          type: integer
+          description: Index of the document used for the input option
+        refined_phrase_name:
+          type: string
+          description: Refined phrase name of the input option.
+    modificationObject:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Datetime string of the edit history event.
+        user_id:
+          type: string
+          description: User ID of the user who made the edit.
+        modifications:
+          type: array
+          description: List of modifications made in this single edit history event.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Message associated with the edit history modification.
+            required:
+            - message
+      required:
+      - timestamp
+      - user_id
+    fieldSourceCoordinates:
+      type: object
+      properties:
+        top_x:
+          type: number
+          format: float
+          nullable: false
+          description: Top-left X coordinate of the bounding box.
+        top_y:
+          type: number
+          format: float
+          nullable: false
+          description: Top-left Y coordinate of the bounding box.
+        bottom_x:
+          type: number
+          format: float
+          nullable: false
+          description: Bottom-right X coordinate of the bounding box.
+        bottom_y:
+          type: number
+          format: float
+          nullable: false
+          description: Bottom-right Y coordinate of the bounding box.
+        page_number:
+          type: integer
+          nullable: false
+          description: Zero-indexed page number of the bounding box.
+  parameters:
+    run_id:
+      in: path
+      name: run_id
+      required: true
+      schema:
+        type: string
+      description: The run ID.
+    ib_context:
+      in: header
+      name: IB-Context
+      schema:
+        type: string
+      required: false
+      description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: auth-scheme
+      description: Bearer HTTP authentication.
+      scheme: bearer
+      type: http

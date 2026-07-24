@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  title: AI Hub Audit Jobs API
+  version: '0.1'
+  description: The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.
+  termsOfService: https://www.instabase.com/terms-of-service/
+  contact:
+    name: Instabase Support
+    url: https://help.instabase.com/
+  license:
+    name: MIT
+    url: https://github.com/instabase/aihub-python/blob/master/LICENSE
+servers:
+- url: https://aihub.instabase.com/api
+security:
+- bearerAuth: []
+tags:
+- name: Jobs
+paths:
+  /v2/jobs/{job_id}:
+    get:
+      operationId: jobStatus
+      x-fern-audiences:
+      - public
+      tags:
+      - Jobs
+      summary: Poll file operation job status
+      description: Poll the asynchronous job created during a file operation request such as deleting a batch or file.
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The job ID returned by a request.
+      - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/jobStatusResponse'
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/jobs/<JOB-ID>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: with SDK
+          code: "import time\nfrom aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\n# start asynchronous job whose status we'll check\ndelete_response = client.batches.delete(batch_id=12345)\n\n# poll job status until done\nwhile True:\n    status_response = client.jobs.status(job_id=delete_response.job_id)\n    if status_response.state not in [\"PENDING\", \"RUNNING\"]:\n        break\n    time.sleep(3)  # pause before polling status again\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\n# start asynchronous job whose status we'll check\nbatch_id = 12345\nurl = f\"https://aihub.instabase.com/api/v2/batches/{batch_id}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\ndelete_response = requests.delete(url, headers=headers)\n\nurl = f\"https://aihub.instabase.com/api/v2/jobs/{delete_response.json()['job_id']}\"\n\n# make the GET request\nstatus_response = requests.get(url, headers=headers)\n\n# handle the response\nif status_response.status_code == 200:\n    print(f\"Job status: {status_response.json()['state']}\")\nelse:\n    print(f\"Error: {status_response.status_code} - {status_response.text}\")\n"
+components:
+  parameters:
+    ib_context:
+      in: header
+      name: IB-Context
+      schema:
+        type: string
+      required: false
+      description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
+  schemas:
+    jobStatusResponse:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The status of the job.
+          enum:
+          - COMPLETE
+          - FAILED
+          - CANCELLED
+          - RUNNING
+          - PENDING
+        message:
+          type: string
+          description: Job status message.
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: auth-scheme
+      description: Bearer HTTP authentication.
+      scheme: bearer
+      type: http

@@ -1,0 +1,376 @@
+openapi: 3.0.0
+info:
+  title: AI Hub Audit Files API
+  version: '0.1'
+  description: The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.
+  termsOfService: https://www.instabase.com/terms-of-service/
+  contact:
+    name: Instabase Support
+    url: https://help.instabase.com/
+  license:
+    name: MIT
+    url: https://github.com/instabase/aihub-python/blob/master/LICENSE
+servers:
+- url: https://aihub.instabase.com/api
+security:
+- bearerAuth: []
+tags:
+- name: Files
+paths:
+  /v2/files/{path}:
+    get:
+      operationId: readFile
+      x-fern-audiences:
+      - public
+      tags:
+      - Files
+      summary: Read file
+      description: 'Read contents from a file.
+
+
+        <Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>
+
+
+        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
+
+        '
+      parameters:
+      - in: path
+        name: path
+        required: true
+        schema:
+          type: string
+        description: Full path to the file.
+      - in: query
+        name: expect-node-type
+        required: true
+        schema:
+          type: string
+          enum:
+          - file
+          - folder
+        description: Type of node at the target path.
+      - $ref: '#/components/parameters/ib_context'
+      - in: header
+        name: Range
+        schema:
+          type: string
+        required: false
+        description: 'The portion of the file to read. A single HTTP byte range, with inclusive bounds and a non-negative start value. If not provided, return the entire file. Example: `bytes=0-4`
+
+          '
+      - in: header
+        name: IB-Retry-Config
+        schema:
+          type: string
+        required: false
+        description: 'Configures retry logic if no file is found at the target path. Uses a constant backoff algorithm. Don''t retry if this header isn''t provided. Example: `{retries:3,backoff-seconds:5}`
+
+          '
+      responses:
+        '200':
+          description: Indicates that the response contains the entire file contents.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                default: application/octet-stream
+            Content-Length:
+              schema:
+                type: integer
+                format: int64
+        '206':
+          description: Indicates that only a portion of the file has been returned, as requested with the Range header.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                default: application/octet-stream
+            Content-Length:
+              schema:
+                type: integer
+                format: int64
+            Content-Range:
+              schema:
+                type: string
+                description: An HTTP content range header. Contains a range representing the returned portion of the file.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl \"${API_ROOT}/v2/files/<FILE-PATH>?expect-node-type=file\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: Simple request with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"My Google Drive\"\nfolder = \"My Drive/AI Hub files\"\nfile_name = \"hello.txt\"\nfile_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}\"\n\n# returns a byte literal, such as `b\"foo\"`\nfile_contents = client.files.read(path=file_path, expect_node_type=\"file\")\nprint(f\"Contents: {file_contents.decode('utf-8')}\")\n"
+        - sdk: python
+          name: Simple request without SDK
+          code: "import requests\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"My Google Drive\"\nfolder = \"My Drive/AI Hub files\"\nfile_name = \"hello.txt\"\nfile_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}\"\n\nurl = f\"https://aihub.instabase.com/api/v2/files/{file_path}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# create query parameters\nparams = {\"expect-node-type\": \"file\"}\n\n# make the GET request\nresponse = requests.get(url, headers=headers, params=params)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Contents: {response.content.decode('utf-8')}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+        - sdk: python
+          name: Complex request with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"My Google Drive\"\nfolder = \"My Drive/AI Hub files\"\nfile_name = \"hello.txt\"\nfile_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}\"\n\nretry_config = '{\"retries\": 3, \"backoff-seconds\": 5}'\n\n# returns a byte literal, such as `b\"foo\"`\nfile_contents = client.files.read(\n    path=file_path,\n    expect_node_type=\"file\",\n    range=\"bytes=10-20\",\n    ib_retry_config=retry_config\n)\nprint(f\"Contents: {file_contents.decode('utf-8')}\")\n"
+        - sdk: python
+          name: Complex request without SDK
+          code: "import requests\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"My Google Drive\"\nfolder = \"My Drive/AI Hub files\"\nfile_name = \"hello.txt\"\nfile_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}\"\n\nbyte_range = \"bytes=10-20\"\nretry_config = '{\"retries\": 3, \"backoff-seconds\": 5}'\n\n# create query parameters\nparams = {\"expect-node-type\": \"file\"}\n\nurl = f\"https://aihub.instabase.com/api/v2/files/{file_path}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\",\n    \"Range\": byte_range,\n    \"IB-Retry-Config\": retry_config\n}\n\n# make the GET request\nresponse = requests.get(url, headers=headers, params=params)\n\n# handle the response\n# 200 means whole content is returned\n# 206 means partial content is returned, due to \"Range\" parameter\nif response.status_code in [200, 206]:\n    print(f\"Contents: {response.content.decode('utf-8')}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+    put:
+      operationId: writeFile
+      x-fern-audiences:
+      - public
+      tags:
+      - Files
+      summary: Create or overwrite file
+      description: 'Create a non-empty file or overwrite an existing file.
+
+
+        If the parent folder of the `path` parameter doesn''t exist, the file system creates it before creating the file.
+
+
+        <Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>
+
+
+        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
+
+
+        Not all filesystem types support this operation.
+
+
+        | Filesystem           | Supported |
+
+        |----------------------|-----------|
+
+        | Instabase            | ✓         |
+
+        | Amazon S3            | ✓         |
+
+        | Azure Blob Storage   | ✓         |
+
+        | Google Cloud Storage | ✓         |
+
+        | Google Drive         | -         |
+
+        '
+      parameters:
+      - in: path
+        name: path
+        required: true
+        schema:
+          type: string
+        description: Full path to the file.
+      - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              description: The raw contents of the file to write.
+              type: string
+              format: binary
+      responses:
+        '201':
+          description: The request succeeded and a new file was created at the target location. AI Hub returns this status code only when the request includes an `If-None-Match` header with a value of `*`.
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Contains a URL leading to the created file.
+        '204':
+          description: The request succeeded.
+        '412':
+          description: The request failed because a file exists at the target location that matches the `If-None-Match` header.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl -X PUT \"${API_ROOT}/v2/files/<FILE-PATH>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\" \\\n  -H \"Content-Type: application/octet-stream\" \\\n  --data-binary \"@<LOCAL_FILEPATH>\"\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"MyDrive\"\nfolder = \"MyFolder\"\nfile_name = \"hello.txt\"\nfile_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}\"\nfile_contents = bytes(\"Hello world\", \"utf-8\")\n\n# returns None\nclient.files.write(path=file_path, data=file_contents)\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"MyDrive\"\nfolder = \"MyFolder\"\nfile_name = \"hello.txt\"\nfile_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}\"\nfile_contents = bytes(\"Hello world\", \"utf-8\")\n\nurl = f\"https://aihub.instabase.com/api/v2/files/{file_path}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\",\n    \"Content-Type\": \"application/octet-stream\"\n}\n\n# make the PUT request\nresponse = requests.put(url, headers=headers, data=file_contents)\n\n# handle the response\nif response.status_code in [201, 204]:\n    print(\"File written successfully\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+    head:
+      operationId: getFileMetadata
+      x-fern-audiences:
+      - public
+      tags:
+      - Files
+      summary: Read file or folder metadata
+      description: 'Read metadata of a file or folder at the target path.
+
+
+        This API operation reports whether the object at the target path is a file or folder. If a file, it also reports the file size and last modification time.
+
+
+        <Info>This acts on files and folders in the AI Hub filesystem, not your local filesystem.</Info>
+
+
+        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
+
+        '
+      parameters:
+      - in: path
+        name: path
+        required: true
+        schema:
+          type: string
+        description: Full path to the file or folder.
+      - $ref: '#/components/parameters/ib_context'
+      - in: header
+        name: IB-Retry-Config
+        schema:
+          type: string
+        required: false
+        description: 'Configures retry logic if no file or folder is found at the target path. Uses a constant backoff algorithm. Don''t retry if this header isn''t provided. Example: `{''retries'': 3, ''backoff-seconds'': 5}`
+
+          '
+      responses:
+        '200':
+          description: Successfully retrieved metadata.
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: Returns `application/json` if it is a folder and `application/octet-stream` if it is a file.
+            Content-Length:
+              schema:
+                type: integer
+                format: int64
+              description: Optional. Only present if the target path is a file. The length of the file, in bytes.
+            last-modified:
+              schema:
+                type: string
+                format: date-time
+              description: Optional. Only present if the target path is a file. The date and time the file was last modified.
+        '404':
+          description: No file or folder was found at the target path.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl -I \"${API_ROOT}/v2/files/<FILE-PATH>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"Instabase Drive\"\nfolder = \"MyFolder\"\nnode = \"hello.txt\"\nnode_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}/{node}\"\n\n# returns an object with status code and headers\nresponse = client.files.get_file_metadata(path=node_path)\n\nis_file = (response.headers[\"Content-Type\"] == \"application/octet-stream\")\nis_folder = (response.headers[\"Content-Type\"] == \"application/json\")\n\nif is_file:\n    file_length = response.headers[\"Content-Length\"]\n    last_modified = response.headers[\"last-modified\"]\n    print(f\"Node is a file with length {file_length} and modification date {last_modified}\")\nelse:\n    print(\"Node is a folder\")\n"
+        - sdk: python
+          name: without SDK
+          code: "import requests\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"Instabase Drive\"\nfolder = \"MyFolder\"\nfile_name = \"hello.txt\"\nnode_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}\"\n\nurl = f\"https://aihub.instabase.com/api/v2/files/{node_path}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the HEAD request\nresponse = requests.head(url, headers=headers)\n\n# handle the response\nif response.status_code == 200:\n    is_file = (response.headers[\"Content-Type\"] == \"application/octet-stream\")\n    is_folder = (response.headers[\"Content-Type\"] == \"application/json\")\n\n    if is_file:\n        file_length = response.headers[\"Content-Length\"]\n        last_modified = response.headers[\"last-modified\"]\n        print(f\"Node is a file with length {file_length} and modification date {last_modified}\")\n    else:\n        print(\"Node is a folder\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+    delete:
+      operationId: deleteFileOrFolder
+      x-fern-audiences:
+      - public
+      tags:
+      - Files
+      summary: Delete file or folder
+      description: 'Delete a single file or folder.
+
+
+        This operation is also available via the SDK method `client.files.delete()`.
+
+
+        <Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>
+
+
+        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
+
+
+        Not all filesystem types support this operation.
+
+
+        | Filesystem           | Supported |
+
+        |----------------------|-----------|
+
+        | Instabase            | ✓         |
+
+        | Amazon S3            | ✓         |
+
+        | Azure Blob Storage   | ✓         |
+
+        | Google Cloud Storage | ✓         |
+
+        | Google Drive         | -         |
+
+        '
+      parameters:
+      - in: path
+        name: path
+        required: true
+        schema:
+          type: string
+        description: Full path to the file or folder.
+      - $ref: '#/components/parameters/ib_context'
+      responses:
+        '202':
+          description: Indicates that the deletion request has been accepted. <br/> <Note>The operation returns this status code regardless of whether the file or folder exists.</Note>
+          headers:
+            Location:
+              schema:
+                type: string
+              description: A URL where the status of the deletion job can be checked.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+      - code-samples:
+        - sdk: curl
+          code: "curl -X DELETE \"${API_ROOT}/v2/files/<FILE-PATH>\" \\\n  -H \"Authorization: Bearer ${API_TOKEN}\" \\\n  -H \"IB-Context: ${IB_CONTEXT}\"\n"
+        - sdk: python
+          name: Delete file with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"Instabase Drive\"\nfolder = \"my-folder\"\nfile_name = \"hello.txt\"\nfile_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}\"\n\n# returns None\nclient.files.delete(path=file_path)\n"
+        - sdk: python
+          name: Delete file without SDK
+          code: "import requests\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"Instabase Drive\"\nfolder = \"my-folder\"\nfile_name = \"hello.txt\"\nfile_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}\"\n\nurl = f\"https://aihub.instabase.com/api/v2/files/{file_path}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the DELETE request\nresponse = requests.delete(url, headers=headers)\n\n# handle the response\nif response.status_code == 202:\n    print(\"File deletion request accepted\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+        - sdk: python
+          name: Delete folder with SDK
+          code: "from aihub import AIHub\n\nclient = AIHub(\n    api_root=\"https://aihub.instabase.com/api\",\n    api_key=\"abcdefghijklmnopqrst1234567890\",\n    ib_context=\"john.doe_acme.com\"\n)\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"Instabase Drive\"\nfolder = \"MyFolder\"\nfolder_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}\"\n\n# returns None\nclient.files.delete(path=folder_path)\n"
+        - sdk: python
+          name: Delete folder without SDK
+          code: "import requests\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"Instabase Drive\"\nfolder = \"MyFolder\"\nfolder_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}\"\n\nurl = f\"https://aihub.instabase.com/api/v2/files/{folder_path}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the DELETE request\nresponse = requests.delete(url, headers=headers)\n\n# handle the response\nif response.status_code == 202:\n    print(\"Folder deletion request accepted\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
+components:
+  parameters:
+    ib_context:
+      in: header
+      name: IB-Context
+      schema:
+        type: string
+      required: false
+      description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
+  schemas:
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: auth-scheme
+      description: Bearer HTTP authentication.
+      scheme: bearer
+      type: http

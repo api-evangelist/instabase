@@ -1,0 +1,16 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/instabase-aihub-openapi.yaml
+skills:
+  - file: instabase-process-documents.md
+    name: Process documents with an AI Hub app
+    api: openapi/instabase-aihub-openapi.yaml
+    operations: [createBatch, addFileToBatch, runApp, getRunStatus, getRunResults]
+  - file: instabase-run-deployment.md
+    name: Run a production app deployment
+    api: openapi/instabase-aihub-openapi.yaml
+    operations: [runDeployment, getRunStatus, getRunResults]
+  - file: instabase-manage-secrets.md
+    name: Manage AI Hub secrets
+    api: openapi/instabase-aihub-openapi.yaml
+    operations: [listSecrets, createSecret, updateSecret, deleteSecret]

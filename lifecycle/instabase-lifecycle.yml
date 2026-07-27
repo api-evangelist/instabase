@@ -1,0 +1,27 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.instabase.com/release-notes.md
+versioning:
+  api_scheme: uri-path
+  api_current: v2
+  platform_scheme: 'calendar YY.WW'
+  platform_current: '26.24'
+  docs: https://docs.instabase.com/versions.md
+release_notes: https://docs.instabase.com/release-notes
+deprecation:
+  policy_url: https://docs.instabase.com/policies/upgrades.md
+  deprecated_endpoints:
+    - openapi/instabase-aihub-openapi.yaml#jobStatus
+  deprecated_docs:
+    - https://docs.instabase.com/api-sdk/api-reference/legacy/job-status-endpoint.md
+    - https://docs.instabase.com/api-sdk/api-reference/legacy/run-app-endpoint.md
+    - https://docs.instabase.com/api-sdk/api-reference/legacy/run-results-endpoint.md
+    - https://docs.instabase.com/api-sdk/api-reference/legacy/mount-endpoint.md
+  note: >-
+    AI Hub publishes an upgrades-and-maintenance policy and marks a set of
+    legacy API endpoints (job status, run app, run results, mount) as
+    deprecated in the API reference.
+status_page: null
+status_page_note: No public status page found (status.instabase.com did not resolve on 2026-07-19).
+sla:
+  note: SLAs are an Enterprise-tier feature (ENABLE_SLAS) rather than a public commitment.

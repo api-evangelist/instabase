@@ -1,8 +1,16 @@
 aid: instabase
 name: Instabase
-description: Instabase is a company surfaced as a portfolio company of a16z, greylock, index-ventures
-  and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the
-  enrichment pipeline.
+description: >-
+  Instabase is an agentic automation platform that transforms complex,
+  document-heavy workflows using AI. Its AI Hub product uses large language
+  models and packet-aware AI agents to extract, classify, validate, and
+  reason over unstructured document packets (PDFs, images, spreadsheets,
+  emails, scans, and more), turning them into structured, verifiable
+  intelligence. AI Hub exposes a REST API and Python SDK for creating file
+  batches, running automation apps and production deployments, reading and
+  writing workspace files, and managing secrets, with industry solutions for
+  financial services, insurance, healthcare, and the public sector.
+  Instabase is venture-backed (a16z, Greylock, Index Ventures).
 url: https://raw.githubusercontent.com/api-evangelist/instabase/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -12,17 +20,198 @@ x-backed-by:
 - index-ventures
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
+image: https://cdn.prod.website-files.com/6883b569dca0edf626a1fce5/68cdbf2b866f068b4585e5ea_Open%20graph.png
 tags:
 - Company
-apis: []
+- Intelligent Document Processing
+- Document AI
+- Artificial Intelligence
+- Machine Learning
+- Automation
+- Data Extraction
+- LLM
+- Financial Services
+- Insurance
+apis:
+- aid: instabase:instabase-audit-api
+  name: Instabase Audit API
+  description: The Audit API from Instabase — 1 operation(s) for audit.
+  humanURL: https://docs.instabase.com/api-sdk/
+  baseURL: https://aihub.instabase.com/api
+  tags:
+  - Audit
+  properties:
+  - type: OpenAPI
+    url: openapi/instabase-audit-api-openapi.yml
+  - type: Authentication
+    url: authentication/instabase-authentication.yml
+  - type: ErrorCatalog
+    url: errors/instabase-problem-types.yml
+  - type: DataModel
+    url: data-model/instabase-data-model.yml
+- aid: instabase:instabase-batches-api
+  name: Instabase Batches API
+  description: The Batches API from Instabase — 8 operation(s) for batches.
+  humanURL: https://docs.instabase.com/api-sdk/
+  baseURL: https://aihub.instabase.com/api
+  tags:
+  - Batches
+  properties:
+  - type: OpenAPI
+    url: openapi/instabase-batches-api-openapi.yml
+  - type: Authentication
+    url: authentication/instabase-authentication.yml
+  - type: ErrorCatalog
+    url: errors/instabase-problem-types.yml
+  - type: DataModel
+    url: data-model/instabase-data-model.yml
+- aid: instabase:instabase-files-api
+  name: Instabase Files API
+  description: The Files API from Instabase — 1 operation(s) for files.
+  humanURL: https://docs.instabase.com/api-sdk/
+  baseURL: https://aihub.instabase.com/api
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/instabase-files-api-openapi.yml
+  - type: Authentication
+    url: authentication/instabase-authentication.yml
+  - type: ErrorCatalog
+    url: errors/instabase-problem-types.yml
+  - type: DataModel
+    url: data-model/instabase-data-model.yml
+- aid: instabase:instabase-jobs-api
+  name: Instabase Jobs API
+  description: The Jobs API from Instabase — 1 operation(s) for jobs.
+  humanURL: https://docs.instabase.com/api-sdk/
+  baseURL: https://aihub.instabase.com/api
+  tags:
+  - Jobs
+  properties:
+  - type: OpenAPI
+    url: openapi/instabase-jobs-api-openapi.yml
+  - type: Authentication
+    url: authentication/instabase-authentication.yml
+  - type: ErrorCatalog
+    url: errors/instabase-problem-types.yml
+  - type: DataModel
+    url: data-model/instabase-data-model.yml
+- aid: instabase:instabase-runs-api
+  name: Instabase Runs API
+  description: The Runs API from Instabase — 4 operation(s) for runs.
+  humanURL: https://docs.instabase.com/api-sdk/
+  baseURL: https://aihub.instabase.com/api
+  tags:
+  - Runs
+  properties:
+  - type: OpenAPI
+    url: openapi/instabase-runs-api-openapi.yml
+  - type: Authentication
+    url: authentication/instabase-authentication.yml
+  - type: ErrorCatalog
+    url: errors/instabase-problem-types.yml
+  - type: DataModel
+    url: data-model/instabase-data-model.yml
+- aid: instabase:instabase-secrets-api
+  name: Instabase Secrets API
+  description: The Secrets API from Instabase — 1 operation(s) for secrets.
+  humanURL: https://docs.instabase.com/api-sdk/
+  baseURL: https://aihub.instabase.com/api
+  tags:
+  - Secrets
+  properties:
+  - type: OpenAPI
+    url: openapi/instabase-secrets-api-openapi.yml
+  - type: Authentication
+    url: authentication/instabase-authentication.yml
+  - type: ErrorCatalog
+    url: errors/instabase-problem-types.yml
+  - type: DataModel
+    url: data-model/instabase-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+# --- Identity / link properties ---
 - type: Website
   url: https://www.instabase.com/
+- type: DeveloperPortal
+  url: https://docs.instabase.com/
+- type: Documentation
+  url: https://docs.instabase.com/
+- type: APIReference
+  url: https://docs.instabase.com/api-sdk/api-reference/
+- type: GettingStarted
+  url: https://docs.instabase.com/overview/getting-started
+- type: Support
+  url: https://support.instabase.com/hc/en-us
+- type: Blog
+  url: https://www.instabase.com/blog
+- type: GitHubOrganization
+  url: https://github.com/instabase
+- type: SignUp
+  url: https://aihub.instabase.com/
+- type: PrivacyPolicy
+  url: https://www.instabase.com/privacy-policy
+- type: TrustCenter
+  url: https://trust.instabase.com/
+# --- Artifact pointers ---
+- type: SDKs
+  url: packages/instabase-packages.yml
+- type: Packages
+  url: packages/instabase-packages.yml
+- type: MCPServer
+  url: mcp/instabase-mcp.yml
+- type: LLMsTxt
+  url: llms/instabase-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Conventions
+  url: conventions/instabase-conventions.yml
+- type: ChangeLog
+  url: changelog/instabase-changelog.yml
+- type: Lifecycle
+  url: lifecycle/instabase-lifecycle.yml
+- type: Deprecation
+  url: https://docs.instabase.com/policies/upgrades.md
+- type: Conformance
+  url: conformance/instabase-conformance.yml
+- type: Compliance
+  url: https://trust.instabase.com/
+- type: Webhooks
+  url: asyncapi/instabase-webhooks.yml
+- type: WellKnown
+  url: well-known/instabase-well-known.yml
+- type: Authentication
+  url: authentication/instabase-authentication.yml
+- type: AgenticAccess
+  url: agentic-access/instabase-agentic-access.yml
+- type: DomainSecurity
+  url: security/instabase-domain-security.yml
+- type: VulnerabilityDisclosure
+  url: security/instabase-vulnerability-disclosure.yml
+- type: Security
+  url: https://trust.instabase.com/
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

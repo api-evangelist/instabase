@@ -1,0 +1,24 @@
+generated: '2026-07-19'
+method: searched
+source: https://pypi.org/project/instabase-aihub/
+packages:
+  - language: python
+    registry: pypi
+    name: instabase-aihub
+    url: https://pypi.org/project/instabase-aihub/
+    install: pip install instabase-aihub
+    version: 0.14.0
+    official: true
+    notes: >-
+      Official AI Hub API Python SDK documented at
+      https://docs.instabase.com/api-sdk/. Initialized as
+      AIHub(api_root, api_key, ib_context).
+  - language: python
+    registry: pypi
+    name: instabase
+    url: https://pypi.org/project/instabase/
+    install: pip install instabase
+    version: 0.0.3
+    official: true
+    source_repo: https://github.com/instabase/instabase-sdk-py
+    notes: SDK to access Instabase Apps.

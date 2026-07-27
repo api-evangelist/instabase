@@ -1,0 +1,27 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/instabase-aihub-openapi.yaml
+format: json
+envelope_schema: error
+docs: https://docs.instabase.com/api-sdk/api-reference/response-statuses.md
+notes: >-
+  Derived from the AI Hub OpenAPI response codes. Errors are returned as a
+  JSON body conforming to the `error` component schema (not RFC 9457
+  application/problem+json).
+status_classes:
+  - status: 200
+    meaning: OK — request succeeded.
+  - status: 201
+    meaning: Created — resource created (e.g. batch, secret).
+  - status: 202
+    meaning: Accepted — async job started; poll the returned job handle.
+  - status: 204
+    meaning: No Content — deletion/update succeeded with no body.
+  - status: 206
+    meaning: Partial Content — Range request on a file read.
+  - status: 404
+    meaning: Not Found — batch, file, run, job, or secret does not exist.
+  - status: 412
+    meaning: Precondition Failed — a conditional/expectation header (e.g. expect-node-type) was not met.
+  - status: default
+    meaning: Error response carrying the `error` schema body.

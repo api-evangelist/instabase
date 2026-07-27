@@ -1,0 +1,43 @@
+generated: '2026-07-19'
+method: searched
+source: https://trust.instabase.com/
+spec: openapi/instabase-aihub-openapi.yaml
+standards:
+  - id: oauth2
+    conforms: false
+    evidence: API uses http bearer tokens, not oauth2 flows (external OIDC scope claims supported at enterprise tier).
+  - id: bearer-token-http
+    conforms: true
+    evidence: OpenAPI securityScheme type http scheme bearer applied globally.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: Errors use a JSON `error` schema, not application/problem+json.
+  - id: rfc7233-range-requests
+    conforms: true
+    evidence: File read supports Range requests returning 206 Partial Content.
+  - id: soc2
+    conforms: true
+    evidence: SOC 2 published on Trust Center.
+  - id: hipaa
+    conforms: true
+    evidence: HIPAA published on Trust Center.
+  - id: gdpr
+    conforms: true
+    evidence: GDPR published on Trust Center.
+  - id: ccpa
+    conforms: true
+    evidence: CCPA published on Trust Center.
+  - id: dora
+    conforms: true
+    evidence: DORA (Digital Operational Resilience Act) published on Trust Center.
+  - id: eu-ai-act
+    conforms: true
+    evidence: EU AI Act published on Trust Center.
+compliance_programs:
+  - SOC 2
+  - HIPAA
+  - GDPR
+  - CCPA
+  - DORA
+  - EU AI Act
+compliance_url: https://trust.instabase.com/

@@ -1,0 +1,24 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.instabase.com/release-notes.md
+spec_type: Webhooks
+description: >-
+  AI Hub supports webhook notifications for app deployments. Deployment
+  notifications can POST to a configured webhook endpoint when runs complete
+  or require review, and (as of release 26.24) support Azure Event Grid
+  payload formats. This is a webhook/event surface; Instabase does not
+  publish a standalone AsyncAPI document.
+docs:
+  - https://docs.instabase.com/automate/monitoring-deployments.md
+  - https://docs.instabase.com/automate/deployments.md
+events:
+  - name: deployment.run.completed
+    trigger: An app deployment run finishes processing a batch.
+    delivery: HTTP POST to configured webhook endpoint
+    payload_formats: [default JSON, Azure Event Grid]
+  - name: deployment.review.required
+    trigger: A deployment run produces results that require human review.
+    delivery: HTTP POST to configured webhook endpoint
+notes: >-
+  Event names are descriptive of the documented deployment-notification
+  behavior; Instabase does not publish a machine-readable event catalog.

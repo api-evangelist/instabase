@@ -1,0 +1,28 @@
+generated: '2026-07-19'
+method: probed
+source: live probes 2026-07-19
+hosts:
+  - https://www.instabase.com
+  - https://instabase.com
+  - https://aihub.instabase.com
+documents:
+  - path: /.well-known/security.txt
+    host: https://www.instabase.com
+    status: 404
+  - path: /.well-known/security.txt
+    host: https://instabase.com
+    status: 404
+  - path: /.well-known/api-catalog
+    host: https://www.instabase.com
+    status: 404
+  - path: /.well-known/openid-configuration
+    host: https://aihub.instabase.com
+    status: 200
+    note: >-
+      Returns an application HTML shell whose embedded context is a
+      "404 Not Found" error, not a valid OIDC discovery document. Treated
+      as not-published.
+notes: >-
+  No valid /.well-known discovery documents are published. The responsible
+  disclosure channel is on the Trust Center
+  (see security/instabase-vulnerability-disclosure.yml), not a security.txt.

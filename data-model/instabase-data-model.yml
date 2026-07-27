@@ -1,0 +1,54 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/instabase-aihub-openapi.yaml
+entities:
+  - name: batch
+    description: A container of files uploaded for processing.
+    id_field: batch_id
+  - name: document
+    description: A parsed document within a batch/result, carrying fields and page layout.
+  - name: documentField
+    description: An extracted field value with optional confidence and source coordinates.
+  - name: run
+    description: An app or deployment run over a batch, producing results.
+    id_field: run_id
+  - name: job
+    description: An async job handle for long-running batch/run/delete operations.
+    id_field: job_id
+  - name: secret
+    description: A named secret stored in the AI Hub secret manager.
+  - name: caseInfo
+    description: Case-management record aggregating fields across document classes.
+relationships:
+  - from: batch
+    to: document
+    type: has_many
+    via: files
+  - from: run
+    to: batch
+    type: belongs_to
+    via: batch_id
+  - from: run
+    to: document
+    type: has_many
+    via: results
+  - from: document
+    to: documentField
+    type: has_many
+    via: fields
+  - from: documentField
+    to: fieldSourceCoordinates
+    type: has_one
+    via: source
+  - from: batch
+    to: job
+    type: has_many
+    via: jobs
+  - from: caseInfo
+    to: caseInfoField
+    type: has_many
+    via: fields
+notes: >-
+  Derived from OpenAPI component schemas and id-reference parameters
+  (batch_id, run_id, job_id). Deployments run apps against batches; results
+  are documents composed of extracted fields.

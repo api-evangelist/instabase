@@ -1,0 +1,28 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Instabase AI Hub API
+  version: 1.0.0
+extends: openapi/instabase-aihub-openapi.yaml
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-enriched: '2026-07-19'
+      x-api-evangelist: https://apievangelist.com
+      x-authentication-header: 'Authorization: Bearer + IB-Context'
+      x-docs: https://docs.instabase.com/api-sdk/
+  - target: $.info
+    update:
+      description: >-
+        AI Hub API for document understanding — create and process file
+        batches, run automation apps and deployments, read/write workspace
+        files, and manage secrets. Bearer-token auth with an IB-Context
+        header. Long-running work returns pollable job handles.
+  - target: $.servers
+    update:
+      - url: https://aihub.instabase.com/api
+        description: Standard AI Hub organization host
+      - url: https://{organization}.instabase.com/api
+        description: Custom-domain organization host
+        variables:
+          organization:
+            default: my-organization

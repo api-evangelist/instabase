@@ -1,0 +1,252 @@
+# Instabase AI Hub Docs
+
+> Instabase AI Hub brings you the power of large language models (LLMs) so that you can get information from any kind of document.
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<h1>
+  Instabase AI Hub Documentation
+</h1>
+
+<h3>
+  Quickly understand and extract information from complex documents
+</h3>
+
+<a href="/overview/getting-started">
+  <i />
+
+  <h3>
+    Get started
+  </h3>
+</a>
+
+<p>
+  Learn what AI Hub can do and how it works, and try out sample tasks to get a feel for what's possible.
+</p>
+
+<a href="/overview/getting-started">
+  Learn more
+</a>
+
+<a href="/automate/overview">
+  <i />
+
+  <h3>
+    App editor
+  </h3>
+</a>
+
+<p>
+  Document extraction and classification. Use prebuilt or custom apps to turn documents into structured data in a guided, no-code/low-code interface.
+</p>
+
+<a href="/automate/overview">
+  Learn more
+</a>
+
+<a href="/flow/overview">
+  <i />
+
+  <h3>
+    Flow editor
+  </h3>
+</a>
+
+<p>
+  End-to-end workflow automation for deeply customizable document processing. Build and run flows that chain classification, extraction, custom logic, and integrations into full document-processing pipelines.
+</p>
+
+<a href="/flow/overview">
+  Learn more
+</a>
+
+<a href="/release-notes">
+  <i />
+
+  <h3>
+    Track updates
+  </h3>
+</a>
+
+<p>
+  Check out the latest AI Hub features, improvements, and fixes in the release notes.
+</p>
+
+<a href="/release-notes">
+  Learn more
+</a>
+
+<a href="/api-sdk">
+  <i />
+
+  <h3>
+    Integrate via API & SDK
+  </h3>
+</a>
+
+<p>
+  Build integrations using the APIs and SDK. Automate document processing and incorporate AI Hub capabilities into your applications.
+</p>
+
+<a href="/api-sdk">
+  Learn more
+</a>
+
+<p>
+  AI Hub is supported on the most recent two versions of Chrome, Edge, Firefox, Opera, and Safari.
+</p>
+
+## Instructions for AI Agents
+
+- For clean Markdown of any page, append `.md` to the page URL
+- For section-specific indexes, append `/llms.txt` to any section URL
+- For AI client integration (Claude Code, Cursor, etc.), connect to the MCP server at https://docs.instabase.com/_mcp/server
+
+## Docs
+
+- [Getting started](https://docs.instabase.com/overview/getting-started.md): Overview of AI Hub capabilities, architecture, and core components.
+- [Account setup](https://docs.instabase.com/overview/account-setup.md): Get started with AI Hub by joining an organization.
+- [Release notes](https://docs.instabase.com/release-notes.md): Important release updates for Instabase AI Hub.
+- [AI runtime release notes](https://docs.instabase.com/ai-runtime.md): Important release updates for AI runtime.
+- [Release timeline](https://docs.instabase.com/versions.md): AI Hub and AI runtime release dates.
+- [Glossary](https://docs.instabase.com/overview/glossary.md): Reference of terms used in AI Hub.
+- [Choosing a model](https://docs.instabase.com/overview/models.md): Choose the model that best suits your needs, balancing speed, accuracy, and cost.
+- [File limitations and processing](https://docs.instabase.com/overview/limitations.md): Be aware of the technical limitations and supported files types for AI Hub.
+- [Supported languages](https://docs.instabase.com/overview/languages.md): Language support varies depending on your processing mode and digitization settings.
+- [List of visual tutorials](https://docs.instabase.com/overview/visual-tutorials.md): List of visual tutorials that are embedded in individual documentation pages.
+- [Upgrades and maintenance](https://docs.instabase.com/policies/upgrades.md): Learn about upgrades and maintenance for your AI Hub environment.
+- [Data privacy and security](https://docs.instabase.com/policies/privacy-policy.md): Instabase AI Hub was designed with security, confidentiality, and compliance in mind.
+- [LLM best practices](https://docs.instabase.com/policies/best-practices.md): When you use AI Hub, be aware of the limitations of LLMs, and follow best practices.
+- [About automation apps](https://docs.instabase.com/automate/overview.md): Automation capabilities transform documents into structured, actionable data.
+- [Creating apps](https://docs.instabase.com/automate/creating.md): Transform your document processing requirements into reusable, shareable solutions.
+- [Working with automation projects](https://docs.instabase.com/automate/projects.md): Understanding the automation project interface can help you efficiently create automation apps.
+- [Extracting data from documents](https://docs.instabase.com/automate/document-schema.md): Specify classes and fields that define your project schema.
+- [Extracting data from packets](https://docs.instabase.com/automate/packet-schema.md): Specify cross-class fields to process related documents together as packets.
+- [Cleaning results](https://docs.instabase.com/automate/cleaning.md): Refine extracted data using a variety of cleaning options.
+- [Validating documents](https://docs.instabase.com/automate/validating-documents.md): Ensure high-quality output by implementing validation rules.
+- [Validating packets](https://docs.instabase.com/automate/validating-packets.md): Ensure data quality and consistency across documents in a packet with cross-class validation rules.
+- [Creating or versioning apps](https://docs.instabase.com/automate/app-versions.md): Package your project into a reusable app version so it can be used and deployed.
+- [Prompting guidance](https://docs.instabase.com/automate/prompts.md): Guidance for selecting field types, writing effective prompts, and optimizing extraction accuracy in automation projects
+- [Testing apps](https://docs.instabase.com/automate/testing.md): Accuracy testing ensures automation apps meet your accuracy requirements before deployment.
+- [Managing ground truth datasets](https://docs.instabase.com/automate/datasets.md): Configure ground truth datasets with validated data to use in accuracy testing.
+- [Running accuracy tests](https://docs.instabase.com/automate/accuracy.md): See how accurate an app is by comparing verified values to actual run results.
+- [Running and deploying apps](https://docs.instabase.com/automate/running.md): Run apps on-demand, or automate them with app deployments.
+- [Running apps](https://docs.instabase.com/automate/app-use.md): After creating an app, you can run it on-demand, share it, and manage access across your organization.
+- [Deploying apps](https://docs.instabase.com/automate/deployments.md): Deploy apps to transform them into production-scale, automated workflows.
+- [Monitoring deployments](https://docs.instabase.com/automate/monitoring-deployments.md): Deployment metrics give you insight into deployment and human review efficiency.
+- [Version control for apps](https://docs.instabase.com/automate/version-control.md): Manage versioning for apps and AI runtime.
+- [Reviewing results](https://docs.instabase.com/automate/review.md): Human review enables validating and correcting results from app deployment runs.
+- [Custom functions](https://docs.instabase.com/automate/custom-functions-intro.md): Python functions extend automation apps with extraction, validation, integrations, and reusable logic across your organization.
+- [Writing custom functions](https://docs.instabase.com/automate/custom-functions.md): Follow these guidelines when writing custom functions to use in automation projects and deployments.
+- [Using shared functions](https://docs.instabase.com/automate/using-shared-functions.md): Publish Python functions to the function library to reuse them across projects and deployments.
+- [Calling LLMs from custom functions](https://docs.instabase.com/automate/llms-custom-functions.md): Follow these guidelines when writing custom functions to use in automation projects and deployments.
+- [Error handling](https://docs.instabase.com/automate/errors.md): Handle and troubleshoot errors in results.
+- [Flow editor](https://docs.instabase.com/flow/overview.md): Build and run end-to-end document processing pipelines in AI Hub using the flow editor.
+- [Creating flows](https://docs.instabase.com/flow/creating-flows.md): Structure your flow development work from editing and planning through configuration, testing, and packaging.
+- [Working with flows](https://docs.instabase.com/flow/working-in-flow-editor.md): Use the flow editor to create and test flows.
+- [Planning flows](https://docs.instabase.com/flow/planning-flows.md): Choose step order, filters, checkpoints, and modules before you configure individual steps.
+- [Integrating flows](https://docs.instabase.com/flow/integrate-flows.md): After you've created and compiled a flow, integrate it into your existing business processes to achieve maximum value.
+- [Creating or versioning advanced apps](https://docs.instabase.com/flow/advanced-apps.md): Package your flow into a reusable advanced app
+- [Logging and troubleshooting](https://docs.instabase.com/flow/debug-flows.md): Troubleshoot failing or slow flows with the flow dashboard
+- [Flow steps](https://docs.instabase.com/flow/step-config-reference.md): Combine flow steps to create your document processing pipeline.
+- [Process files](https://docs.instabase.com/flow/step-config-reference/process-files.md): Digitize documents.
+- [Map records](https://docs.instabase.com/flow/step-config-reference/map-records.md): Specify how multipage documents are parsed.
+- [Agent classifier](https://docs.instabase.com/flow/step-config-reference/agent-classifier.md): Classify records using a large language model (LLM) and your classification schema.
+- [Apply classifier](https://docs.instabase.com/flow/step-config-reference/apply-classifier.md): Classify records using rule-based, code-driven split classification.
+- [Apply checkpoint](https://docs.instabase.com/flow/step-config-reference/apply-checkpoint.md): Verify details identified in a previous step according to validation formulas, and trigger a review for failed validations.
+- [Creating validation checkpoints](https://docs.instabase.com/flow/step-config-reference/creating-validation-checkpoints.md): Configure validations and link them to checkpoint modules in your flow so extracted data is checked before downstream use.
+- [Agent extract](https://docs.instabase.com/flow/step-config-reference/agent-extraction.md): Extract structured fields using a large language model (LLM) and your extraction schema.
+- [Apply refiner](https://docs.instabase.com/flow/step-config-reference/apply-refiner.md): Reformat extracted data according to your specifications.
+- [Creating refiner programs](https://docs.instabase.com/flow/step-config-reference/creating-refiner-programs.md): Use refiner to build extractions, connect refiner programs to a flow, and work with text, layout, and structure in a document.
+- [Process case](https://docs.instabase.com/flow/step-config-reference/process-case.md): Configure the Process case step, kwargs, and the packet refiner program for cross-class fields.
+- [Using custom functions](https://docs.instabase.com/flow/using-custom-functions.md): Python custom functions in flows, shared packages, LLM calls from flow UDFs, and the Text Editor.
+- [Custom functions in flow](https://docs.instabase.com/flow/custom-functions/custom-functions-flow.md): Add custom functionality to your flow.
+- [Publishing developer packages](https://docs.instabase.com/flow/custom-functions/dev-packages.md): Developer packages enable distribution and sharing of custom Python files used in flows, such as functions and libraries.
+- [Calling LLMs from custom functions in flows](https://docs.instabase.com/flow/custom-functions/llms-custom-functions.md): Call an LLM from Python in flow legacy scripts using CLIENTS.llm_client, registration, and step configuration on single-tenant deployments.
+- [Using the text editor](https://docs.instabase.com/flow/custom-functions/text-editor.md): Basic editing, templates, and debugging tools for working with files.
+- [Flow guides](https://docs.instabase.com/flow/flow-guides.md): Patterns and walkthroughs for common flow use cases.
+- [Common flow patterns](https://docs.instabase.com/flow/guides/flow-patterns.md): Reference flow patterns for common document processing use cases.
+- [Packet-processing flows](https://docs.instabase.com/flow/guides/packet-processing-flows.md): Design flows for packet processing.
+- [Reviewing flow results](https://docs.instabase.com/flow/reviewing-flow-results.md): Human review for flows and advanced apps.
+- [About administration tools](https://docs.instabase.com/admin.md): Configure and manage AI Hub settings, user access, and integrations.
+- [Account settings](https://docs.instabase.com/admin/account-settings.md): Manage your account information and security settings.
+- [Organization settings](https://docs.instabase.com/admin/org-settings.md): Manage organization-level settings, including enabling features in public preview.
+- [User and access management](https://docs.instabase.com/admin/user-mgmt.md): Manage user and team access in AI Hub.
+- [Managing organization members](https://docs.instabase.com/admin/org-members.md): Add and manage your organization's members.
+- [Managing workspace members](https://docs.instabase.com/admin/workspace-members.md): Add and manage members of shared workspaces.
+- [Organization and workspace roles](https://docs.instabase.com/admin/roles.md): Use organization and workspace roles to manage member permissions.
+- [Managing workspaces](https://docs.instabase.com/admin/workspace-management.md): Manage shared workspaces, including designating production workspaces.
+- [Managing groups](https://docs.instabase.com/admin/group-management.md): Create groups to manage workspace access and permissions.
+- [Managing service accounts](https://docs.instabase.com/admin/service-accounts.md): Manage service accounts and their API tokens.
+- [Identity and security](https://docs.instabase.com/admin/security.md): Secure your environment and control user access with AI Hub's identity and security features.
+- [Configuring SAML SSO for multi-tenant AI Hub](https://docs.instabase.com/admin/saml-sso.md): Configure SAML-based single sign-on for multi-tenant AI Hub.
+- [Configuring SAML SSO for single-tenant AI Hub](https://docs.instabase.com/admin/saml-sso-st.md): Configure SAML-based single sign-on for single-tenant AI Hub.
+- [Configuring OIDC SSO for multi-tenant AI Hub](https://docs.instabase.com/admin/oidc-sso.md): Configure OIDC-based single sign-on for multi-tenant AI Hub.
+- [Configuring OIDC SSO for single-tenant AI Hub](https://docs.instabase.com/admin/oidc-sso-st.md): Configure OIDC-based single sign-on for single-tenant AI Hub.
+- [Configuring OAuth providers](https://docs.instabase.com/admin/security/oauth-providers.md): Configure OAuth providers to enable using externally managed tokens for API access.
+- [Adding OAuth account mappings](https://docs.instabase.com/admin/security/oauth-mappings.md): Link AI Hub accounts to identities in your OAuth provider to enable using externally managed API tokens.
+- [Managing secrets](https://docs.instabase.com/admin/secret-management.md): Use secrets to securely store and reference sensitive information.
+- [Viewing audit logs](https://docs.instabase.com/admin/audit-logs.md): View audit logs for your single-tenant environment.
+- [About data connections](https://docs.instabase.com/admin/data-connections.md): Connect external data sources as input sources, output destinations, or storage locations.
+- [Managing default drives](https://docs.instabase.com/admin/data-sources/default-drives.md): Configure the default storage for AI Hub files.
+- [Connecting Amazon S3](https://docs.instabase.com/admin/data-sources/amazon-s3-connect.md): Add Amazon S3 as a data connection.
+- [Connecting Azure Blob Storage](https://docs.instabase.com/admin/data-sources/azure-blob-storage-connect.md): Add Azure Blob Storage as a data connection.
+- [Connecting Google Cloud Storage](https://docs.instabase.com/admin/data-sources/google-cloud-storage-connect.md): Add Google Cloud Storage as a data connection.
+- [Connecting Google Drive](https://docs.instabase.com/admin/data-sources/google-drive-connect.md): Add Google Drive as a data connection.
+- [Connecting mailboxes](https://docs.instabase.com/admin/data-sources/connect-mail.md): Connect mailboxes for use as an upstream integration.
+- [Billing and usage](https://docs.instabase.com/admin/billing-and-usage.md): Manage subscriptions, billing, and usage in AI Hub.
+- [Managing subscriptions](https://docs.instabase.com/admin/subscriptions.md): Manage your AI Hub Commercial subscription.
+- [Managing billing and invoices](https://docs.instabase.com/admin/billing.md): Manage your account or organization's billing details and invoices.
+- [Monitoring usage](https://docs.instabase.com/admin/usage.md): Monitor your account or organization's usage.
+- [Network architecture requirements](https://docs.instabase.com/admin/network-architecture.md): For self-managed AI Hub deployments in a VPC environment, AI Hub requires specific outbound network connectivity.
+- [Using the API and SDK](https://docs.instabase.com/api-sdk/using-api-sdk.md): Get started using the AI Hub API and SDK.
+- [Authorization and context identification](https://docs.instabase.com/api-sdk/authorization.md): Manage AI Hub API tokens and understand request context.
+- [Response statuses](https://docs.instabase.com/api-sdk/api-reference/response-statuses.md): Review AI Hub API response classes.
+- [Introduction to the SDK](https://docs.instabase.com/api-sdk/sdk-for-beginners/1-intro.md): Tutorial -- Learn to use the AI Hub SDK from the ground up, working through real examples.
+- [Preparing to use the SDK](https://docs.instabase.com/api-sdk/sdk-for-beginners/2-prepare.md): Tutorial -- Installing and authorizing the SDK.
+- [Test SDK installation and authorization](https://docs.instabase.com/api-sdk/sdk-for-beginners/3-test.md): Tutorial -- Testing the SDK.
+- [Automate use case](https://docs.instabase.com/api-sdk/sdk-for-beginners/4-automate.md): Tutorial -- Performing automated document processing.
+- [Cleanup](https://docs.instabase.com/api-sdk/sdk-for-beginners/6-clean-up.md): Cleaning up unneeded files and data.
+- [Next steps](https://docs.instabase.com/api-sdk/sdk-for-beginners/7-next.md): Tutorial -- Learning more about the SDK.
+- [Run automation apps by SDK](https://docs.instabase.com/api-sdk/apps-sdk.md): Process files by running automation apps using the AI Hub SDK.
+- [Specifying file paths](https://docs.instabase.com/api-sdk/api-reference/run-reference.md): Define file paths in your app and deployment runs.
+- [Job status endpoint (Deprecated)](https://docs.instabase.com/api-sdk/api-reference/legacy/job-status-endpoint.md): Job status endpoint for getting app run status and results.
+- [Run apps endpoint (Deprecated)](https://docs.instabase.com/api-sdk/api-reference/legacy/run-app-endpoint.md): API reference for running apps.
+- [Run results endpoint (Deprecated)](https://docs.instabase.com/api-sdk/api-reference/legacy/run-results-endpoint.md): Flow binary endpoint for getting app run results.
+- [Mount endpoint [Deprecated]](https://docs.instabase.com/api-sdk/api-reference/legacy/mount-endpoint.md): Connect and manage external drives at the workspace level.
+
+## API Docs
+
+- API reference > Batches [Create batch](https://docs.instabase.com/api-sdk/api-reference/batches/create-batch.md)
+- API reference > Batches [List batches](https://docs.instabase.com/api-sdk/api-reference/batches/list-batches.md)
+- API reference > Batches [Get batch information](https://docs.instabase.com/api-sdk/api-reference/batches/get-batch.md)
+- API reference > Batches [Delete batch](https://docs.instabase.com/api-sdk/api-reference/batches/delete-batch.md)
+- API reference > Batches [Upload file to batch](https://docs.instabase.com/api-sdk/api-reference/batches/add-file-to-batch.md)
+- API reference > Batches [List files in a batch](https://docs.instabase.com/api-sdk/api-reference/batches/list-files.md)
+- API reference > Batches [Delete file from batch](https://docs.instabase.com/api-sdk/api-reference/batches/delete-file-from-batch.md)
+- API reference > Batches [Poll batches job](https://docs.instabase.com/api-sdk/api-reference/batches/poll-batches-job.md)
+- API reference > Batches [Start multipart upload session](https://docs.instabase.com/api-sdk/api-reference/batches/create-multipart-upload-session.md)
+- API reference > Batches [Upload part to multipart session](https://docs.instabase.com/api-sdk/api-reference/batches/upload-multipart-part.md)
+- API reference > Batches [Commit or abort multipart session](https://docs.instabase.com/api-sdk/api-reference/batches/commit-multipart-upload-session.md)
+- API reference > Runs [Run deployment](https://docs.instabase.com/api-sdk/api-reference/runs/run-deployment.md)
+- API reference > Runs [Run app](https://docs.instabase.com/api-sdk/api-reference/runs/run-app.md)
+- API reference > Runs [Get run status](https://docs.instabase.com/api-sdk/api-reference/runs/get-run-status.md)
+- API reference > Runs [Get run results](https://docs.instabase.com/api-sdk/api-reference/runs/get-run-results.md)
+- API reference > Runs [List runs](https://docs.instabase.com/api-sdk/api-reference/runs/list-runs.md)
+- API reference > Runs [Delete run](https://docs.instabase.com/api-sdk/api-reference/runs/delete-run.md)
+- API reference > Jobs [Poll file operation job status](https://docs.instabase.com/api-sdk/api-reference/jobs/job-status.md)
+- API reference > Secrets [Create secret](https://docs.instabase.com/api-sdk/api-reference/secrets/create-secret.md)
+- API reference > Secrets [List secrets](https://docs.instabase.com/api-sdk/api-reference/secrets/list-secrets.md)
+- API reference > Secrets [Update secret](https://docs.instabase.com/api-sdk/api-reference/secrets/update-secret.md)
+- API reference > Secrets [Delete secret](https://docs.instabase.com/api-sdk/api-reference/secrets/delete-secret.md)
+- API reference > Files [Read file](https://docs.instabase.com/api-sdk/api-reference/files/read-file.md)
+- API reference > Files [Create or overwrite file](https://docs.instabase.com/api-sdk/api-reference/files/write-file.md)
+- API reference > Files [Read file or folder metadata](https://docs.instabase.com/api-sdk/api-reference/files/get-file-metadata.md)
+- API reference > Files [Delete file or folder](https://docs.instabase.com/api-sdk/api-reference/files/delete-file-or-folder.md)
+- API reference > Audit [Get audit logs](https://docs.instabase.com/api-sdk/api-reference/audit/get-audit-logs.md)
+
+## OpenAPI Specification
+
+The raw OpenAPI 3.1 specification for this API is available at:
+- [OpenAPI JSON](https://docs.instabase.com/openapi.json)
+- [OpenAPI YAML](https://docs.instabase.com/openapi.yaml)

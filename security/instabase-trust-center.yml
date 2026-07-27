@@ -1,0 +1,16 @@
+generated: '2026-07-19'
+method: searched
+probe: true
+source: https://trust.instabase.com/
+url: https://trust.instabase.com/
+certifications:
+- SOC 2
+- HIPAA
+- GDPR
+evidence:
+- source: https://trust.instabase.com/
+  keywords:
+  - soc 2
+  - hipaa
+  - trust center
+  - gdpr

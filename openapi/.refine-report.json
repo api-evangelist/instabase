@@ -1,0 +1,24 @@
+{
+  "provider": "instabase",
+  "sources": [
+    "instabase-audit-api-openapi.yml",
+    "instabase-batches-api-openapi.yml",
+    "instabase-files-api-openapi.yml",
+    "instabase-jobs-api-openapi.yml",
+    "instabase-runs-api-openapi.yml",
+    "instabase-secrets-api-openapi.yml"
+  ],
+  "outputs": [
+    "instabase-audit-api-openapi.yml",
+    "instabase-batches-api-openapi.yml",
+    "instabase-files-api-openapi.yml",
+    "instabase-jobs-api-openapi.yml",
+    "instabase-runs-api-openapi.yml",
+    "instabase-secrets-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

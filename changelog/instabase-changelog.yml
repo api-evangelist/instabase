@@ -1,0 +1,23 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.instabase.com/release-notes.md
+scheme: 'calendar YY.WW'
+current_version: '26.24'
+url: https://docs.instabase.com/release-notes
+entries:
+  - version: '26.24'
+    highlights: Webhook notifications now support Azure Event Grid payload formats; secret key names can contain hyphens.
+  - version: '26.20'
+    highlights: Spreadsheet preprocessing project setting for improved extraction from large CSV and Excel files.
+  - version: '26.18'
+    highlights: Security improvements; cross-class ranked fields display class tags showing document source.
+  - version: '26.16'
+    highlights: Stability/performance enhancements; new long-table extraction field setting for multipage tables.
+  - version: '26.14'
+    highlights: OCR-based provenance and large-file extraction mode for documents exceeding typical context limits.
+  - version: '26.12'
+    highlights: Navigation changes; review URL formats updated and document-based reviews migrated to task-based system.
+  - version: '26.10'
+    highlights: Memory optimization; new "Force image OCR" file processing setting.
+  - version: '26.08'
+    highlights: Security enhancements disabling local caching; deployment integration functions return v2-format results.

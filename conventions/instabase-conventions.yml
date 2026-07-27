@@ -1,0 +1,49 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.instabase.com/api-sdk/
+spec: openapi/instabase-aihub-openapi.yaml
+authentication:
+  style: bearer-token
+  header: 'Authorization: Bearer ${API_TOKEN}'
+  context_header: IB-Context
+  context_values: organization ID (org accounts / service accounts) or user ID (community, deprecated)
+  docs: https://docs.instabase.com/api-sdk/authorization.md
+  see: authentication/instabase-authentication.yml
+transport:
+  https_only: true
+  note: The API only supports https; http produces unpredictable responses.
+versioning:
+  api_scheme: uri-path
+  api_versions: [v1, v2]
+  current: v2
+  platform_release_scheme: 'calendar YY.WW (e.g. 26.24)'
+pagination:
+  styles: [offset-limit, token]
+  params: [limit, offset, page_size, start_token, sort_by, order]
+  response_fields: [next_page]
+idempotency:
+  supported: false
+  note: >-
+    No Idempotency-Key contract is documented. A per-request IB-Retry-Config
+    header governs retry behavior but is not an idempotency key.
+retry:
+  header: IB-Retry-Config
+  note: Per-request retry configuration header.
+error_envelope:
+  schema: error
+  format: json
+  note: >-
+    Errors return a JSON body per the `error` schema (not RFC 9457
+    application/problem+json). See errors/instabase-problem-types.yml.
+async_jobs:
+  pattern: >-
+    Long-running operations (batch processing, app/deployment runs, batch
+    deletion) return a job handle polled via GET /v2/jobs/{job_id},
+    GET /v2/batches/jobs/{job_id}, and GET /v2/apps/runs/{run_id}.
+range_requests:
+  supported: true
+  note: File reads support HTTP Range requests (206 Partial Content).
+cross_links:
+  errors: errors/instabase-problem-types.yml
+  lifecycle: lifecycle/instabase-lifecycle.yml
+  authentication: authentication/instabase-authentication.yml

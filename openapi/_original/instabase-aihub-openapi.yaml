@@ -1,0 +1,4526 @@
+openapi: 3.0.0
+info:
+  title: AI Hub API
+  version: "0.1"
+  description: The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.
+  termsOfService: https://www.instabase.com/terms-of-service/
+  contact:
+    name: Instabase Support
+    url: https://help.instabase.com/
+  license:
+    name: MIT
+    url: https://github.com/instabase/aihub-python/blob/master/LICENSE
+servers:
+  - url: https://aihub.instabase.com/api
+security:
+  - bearerAuth: []
+paths:
+  /v2/batches:
+    post:
+      operationId: createBatch
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: Create batch
+      description: |
+        Create a new batch.
+
+        <Note>[Upload files to the batch](/api-sdk/api-reference/batches/add-file-to-batch) in a separate request.</Note>
+      parameters:
+        - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the batch. Maximum length is 255 characters.
+                workspace:
+                  type: string
+                  description: |
+                    The name of the workspace in which to add the batch. If not specified, the default location is your personal workspace.
+
+                    When making this call from a service account, you must specify a workspace.
+
+                    <Info>For organization members, if the default drive changes but is still connected, you can still use the batch as input for running an app. However, you can't upload any additional files to the batch. If the default drive is disconnected, you can't use batches stored on that drive as input for any app run.</Info>
+              required:
+                - name
+      responses:
+        '200':
+          description: Batch created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/batch'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/batches" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/json" \
+                    -d '{"name": "test"}'
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  response = client.batches.create(
+                      name="MyBatch",
+                      workspace="MyWorkspace"
+                  )
+                  
+                  print(f"batch_id: {response.id}")
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+                  
+                  url = "https://aihub.instabase.com/api/v2/batches"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create the request payload
+                  data = {
+                      "name": "MyBatch",
+                      "workspace": "MyWorkspace"
+                  }
+                  
+                  # make the POST request
+                  response = requests.post(url, headers=headers, json=data)
+                  
+                  # handle the response
+                  if response.status_code == 200:
+                      print(f"Batch created with ID: {response.json()['id']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+    get:
+      operationId: listBatches
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: List batches
+      description: Return a list of batches. Use query parameters to filter results.
+      parameters:
+        - in: query
+          name: workspace
+          schema:
+            type: string
+          description: Filter to batches in the specified workspace.
+        - in: query
+          name: username
+          schema:
+            type: string
+          description: Filter to batches created by the specified username (user ID).
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: If paginating results, specify how many batches to return.
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: If paginating results, specify the offset of the returned list.
+        - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: Request successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  batches:
+                    type: array
+                    description: List of batches. See response schema for each batch object.
+                    items:
+                      $ref: '#/components/schemas/batchInfo'
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/batches" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -G \
+                    --data-urlencode "workspace=my-workspace" \
+                    --data-urlencode "limit=100"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  response = client.batches.list(
+                      workspace="MyWorkspace",
+                      username="john.doe_acme.com",
+                      limit=3,
+                      offset=6
+                  )
+                  
+                  for batch in response.batches:
+                      print(f"id: {batch.id}")
+                      print(f"name: {batch.name}")
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+                  
+                  url = "https://aihub.instabase.com/api/v2/batches"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create query parameters
+                  params = {
+                      "workspace": "MyWorkspace",
+                      "limit": 3,
+                      "offset": 6
+                  }
+                  
+                  # make the GET request
+                  response = requests.get(url, headers=headers, params=params)
+                  
+                  # handle the response
+                  if response.status_code == 200:
+                      print(f"Retrieved {len(response.json()['batches'])} batches")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+  /v2/batches/{batch_id}:
+    get:
+      operationId: getBatch
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: Get batch information
+      description: Retrieve information about a batch.
+      parameters:
+        - $ref: '#/components/parameters/batch_id'
+        - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: Batch successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/batchInfo'
+        '404':
+          description: Batch does not exist, or denied access.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/batches/<BATCH-ID>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  batch_info = client.batches.get(batch_id=12345)
+                  
+                  print(f"id: {batch_info.id}")
+                  print(f"name: {batch_info.name}")
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+                  
+                  batch_id = 12345
+                  url = f"https://aihub.instabase.com/api/v2/batches/{batch_id}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the GET request
+                  response = requests.get(url, headers=headers)
+                  
+                  # handle the response
+                  if response.status_code == 200:
+                      print(f"id: {response.json()['id']}")
+                      print(f"name: {response.json()['name']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+    delete:
+      operationId: deleteBatch
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: Delete batch
+      description: Delete a batch and all its files. This is an asynchronous operation that must be [checked for completion](/api-sdk/api-reference/batches/poll-batches-job).
+      parameters:
+        - $ref: '#/components/parameters/batch_id'
+        - $ref: '#/components/parameters/ib_context'
+      responses:
+        '202':
+          description: Batch deletion request accepted. [Poll the job ID](/api-sdk/api-reference/batches/poll-batches-job) to check completion status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/batchDeletionJobResponse'
+        '404':
+          description: Batch does not exist.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X DELETE "${API_ROOT}/v2/batches/<BATCH-ID>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  import time
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  delete_response = client.batches.delete(batch_id=12345)
+                  
+                  # check delete job status until done
+                  while True:
+                      poll_response = client.batches.poll_job(
+                                          job_id=delete_response.job_id
+                                      )
+                      if poll_response.state not in ["PENDING", "RUNNING"]:
+                          break
+                      time.sleep(3)  # pause before polling the status again
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+                  
+                  batch_id = 12345
+                  url = f"https://aihub.instabase.com/api/v2/batches/{batch_id}"
+
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the DELETE request
+                  response = requests.delete(url, headers=headers)
+                  
+                  # handle the response
+                  if response.status_code == 202:
+                      print("Batch deletion job started with ID: "
+                            f"{response.json()['job_id']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+                  
+                  # not included here: check status of deletion job until it's done
+
+  /v2/batches/{batch_id}/files:
+    get:
+      operationId: listFiles
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: List files in a batch
+      description: Return a list of files in a batch.
+      parameters:
+        - $ref: '#/components/parameters/batch_id'
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The number of files to return in each page.
+        - in: query
+          name: start_token
+          schema:
+            type: string
+          description: The token to start the list from.
+        - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: Request successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listBatchFilesResponse'
+              example:
+                nodes:
+                  - full_path: "/path/to/document1.pdf"
+                    metadata:
+                      node_type: "file"
+                      size: 1024
+                      modified_timestamp: 1647532800
+                    perms:
+                      can_read: true
+                      can_write: true
+                      can_delete: true
+                    name: "document1.pdf"
+                  - full_path: "/path/to/document2.pdf"
+                    metadata:
+                      node_type: "file"
+                      size: 2048
+                      modified_timestamp: 1647619200
+                    perms:
+                      can_read: true
+                      can_write: false
+                      can_delete: false
+                    name: "document2.pdf"
+                next_page_token: "eyJwYWdlIjogMn0="
+                has_more: true
+        '404':
+          description: Batch does not exist, or denied access.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/batches/<BATCH-ID>/files" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  response = client.batches.list_files(
+                      batch_id=12345,
+                      page_size=2,
+                      start_token="abcd...<snip>...1234"
+                  )
+                  
+                  print(f"Has more files? {response.has_more}")
+                  for node in response.nodes:
+                      print(f"File name: {node.name}")
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  batch_id = 12345
+                  url = f"https://aihub.instabase.com/api/v2/batches/{batch_id}/files"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  page_size = 2
+                  start_token = None
+
+                  # make repeated calls to fetch more files until there are no more
+                  while True:
+                      params = {
+                          "page_size": page_size,
+                          "start_token": start_token
+                      }
+                      # make the GET request
+                      response = requests.get(url, headers=headers, params=params)
+
+                      # handle the response
+                      if response.status_code != 200:
+                          print(f"Error: {response.status_code} - {response.text}")
+                          break
+
+                      for node in response.json()['nodes']:
+                          print(f"File name: {node['name']}")
+
+                      if not response.json().get("has_more"):
+                          break
+
+                      start_token = response.json().get("next_page_token")
+
+  /v2/batches/{batch_id}/files/{filename}:
+    put:
+      operationId: addFileToBatch
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: Upload file to batch
+      description: |
+        Upload a file to a batch or update the contents of a previously uploaded file in a batch.
+
+        <Info>Files can be uploaded one at a time and the suggested max size for each file is 10 MB. For larger files, see [Multipart file upload](/api-sdk/api-reference/batches/create-multipart-upload-session).</Info>
+
+        <Note>If you upload a password-protected PDF, provide the password when you process the PDF with an AI Hub app. See instructions for configuring the `settings.runtime_config.instabase.pdf.passwords` property for the [Run deployment](/api-sdk/api-reference/runs/run-deployment#request.body.settings.runtime_config.instabase.pdf.passwords) or [Run app](/api-sdk/api-reference/runs/run-app#request.body.settings.runtime_config.instabase.pdf.passwords) operations.</Note>
+      parameters:
+        - $ref: '#/components/parameters/batch_id'
+        - name: filename
+          in: path
+          required: true
+          description: A user-defined name for the file on the Instabase filesystem. Include the file extension. This doesn't need to be the same as its name on your local filesystem.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              description: The raw contents of the file to upload. See the example request, being sure to define the `<LOCAL_FILEPATH>` with the full path to the file in the machine running the script.
+              type: string
+              format: binary
+      responses:
+        '204':
+          description: File uploaded successfully.
+        '404':
+          description: Batch with ID <BATCH-ID> does not exist.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X PUT "${API_ROOT}/v2/batches/<BATCH-ID>/files/<FILENAME>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/octet-stream" \
+                    --upload-file '<LOCAL_FILEPATH>' # Full path to the file in the machine that's making the request
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  local_filepath = "/local/path/to/file1.pdf"
+                  
+                  # returns None
+                  with open(local_filepath, "rb") as local_file:
+                      client.batches.add_file(
+                          batch_id=12345,
+                          file_name="MyFile1.pdf",  # AI Hub filesystem
+                          file=local_file  # local filesystem
+                      )
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  batch_id = 12345
+                  ai_hub_filename = "MyFile1.pdf"
+                  url = f"https://aihub.instabase.com/api/v2/batches/{batch_id}/files/{ai_hub_filename}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com",
+                      "Content-Type": "application/octet-stream"
+                  }
+                  
+                  local_filepath = "/local/path/to/file1.pdf"
+
+                  # read the file contents
+                  with open(local_filepath, "rb") as local_file:
+                      file_content = local_file.read()
+
+                  # make the PUT request
+                  response = requests.put(url, headers=headers, data=file_content)
+
+                  # handle the response
+                  if response.status_code == 204:
+                      print("File uploaded successfully")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+    delete:
+      operationId: deleteFileFromBatch
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: Delete file from batch
+      description: Delete a file from a batch.
+      parameters:
+        - $ref: '#/components/parameters/batch_id'
+        - name: filename
+          in: path
+          required: true
+          description: The name of the file.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/ib_context'
+      responses:
+        '202':
+          description: File deletion request accepted. Poll the deletion job for completion status.
+        '404':
+          description: Batch does not exist.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X DELETE "${API_ROOT}/v2/batches/<BATCH-ID>/files/<FILENAME>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  # returns None
+                  client.batches.delete_file(
+                      batch_id=12345,
+                      file_name="MyFile.txt"
+                  )
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  batch_id = 12345
+                  ai_hub_filename = "MyFile.txt"
+                  url = f"https://aihub.instabase.com/api/v2/batches/{batch_id}/files/{ai_hub_filename}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the DELETE request
+                  response = requests.delete(url, headers=headers)
+                  
+                  # handle the response
+                  if response.status_code == 202:
+                      print("File deletion request accepted")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+  /v2/batches/multipart-upload:
+    post:
+      operationId: createMultipartUploadSession
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: Start multipart upload session
+      description: |
+        Start a multipart upload session. Use this endpoint when you need to upload a file larger than 10 MB to a batch.
+
+        The multipart upload process consists of three steps:
+        1. Create a multipart upload session (this endpoint)
+        2. [Upload file parts](/api-sdk/api-reference/batches/upload-multipart-part) to the session
+        3. [Commit the session](/api-sdk/api-reference/batches/commit-multipart-upload-session) to finalize the upload
+      parameters:
+        - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batch_id:
+                  type: integer
+                  description: The batch ID to upload the file to.
+                filename:
+                  type: string
+                  description: A file name for the uploaded file on the AI Hub filesystem, including the file extension. Maximum of 255 characters.
+                file_size:
+                  type: integer
+                  description: The file size, in bytes. Can be an integer or a string.
+              required:
+                - batch_id
+                - filename
+                - file_size
+      responses:
+        '201':
+          description: The multipart upload session was initiated.
+          headers:
+            Location:
+              schema:
+                type: string
+              description: The session endpoint URL to use in subsequent multipart upload requests, in the form `<API-ROOT>/v2/batches/multipart-upload/sessions/<SESSION-ID>`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/multipartUploadSessionResponse'
+        '404':
+          description: Batch with the specified ID doesn't exist.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/batches/multipart-upload" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                          "batch_id": <BATCH-ID>,
+                          "filename": "large-file.pdf",
+                          "file_size": 15728640
+                        }'
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  import os
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  ai_hub_filename = "large-file.pdf"
+
+                  # get file size
+                  local_filepath = "/local/path/to/large-file.pdf"
+                  file_size = os.path.getsize(local_filepath)
+
+                  # create multipart upload session
+                  response = client.batches.create_multipart_upload_session(
+                      batch_id=12345,
+                      filename=ai_hub_filename,
+                      file_size=file_size
+                  )
+                  
+                  print(f"Session ID: {response.session_id}")
+                  print(f"Part size: {response.part_size}")
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import os
+                  import requests
+
+                  ai_hub_filename = "large-file.pdf"
+                  
+                  # get file size
+                  local_filepath = "/local/path/to/large-file.pdf"
+                  file_size = os.path.getsize(local_filepath)
+
+                  url = "https://aihub.instabase.com/api/v2/batches/multipart-upload"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create the request payload
+                  data = {
+                      "batch_id": 12345,
+                      "filename": ai_hub_filename,
+                      "file_size": file_size
+                  }
+                  
+                  # make the POST request
+                  response = requests.post(url, headers=headers, json=data)
+
+                  # handle the response
+                  if response.status_code == 201:
+                      print(f"Session ID: {response.json()['session_id']}")
+                      print(f"Part size: {response.json()['part_size']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+  /v2/batches/multipart-upload/sessions/{session_id}/parts/{part_num}:
+    put:
+      operationId: uploadMultipartPart
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: Upload part to multipart session
+      description: |
+        Upload part of a file to the multipart upload session. The size of each part must match the `part_size` returned by the [Start multipart upload session](/api-sdk/api-reference/batches/create-multipart-upload-session) call, except for the final part, which can be smaller.
+
+        Parts must be uploaded with consecutive part numbers starting at 1.
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The session ID obtained from the Start multipart upload session response.
+        - name: part_num
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The part number, starting at 1 and increasing consecutively for each part.
+        - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+              description: Raw content of the part to be uploaded.
+      responses:
+        '201':
+          description: The part was successfully uploaded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/multipartUploadPartResponse'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X PUT "${API_ROOT}/v2/batches/multipart-upload/sessions/<SESSION_ID>/parts/1" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/octet-stream" \
+                    --data-binary "@part1.bin"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  parts = []
+                  part_num = 1
+                  
+                  # use `session_id` and `part_size` variables set by 
+                  # the "Start multipart upload session" API/SDK operation,
+                  # which must be run before running this operation
+                  
+                  local_filepath = "/local/path/to/large-file.pdf"
+                  with open(local_filepath, "rb") as local_file:
+                      while True:
+                          part_data = local_file.read(part_size)
+                          if not part_data:
+                              break
+                          
+                          # upload this part using SDK
+                          response = client.batches.upload_multipart_part(
+                              session_id=session_id,
+                              part_num=part_num,
+                              part_data=part_data
+                          )
+                  
+                          parts.append(
+                              {
+                                  "part_num": part_num,
+                                  "part_id": response.part_id
+                              }
+                          )
+                          print(f"Uploaded part {part_num}")
+                          
+                          part_num += 1
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  # use `session_id` and `part_size` variables set by
+                  # the "Start multipart upload session" API/SDK operation,
+                  # which must be run before running this operation
+                  session_endpoint = f"https://aihub.instabase.com/api/v2/batches/multipart-upload/sessions/{session_id}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  parts = []
+                  part_num = 1
+
+                  local_filepath = "/local/path/to/large-file.pdf"
+                  with open(local_filepath, "rb") as input_file:
+                      part = input_file.read(part_size)
+                      while part:
+                          # upload this part
+                          part_url = f"{session_endpoint}/parts/{part_num}"
+                          part_response = requests.put(part_url, headers=headers, data=part)
+
+                          if part_response.status_code == 201:
+                              parts.append(
+                                  {
+                                      "part_num": part_num,
+                                      "part_id": part_response.json()["part_id"]
+                                  }
+                              )
+                              print(f"Uploaded part {part_num}")
+                          else:
+                              print(f"Error uploading part {part_num}: {part_response.status_code}")
+                              break
+
+                          # read next part
+                          part = input_file.read(part_size)
+                          part_num += 1
+
+  /v2/batches/multipart-upload/sessions/{session_id}:
+    post:
+      operationId: commitMultipartUploadSession
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: Commit or abort multipart session
+      description: |
+        After uploading all parts to a multipart upload session, use this endpoint to commit and close the session, or abort the session.
+
+        When committing, provide all the uploaded parts in the correct order. When aborting, the session and all uploaded parts are discarded.
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The session ID obtained from the Start multipart upload session response.
+        - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum: [commit, abort]
+                  description: Set to `commit` to finalize the upload or `abort` to cancel it.
+                parts:
+                  type: array
+                  description: Required when action is `commit`. List of all uploaded parts in order.
+                  items:
+                    type: object
+                    properties:
+                      part_num:
+                        type: integer
+                        description: The part number of the uploaded part.
+                      part_id:
+                        type: string
+                        description: The part ID returned when the part was uploaded.
+                    required:
+                      - part_num
+                      - part_id
+              required:
+                - action
+      responses:
+        '201':
+          description: The multipart upload session was successfully committed or aborted.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X POST "${API_ROOT}/v2/batches/multipart-upload/sessions/<SESSION-ID>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                          "action": "commit",
+                          "parts": [
+                               {"part_num": 1, "part_id": "12345"},
+                               {"part_num": 2, "part_id": "12346"},
+                               {"part_num": 3, "part_id": "12347"}
+                          ]
+                        }'
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  # This assumes the `session_id` variable was set when the
+                  # "Start multipart upload session" API/SDK operation was called earlier.
+                  parts = [
+                      {"part_num": 1, "part_id": "12345"},
+                      {"part_num": 2, "part_id": "12346"},
+                      {"part_num": 3, "part_id": "12347"}
+                  ]
+
+                  # commit the session
+                  client.batches.commit_multipart_upload_session(
+                      session_id=session_id,
+                      action="commit",
+                      parts=parts
+                  )
+                  print("Multipart upload completed successfully")
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+                  
+                  # This assumes the `session_id` and `parts` variables were set when the
+                  # "Start multipart upload session" API/SDK operation was called earlier.
+                  session_endpoint = f"https://aihub.instabase.com/api/v2/batches/multipart-upload/sessions/{session_id}"
+                  parts = [
+                      {"part_num": 1, "part_id": "12345"},
+                      {"part_num": 2, "part_id": "12346"},
+                      {"part_num": 3, "part_id": "12347"}
+                  ]
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # commit the session
+                  data = {
+                      "action": "commit",
+                      "parts": parts
+                  }
+                  
+                  response = requests.post(session_endpoint, headers=headers, json=data)
+
+                  if response.status_code == 201:
+                      print("Multipart upload completed successfully")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+            - sdk: python
+              name: with SDK - Complete Workflow
+              code: |
+                  import os
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  batch_id = 12345
+                  local_filename = "large-file.pdf"
+                  local_file_path = f"/local/path/to/{local_filename}"
+                  file_size = os.path.getsize(local_file_path)
+
+                  # Step 1: Create session
+                  ai_hub_filename = "upload.pdf"
+                  response = client.batches.create_multipart_upload_session(
+                      batch_id=batch_id,
+                      filename=ai_hub_filename,
+                      file_size=file_size
+                  )
+                  
+                  session_id = response.session_id
+                  part_size = response.part_size
+
+                  # Step 2: Upload parts
+                  parts = []
+                  part_num = 1
+
+                  with open(local_file_path, "rb") as local_file:
+                      while True:
+                          part_data = local_file.read(part_size)
+                          if not part_data:
+                              break
+
+                          response = client.batches.upload_multipart_part(
+                              session_id=session_id,
+                              part_num=part_num,
+                              part_data=part_data)
+
+                          parts.append({
+                              "part_num": part_num,
+                              "part_id": response.part_id
+                          })
+                          part_num += 1
+
+                  # Step 3: Commit session
+                  client.batches.commit_multipart_upload_session(
+                      session_id=session_id,
+                      action="commit",
+                      parts=parts
+                  )
+                  print("Multipart upload completed successfully")
+
+  /v2/batches/jobs/{job_id}:
+    get:
+      operationId: pollBatchesJob
+      x-fern-audiences:
+        - public
+      tags:
+        - Batches
+      summary: Poll batches job
+      description: |
+        Poll the asynchronous job created when deleting a batch.
+
+        <Info>This API operation and SDK method are maintained for backward compatibility, but the functionally identical API operation [poll file operation job status](/api-sdk/api-reference/jobs/job-status) and its corresponding SDK method [client.jobs.status()](/api-sdk/api-reference/jobs/job-status) are preferred.</Info>
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The job ID returned by a [Delete batch](/api-sdk/api-reference/batches/delete-batch) request.
+        - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/jobStatusResponse'
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/batches/jobs/<JOB-ID>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  import time
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  # poll the status of a job until it's done
+                  while True:
+                      response = client.batches.poll_job(
+                          job_id="a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+                      if response.state not in ["PENDING", "RUNNING"]:
+                          break
+                      time.sleep(3)  # pause before polling the status again
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  job_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                  url = f"https://aihub.instabase.com/api/v2/batches/jobs/{job_id}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the GET request
+                  response = requests.get(url, headers=headers)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      print(f"Job status: {response.json()['state']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+  /v2/apps/runs:
+    post:
+      operationId: runApp
+      x-fern-audiences:
+        - public
+      tags:
+        - Runs
+      summary: Run app
+      description: |
+        Run an automation app by its name or app ID. The input for the run can be a batch ID or an input file path.
+
+        <Tip>
+
+        <span class="badge">Commercial & Enterprise</span>
+
+        Running an automation app via a deployment is generally preferred over running an app directly.
+
+        Deployments offer additional features including upstream and downstream integrations, deployment metrics, human review workflows, and secret and configuration management.
+
+        Learn more about [deployments](/automate/deployments) to decide if you'd rather use the [Run deployment](/api-sdk/api-reference/runs/run-deployment) API operation.
+
+        </Tip>
+
+        <Note>Any specified input or output is validated against the context set by the `IB-Context` header. For example, if the context is set to your community account, but the batch ID used as input for the run is stored in your organization, the call fails.</Note>
+      parameters:
+        - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                app_name:
+                  type: string
+                  description: Required unless using `app_id`. The name of the app to run.
+                app_id:
+                  type: string
+                  description: |
+                    Required unless using `app_name`. The app ID of the app to run.
+
+                    <Tip>You can find an app ID in the app URL, such as http<span>s://</span>aihub.instabase.com/hub/apps/**528c36e8-ac5b-490d-a41b-7eec9c404b87**.</Tip>
+                owner:
+                  type: string
+                  description: |
+                    The account that generated the app. If not specified, defaults to your AI Hub username.
+
+                    For custom apps belonging to you, accept the default. For AI Hub Marketplace apps published by Instabase, specify `instabase`.
+                batch_id:
+                  type: integer
+                  description: Required unless using `input_dir`. The batch ID of a batch created with the [Batches endpoint](/api-sdk/api-reference/batches/create-batch/). All files uploaded to the batch are used as input for the run.
+                input_dir:
+                  type: string
+                  description: Required unless using `batch_id`. The path of the input folder in a connected drive or Instabase Drive. See [Specifying file paths](/api-sdk/api-reference/run-reference/).
+                version:
+                  type: string
+                  description: Version of the app to use. If not specified, defaults to the latest production version.
+                output_workspace:
+                  type: string
+                  description: |
+                    The workspace in which to run the app. Output saves to the specified workspace. If not defined, the default is your personal workspace.
+
+                    <Note>Service accounts don't have personal workspaces. If making this call from a service account, you must specify a value for either `output_workspace` or `output_dir`.</Note>
+                output_dir:
+                  type: string
+                  description: Defines a specific location for the output to be saved in a connected drive or Instabase Drive. If defined, overrides the `output_workspace` value. See [Specifying file paths](/api-sdk/api-reference/run-reference/).
+                settings:
+                  type: object
+                  description: JSON object containing settings for the app run.
+                  properties:
+                    keys:
+                      type: object
+                      description: |
+                         Configure runtime values for any custom and secret keys referenced in the app. Undefined keys run without a value.
+                      properties:
+                         custom:
+                            type: object
+                            description: |
+                               Configure any custom keys, using key/value pairs. In the key/value pair, define the key as the name of an existing key used in your app, and define the value as any custom value.
+
+                               <Note>Any keys being defined by API should correspond to keys listed on the app **Overview** page, on the **Keys** tab.</Note>
+                            additionalProperties: true
+                         secret:
+                            type: object
+                            description: |
+                               Configure any secret keys, using key/value pairs. In the key/value pair, define the key as the name of an existing secret key used in your app, and define the value as any secret in the organization's secrets vault. For guidance on managing secrets, see [Managing secrets](/admin/secret-management/) or refer to the [Secrets endpoints](/api-sdk/api-reference/secrets/).
+
+                               <Note>Any keys being defined by API should correspond to keys listed on the app **Overview** page, on the **Keys** tab.</Note>
+                            additionalProperties:
+                               type: string
+                    runtime_config:
+                      type: object
+                      description: A dictionary supporting select runtime configurations, such as generating retrievable PDFs of processed documents. For all other runtime configurations, use the `keys` parameter.
+                      properties:
+                         generate_post_process_pdf:
+                            type: boolean
+                            description: |
+                               Set to `true` to generate a retrievable PDF for each document the app processes, including separate PDFs for each document created by split classification. PDF generation is supported only for documents less than 100 pages in length.
+
+                               <Note>When getting run results, use the [`include_source_info` query parameter](/api-sdk/api-reference/runs/get-run-results#request.query.include_source_info.include_source_info) to return the file path for any generated PDFs in your results. File paths are returned under `files/documents/post_processed_pdf_path`.</Note>
+                         instabase:
+                            type: object
+                            description: A dictionary supporting select runtime configurations.
+                            properties:
+                                pdf:
+                                  type: object
+                                  description: A dictionary supporting select runtime configurations dealing with PDF input documents.
+                                  properties:
+                                      passwords:
+                                        type: object
+                                        description: A dictionary with titles of encrypted PDF documents as keys and passwords for those documents as values.
+                                        additionalProperties:
+                                          type: string
+                    tags:
+                      type: array
+                      items:
+                        type: string
+                      description: |
+                        List of string tags to attach to this run. Combined length of all tags must not exceed 500 characters.
+
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/run'
+          description: Run started successfully.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              name: Simple request
+              code: |
+                  curl "${API_ROOT}/v2/apps/runs" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                          "batch_id": <BATCH-ID>,
+                          "app_name": "<APP-NAME>"
+                        }'
+
+            - sdk: python
+              name: Simple request with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  run = client.apps.runs.create(
+                      app_name="MyApp",
+                      batch_id=12345
+                  )
+                  
+                  print(f"Run ID: {run.id}")
+
+            - sdk: python
+              name: Simple request without SDK
+              code: |
+                  import requests
+
+                  url = "https://aihub.instabase.com/api/v2/apps/runs"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create the request payload
+                  data = {
+                      "batch_id": 12345,
+                      "app_name": "My App"
+                  }
+                  
+                  # make the POST request
+                  response = requests.post(url, headers=headers, json=data)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      print(f"Run started with ID: {response.json()['id']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+            - sdk: curl
+              name: Complex request
+              code: |
+                  curl "${API_ROOT}/v2/apps/runs" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                          "batch_id": "<BATCH-ID>",
+                          "app_name": "<APP-NAME>",
+                          "settings": {
+                            "runtime_config": {
+                              "generate_post_process_pdf": true,
+                              "instabase": {
+                                "pdf": {
+                                  "passwords": {
+                                    "test1.pdf": "abc123",
+                                    "scott.pdf": "tiger"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }'
+
+            - sdk: python
+              name: Complex request with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  run = client.apps.runs.create(
+                      app_name="MyApp",
+                      batch_id=12345,
+                      settings={
+                          "runtime_config": {
+                              "generate_post_process_pdf": True,
+                              "instabase": {
+                                  "pdf": {
+                                      "passwords": {
+                                          "test1.pdf": "abc123",
+                                          "scott.pdf": "tiger"
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  )
+                  print(f"Run ID: {run.id}")
+
+            - sdk: python
+              name: Complex request without SDK
+              code: |
+                  import requests
+                  
+                  url = "https://aihub.instabase.com/api/v2/apps/runs"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create the request payload
+                  data = {
+                      "batch_id": 12345,
+                      "app_name": "My App",
+                      "settings": {
+                          "runtime_config": {
+                              "generate_post_process_pdf": True,
+                              "instabase": {
+                                  "pdf": {
+                                      "passwords": {
+                                          "test1.pdf": "abc123",
+                                          "scott.pdf": "tiger"
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+                  
+                  # make the POST request
+                  response = requests.post(url, headers=headers, json=data)
+                  
+                  # handle the response
+                  if response.status_code == 200:
+                      print(f"Run started with ID: {response.json()['id']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+    get:
+      operationId: listRuns
+      x-fern-audiences:
+        - public
+      tags:
+        - Runs
+      summary: List runs
+      description: Return a list of runs. Use query parameters to filter results.
+      parameters:
+        - $ref: '#/components/parameters/ib_context'
+        - in: query
+          name: app_id
+          schema:
+            type: string
+          description: Filter runs by app ID.
+        - in: query
+          name: app_name
+          schema:
+            type: string
+          description: Filter runs by app name.
+        - in: query
+          name: deployment_id
+          schema:
+            type: string
+          description: Filter runs by deployment ID.
+        - in: query
+          name: username
+          schema:
+            type: string
+          description: Filter runs initiated by the specified user (username).
+        - in: query
+          name: run_id
+          schema:
+            type: string
+          description: Filter specific run by run ID.
+        - in: query
+          name: status
+          schema:
+            type: array
+            items:
+              type: string
+          description: Filter jobs by status, such as COMPLETE, RUNNING, or FAILED.
+        - in: query
+          name: output_workspaces
+          schema:
+            type: array
+            items:
+              type: string
+          description: Filter runs by the run's output workspace. By default, all runs across all workspaces you have access to are returned, use this query parameter to filter by specific workspace names. You must have access to the named workspaces.
+        - in: query
+          name: from_timestamp
+          schema:
+            type: integer
+          description: Filter runs starting from this timestamp. Timestamp in Unix time in seconds. Defaults to 24 hours before the current time.
+        - in: query
+          name: to_timestamp
+          schema:
+            type: integer
+          description: Filter runs up to this timestamp. Timestamp in Unix time in seconds. Defaults to the current time.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of results to return.
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Offset of the first result to return.
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+            enum:
+              - start_timestamp
+              - status
+          description: Field to sort results by.
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum:
+              - ASCENDING
+              - DESCENDING
+          description: Order of sorting, such as ASCENDING or DESCENDING.
+      responses:
+        '200':
+          description: A list of all runs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/run'
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/apps/runs" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  response = client.apps.runs.list()
+                  
+                  print(f"third run ID: {response.runs[2].id}")  # 0-based indexing
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  url = "https://aihub.instabase.com/api/v2/apps/runs"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the GET request
+                  response = requests.get(url, headers=headers)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      # the next line assumes the call returned at least 3 runs
+                      print(f"third run ID: {response.json()['runs'][2]['id']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+  /v2/apps/deployments/{deployment-id}/runs:
+    post:
+      operationId: runDeployment
+      x-fern-audiences:
+        - public
+      tags:
+        - Runs
+      summary: Run deployment
+      description: |
+        <span class="badge">Commercial & Enterprise</span>
+
+        Run an AI Hub deployment by its deployment ID. The input for the run is specified using a batch ID or file path.
+
+        <Info>Use the UI to optionally [configure email notifications or webhooks](/automate/deployments#configuring-notifications) for certain events within the deployed app's lifecycle.</Info>
+
+        <Note>Any specified input or output is validated against the context set by the `IB-Context` header. For example, if the context is set to your community account, but the batch ID used as input for the run is stored in your organization, the call fails.</Note>
+      parameters:
+        - $ref: '#/components/parameters/ib_context'
+        - in: path
+          name: deployment-id
+          schema:
+            type: string
+            default: false
+          required: true
+          description: |
+            The deployment ID.
+
+            <Tip>Find the deployment ID by opening the deployment in AI Hub and looking at the site URL, such as https<span>://</span>aihub.instabase.com/deployments/**01902d6f-bb35-74cb-bd27-c09b38bbf20a**/runs.</Tip>
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batch_id:
+                  type: integer
+                  description: Required unless using `input_dir` or `manual_upstream_integration`. The batch ID of a batch created with the [Batches endpoint](/api-sdk/api-reference/batches/create-batch/). All files uploaded to the batch are used as input for the run.
+                input_dir:
+                  type: string
+                  description: Required unless using `batch_id` or `manual_upstream_integration`. The path of the input folder in a connected drive or Instabase Drive. See [Specifying file paths](/api-sdk/api-reference/run-reference/).
+                manual_upstream_integration:
+                  type: boolean
+                  description: Use the deployment's upstream integration as a source rather than a `batch_id` or `input_dir`. Requires an upstream integration to be configured for the deployment.
+                from_timestamp:
+                  type: number
+                  description: Required if `manual_upstream_integration` is true and the upstream integration is a mailbox integration. Specifies the earliest date in Unix time milliseconds from which to pull emails.
+                to_timestamp:
+                  type: number
+                  description: Required if `manual_upstream_integration` is true and the upstream integration is a mailbox integration. Specifies the latest date in Unix time milliseconds from which to pull emails.
+                version:
+                  type: string
+                  description: Version of the app to use. If not specified, defaults to the latest production version.
+                output_dir:
+                  type: string
+                  description: Defines a specific location for the output to be saved in a connected drive or Instabase Drive. If defined, overrides the output workspace configured for the deployment. See [Specifying file paths](/api-sdk/api-reference/run-reference).
+                settings:
+                  type: object
+                  description: JSON object containing settings for the deployment run.
+                  properties:
+                    keys:
+                      type: object
+                      description: |
+                         Define the values for any custom or secret keys configured under your deployment's *Runtime configurations* settings. Key values passed via API override any key values defined in the deployment configuration.
+                      properties:
+                         custom:
+                            type: object
+                            description: |
+                               Configure any custom keys, using key/value pairs. In the key/value pair, define the key as the name of an existing key used in your deployment, and define the value as any custom value.
+
+                               <Note>Any keys being defined by API should correspond to keys listed under your deployment's *Runtime configuration* settings. For keys included in the `custom` object, match against the keys listed on the **Custom keys** tab of the runtime configuration.</Note>
+                            additionalProperties: true
+                         secret:
+                            type: object
+                            description: |
+                               Configure any secret keys, using key/value pairs. In the key/value pair, define the key as the name of an existing secret key used in your deployment, and define the value as any secret in the organization's secrets vault. For guidance on managing secrets, see [Managing secrets](/admin/secret-management/) or refer to the [Secrets endpoints](/api-sdk/api-reference/secrets/).
+
+                               <Note>Any keys being defined by API should correspond to keys listed under your deployment's *Runtime configuration* settings. For keys included in the `secret` object, match against the keys listed on the **Secret keys** tab of the runtime configuration.</Note>
+                            additionalProperties:
+                               type: string
+                    runtime_config:
+                      type: object
+                      description: A dictionary supporting select runtime configurations, such as generating retrievable PDFs of processed documents. For all other runtime configurations, use the `keys` parameter.
+                      properties:
+                         generate_post_process_pdf:
+                            type: boolean
+                            description: |
+                               Set to `true` to generate a retrievable PDF for each document the app processes, including separate PDFs for each document created by split classification.
+
+                               <Note>When getting run results, use the [`include_source_info` query parameter](/api-sdk/api-reference/runs/get-run-results#request.query.include_source_info.include_source_info) to return the file path for any generated PDFs in your results. File paths are returned under `files/documents/post_processed_pdf_path`.</Note>
+                         instabase:
+                           type: object
+                           description: A dictionary supporting select runtime configurations.
+                           properties:
+                             pdf:
+                               type: object
+                               description: A dictionary supporting select runtime configurations dealing with PDF input documents.
+                               properties:
+                                 passwords:
+                                   type: object
+                                   description: A dictionary with titles of encrypted PDF documents as keys and passwords for those documents as values.
+                                   additionalProperties:
+                                     type: string
+                    tags:
+                      type: array
+                      items:
+                        type: string
+                      description: |
+                        List of string tags to attach to this run. Combined length of all tags must not exceed 500 characters.
+
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/run'
+          description: Successfully initiated an asynchronous operation to run the deployment.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/apps/deployments/<DEPLOYMENT-ID>/runs" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                          "batch_id": <BATCH-ID>,
+                        }'
+
+            - sdk: python
+              name: Use batch ID with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  run = client.apps.deployments.runs.create(
+                      deployment_id="12345678-abcde-1234-abcd-123456789012",
+                      batch_id=12345
+                  )
+                  
+                  print(f"run ID: {run.id}")
+
+            - sdk: python
+              name: Use batch ID without SDK
+              code: |
+                  import requests
+
+                  deployment_id = "12345678-abcde-1234-abcd-123456789012"
+                  url = f"https://aihub.instabase.com/api/v2/apps/deployments/{deployment_id}/runs"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create the request payload
+                  data = {"batch_id": 12345}
+                  
+                  # make the POST request
+                  response = requests.post(url, headers=headers, json=data)
+
+                  # handle the response
+                  if response.status_code == 202:
+                      print(f"Deployment run started with ID: {response.json()['id']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+            - sdk: python
+              name: Use input dir with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  organization_id = "acme"
+                  workspace = "MyWorkspace"
+                  drive_name = "My Google Drive"
+                  folder = "My Drive/input_files/documents/"
+                  input_dir = f"{organization_id}/{workspace}/fs/{drive_name}/{folder}"
+                  
+                  run = client.apps.deployments.runs.create(
+                      deployment_id="12345678-abcde-1234-abcd-123456789012",
+                      input_dir=input_dir
+                  )
+                  
+                  print(f"run ID: {run.id}")
+
+            - sdk: python
+              name: Use input dir without SDK
+              code: |
+                  import requests
+                  
+                  deployment_id = "12345678-abcde-1234-abcd-123456789012"
+                  url = f"https://aihub.instabase.com/api/v2/apps/deployments/{deployment_id}/runs"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  organization_id = "acme"
+                  workspace = "MyWorkspace"
+                  drive_name = "My Google Drive"
+                  folder = "My Drive/input_files/documents/"
+                  input_dir = f"{organization_id}/{workspace}/fs/{drive_name}/{folder}"
+                  
+                  # create the request payload
+                  data = {"input_dir": input_dir}
+                  
+                  # make the POST request
+                  response = requests.post(url, headers=headers, json=data)
+
+                  # handle the response
+                  if response.status_code == 202:
+                      print(f"Deployment run started with ID: {response.json()['id']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+  /v2/apps/runs/{run_id}:
+    get:
+      operationId: getRunStatus
+      x-fern-audiences:
+        - public
+      tags:
+        - Runs
+      summary: Get run status
+      description: Get the status of a run.
+      parameters:
+        - $ref: '#/components/parameters/run_id'
+        - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/run'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/apps/runs/<RUN-ID>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  response = client.apps.runs.status(
+                      run_id="a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                  )
+                  
+                  print(f"Run status: {response.status}")
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+                  
+                  run_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                  url = f"https://aihub.instabase.com/api/v2/apps/runs/{run_id}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the GET request
+                  response = requests.get(url, headers=headers)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      print(f"Run status: {response.json()['status']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+    delete:
+      operationId: deleteRun
+      x-fern-audiences:
+        - public
+      tags:
+        - Runs
+      summary: Delete run
+      description: |
+        Deletes a specified automation app run and optionally its associated database data, input files, output files, and logs. This is an asynchronous operation that must be [checked for completion](/api-sdk/api-reference/jobs/job-status).
+
+        <Warning>Deleting the run's input files also deletes the batch that the run processed.</Warning>
+      parameters:
+        - $ref: '#/components/parameters/run_id'
+        - $ref: '#/components/parameters/ib_context'
+        - in: query
+          name: delete_db_data
+          schema:
+            type: boolean
+            default: true
+          description: Delete the run's database data.
+        - in: query
+          name: delete_input
+          schema:
+            type: boolean
+            default: true
+          description: Delete the run's input files.
+        - in: query
+          name: delete_output
+          schema:
+            type: boolean
+            default: true
+          description: Delete the run's output files.
+        - in: query
+          name: delete_logs
+          schema:
+            type: boolean
+            default: true
+          description: Delete the run's logs.
+      responses:
+        '202':
+          description: Run deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  delete_input_dir_job_id:
+                    type: string
+                    description: Job ID for deleting the input directory.
+                    nullable: true
+                  delete_output_dir_job_id:
+                    type: string
+                    description: Job ID for deleting the output directory.
+                    nullable: true
+                  delete_log_dir_job_id:
+                    type: string
+                    description: Job ID for deleting the log directory.
+                    nullable: true
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X DELETE "${API_ROOT}/v2/apps/runs/<RUN-ID>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  import time
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  response = client.apps.runs.delete(
+                      run_id="a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                  )
+                  
+                  job_ids = [
+                      response.delete_input_dir_job_id,
+                      response.delete_output_dir_job_id,
+                      response.delete_log_dir_job_id
+                  ]
+                  
+                  # remove empty job IDs
+                  job_ids = [job_id for job_id in job_ids if job_id]
+                  
+                  # poll for job completion
+                  while job_ids:
+                      for job_id in job_ids[:]:
+                          job_status = client.jobs.status(job_id)
+                          if job_status.state == "COMPLETE":
+                              job_ids.remove(job_id)
+                      time.sleep(5)
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  run_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                  url = f"https://aihub.instabase.com/api/v2/apps/runs/{run_id}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the DELETE request
+                  response = requests.delete(url, headers=headers)
+
+                  # handle the response
+                  if response.status_code == 202:
+                      print("Run deletion request accepted")
+                      print(f"Delete input dir job ID: {response.json()['delete_input_dir_job_id']}")
+                      print(f"Delete output dir job ID: {response.json()['delete_output_dir_job_id']}")
+                      print(f"Delete log dir job ID: {response.json()['delete_log_dir_job_id']}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+  /v2/apps/runs/{run_id}/results:
+    get:
+      operationId: getRunResults
+      x-fern-audiences:
+        - public
+      tags:
+        - Runs
+      summary: Get run results
+      description: |
+        Get the results of a completed automation app run.
+
+        <Note>
+        The results from this endpoint are paginated. The `has_more` field in the response indicates if there are more results to fetch and the `file_offset` query parameter can be used to specify the starting point for the next set of results.
+
+        For an example of using `file_offset` to fetch all results, see the *Retrieving paginated results* code sample.
+        </Note>
+
+        <Info>
+
+        This API operation might return field names that differ from those in the automation project.
+        The operation converts field names to valid Python variable names by:
+
+        * Allowing only letters, numbers, and underscores
+        * Requiring names to start with a letter or underscore
+        * Replacing invalid characters with underscores
+        * Converting single underscores to double underscores
+
+        Examples:
+        * `due date` → `due_date`
+        * `driver's license` → `driver_s_license`
+        * `3rd category` → `_3rd_category`
+        * `secret_id` → `secret__id`
+
+        These changes apply only to field names in the API response. The field names in the automation project are not changed.
+
+        </Info>
+      parameters:
+        - $ref: '#/components/parameters/run_id'
+        - in: query
+          name: include_review_results
+          schema:
+            type: boolean
+            default: false
+          description: |
+            Whether to include human review details in the results. When set to `true`, various human review details are returned.
+
+            <Note>The review process can include manually correcting values. This endpoint doesn't support returning the original and corrected values.</Note>
+
+            The following values are returned at the document level (`files/documents/...`):
+
+            - `review_completed`
+            - `class_edit_history`
+            - `class_edit_history/timestamp`
+            - `class_edit_history/user_id`
+            - `class_edit_history/modifications`
+            - `class_edit_history/modifications/message`
+
+            The following values are returned at the field level (`files/documents/fields/...`):
+
+            - `edit_history`
+            - `edit_history/timestamp`
+            - `edit_history/user_id`
+            - `edit_history/modifications`
+            - `edit_history/modifications/message`
+
+            The following values are returned at the packet level (also known as case level) (`case_info/fields/...`):
+
+            - `edit_history`
+            - `edit_history/timestamp`
+            - `edit_history/user_id`
+            - `edit_history/modifications`
+            - `edit_history/modifications/message`
+
+            See the response schema for details and descriptions.
+
+        - in: query
+          name: include_confidence_scores
+          schema:
+            type: boolean
+            default: false
+          description: |
+            Whether to include confidence scores in the results. When set to `true`, various confidence scores are returned.
+
+            The following values are returned at the document level (`files/documents/...`):
+
+            - `classification_confidence`
+
+            The following values are returned at the field level (`files/documents/fields/...`):
+
+            - `confidence/model`
+            - `confidence/ocr`
+
+            See the response schema for details and descriptions.
+        - in: query
+          name: include_validation_results
+          schema:
+            type: boolean
+            default: false
+          description: |
+            Whether to include validation status in the results. When set to `true`, various validation results are returned.
+
+            The following values are returned at the document level (`files/documents/...`):
+
+            - `validations/final_result_pass`
+
+            The following values are returned at the field level (`files/documents/fields/...`):
+
+            - `validations/valid`
+            - `validations/alerts`
+
+            The following values are returned at the packet level (also known as case level) (`case_info/fields/...`):
+
+            - `validations/valid`
+            - `validations/failures`
+
+            Cross-class validation ensures data quality and consistency across documents within a packet.
+
+            See the response schema for details and descriptions.
+        - in: query
+          name: include_source_info
+          schema:
+            type: boolean
+            default: false
+          description: |
+            Whether to include source information in the results. When set to `true`, various source details are returned.
+
+            The following values are returned at the document level (`files/documents/...`):
+
+            - `post_processed_paths`
+            - `post_processed_pdf_path`
+
+               <Note>
+               A `post_processed_pdf_path` is populated when `settings/runtime_config/generate_post_process_pdf=true`. Paths to PDFs are generated from each document, with separate PDF paths for documents split during classification.
+               </Note>
+
+            - `page_layouts`
+
+            The following values are returned at the field level (`files/documents/fields/...`):
+
+            - `source_coordinates/top_x`
+            - `source_coordinates/top_y`
+            - `source_coordinates/bottom_x`
+            - `source_coordinates/bottom_y`
+            - `source_coordinates/page_number`
+
+            See the response schema for details and descriptions.
+        - in: query
+          name: file_offset
+          schema:
+            type: integer
+            default: 0
+          description: The initial file index to start returning results from. Defaults to `0`.
+        - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: |
+            Run results retrieved successfully.
+
+            <Note>
+
+            If errors occur at the class, field, or document levels, the response status code is `200` and the response body includes error details.
+
+            </Note>
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resultsResponse'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - path-parameters:
+            run_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+          response:
+            body:
+              id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+              status: "COMPLETE"
+              message: "Completed single_flow"
+              start_timestamp: 1765912514238248673
+              finish_timestamp: 1765912529614833939
+              batch_id: '1235'
+              files:
+                - original_file_name: "test.png"
+                  input_file_path: "instabase-sandbox-org/test-org/fs/Instabase Drive/app-runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890/input/test.png"
+                  documents:
+                    - class_name: "Wage And Tax Statement"
+                      page_numbers: [1, 2]
+                      fields:
+                        - value: "123 STREET RD ANYWHERE, USA,12345"
+                          type: "TEXT"
+                          field_name: "employers_address_and_ZIP_code"
+                - original_file_name: "test2.png"
+                  input_file_path: "instabase-sandbox-org/test-org/fs/Instabase Drive/app-runs/a1b2c3d4-e5f6-7890-abcd-ef1234567890/input/test2.png"
+                  documents:
+                    - class_name: "Driver License"
+                      page_numbers: [1]
+                      fields:
+                        - value: "Male"
+                          type: "TEXT"
+                          field_name: "sex"
+              keys:
+                - custom: {}
+              case_info:
+                fields:
+                  - name: "Employee_Address"
+                    value: "123 STREET RD ANYWHERE, USA,12345"
+                    input_fields:
+                      - record_index: 0
+                        refined_phrase_name: "employers_address_and_ZIP_code"
+                    chosen_field:
+                      record_index: 0
+                      refined_phrase_name: "employers_address_and_ZIP_code"
+                    edit_history:
+                      - timestamp: "08/27/2025 00:58:39"
+                        user_id: "john.doe_instabase.com"
+                        modifications:
+                          - message: "Edited to \"123 STREET RD ANYWHERE, USA,12345\""
+                  - name: "Sex"
+                    value: "Male"
+                    input_fields:
+                      - record_index: 0
+                        refined_phrase_name: "sex"
+                    chosen_field:
+                      record_index: 0
+                      refined_phrase_name: "sex"
+              has_more: false
+          code-samples:
+            - sdk: curl
+              name: Simple request
+              code: |
+                  curl "${API_ROOT}/v2/apps/runs/<RUN-ID>/results" \
+                  -H "Authorization: Bearer ${API_TOKEN}" \
+                  -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: Simple request with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  results = client.apps.runs.results(
+                      run_id="a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                  )
+                  
+                  print(f"Retrieved results from {len(results.files)} files")
+
+            - sdk: python
+              name: Simple request without SDK
+              code: |
+                  import requests
+
+                  run_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                  url = f"https://aihub.instabase.com/api/v2/apps/runs/{run_id}/results"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the GET request
+                  response = requests.get(url, headers=headers)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      print(f"Retrieved results from {len(response.json()['files'])} files")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+        - path-parameters:
+            run_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+          response:
+            body:
+              id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+              status: "COMPLETE"
+              message: "Completed single_flow"
+              start_timestamp: 1765912514238248673
+              finish_timestamp: 1765912529614833939
+              batch_id: "9706"
+              files:
+                - original_file_name: "test.png"
+                  documents:
+                    - class_name: "Wage And Tax Statement"
+                      page_layouts:
+                        - page_number: 0
+                          width: 1012.0
+                          height: 639.0
+                      fields:
+                        - value: "123 STREET RD ANYWHERE, USA,12345"
+                          type: "TEXT"
+                          confidence:
+                            model: 0.5900550516
+                            ocr: 0.6900550516
+                          source_coordinates:
+                            - top_x: 36.0
+                              top_y: 181.0
+                              bottom_x: 84.0
+                              bottom_y: 212.0
+                              page_number: 0
+                            - top_x: 90.0
+                              top_y: 182.0
+                              bottom_x: 198.0
+                              bottom_y: 211.0
+                              page_number: 0
+                          field_name: "employers_address_and_ZIP_code"
+                      post_processed_paths:
+                        - "instabase-org/orguser/fs/S3 Drive/app-runs/dd97-42cb-8b8e-28a63066887e/4180-8508-b103afb67185/s1_process_files/images/test.png.PNG"
+                - original_file_name: "test2.png"
+                  documents:
+                    - class_name: "Driver License"
+                      page_layouts:
+                        - page_number: 0
+                          width: 1012.0
+                          height: 639.0
+                      fields:
+                        - value: "Male"
+                          type: "TEXT"
+                          confidence:
+                            model: 0.6915
+                            ocr: 0.7915
+                          source_coordinates: []
+                          field_name: "sex"
+                      post_processed_paths:
+                        - "instabase-org/orguser/fs/S3 Drive/app-runs/dd97-42cb-8b8e-28a63066887e/4180-8508-b103afb67185/s1_process_files/images/test2.png.PNG"
+              case_info:
+                fields:
+                  - name: "Employee_Address"
+                    value: "123 STREET RD ANYWHERE, USA,12345"
+                    input_fields:
+                      - record_index: 0
+                        refined_phrase_name: "employers_address_and_ZIP_code"
+                    chosen_field:
+                      record_index: 0
+                      refined_phrase_name: "employers_address_and_ZIP_code"
+                    edit_history:
+                      - timestamp: "08/27/2025 00:58:39"
+                        user_id: "john.doe_instabase.com"
+                        modifications:
+                          - message: "Edited to \"123 STREET RD ANYWHERE, USA,12345\""
+                  - name: "Sex"
+                    value: "Male"
+                    input_fields:
+                      - record_index: 0
+                        refined_phrase_name: "sex"
+                    chosen_field:
+                      record_index: 0
+                      refined_phrase_name: "sex"
+              review_completed: false
+              has_more: false
+          code-samples:
+            - sdk: curl
+              name: Using query parameters with SDK
+              code: |
+                  curl "${API_ROOT}/v2/apps/runs/<RUN-ID>/results?include_confidence_scores=true&include_source_info=true" \
+                    -H "Authorization: Bearer ${API_TOKEN}"
+
+            - sdk: python
+              name: Using query parameters with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  results = client.apps.runs.results(
+                      run_id="a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                      include_confidence_scores=True,
+                      include_source_info=True
+                  )
+                  
+                  print(f"Retrieved results from {len(results.files)} files")
+
+            - sdk: python
+              name: Using query parameters without SDK
+              code: |
+                  import requests
+
+                  run_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                  url = f"https://aihub.instabase.com/api/v2/apps/runs/{run_id}/results" 
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  params = {
+                      "include_confidence_scores": True,
+                      "include_source_info": True
+                  }
+                
+                  # make the GET request
+                  response = requests.get(url, headers=headers, params=params)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      print(f"Retrieved results for {len(response.json()['files'])} files")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+            - sdk: python
+              name: Retrieving paginated results with SDK
+              code: |
+                  # The results from this endpoint are paginated.
+                  # The `has_more` field in the response indicates whether there are more results to fetch,
+                  # and `file_offset` specifies the starting point for the next set of results.
+                  # This example retrieves all results.
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  all_files_results = []
+                  current_offset = 0
+                  run_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+
+                  while True:
+                      # fetch results with the current offset
+                      response = client.apps.runs.results(
+                          run_id=run_id, 
+                          file_offset=current_offset
+                      )
+                  
+                      # extend the list with the files from the current response
+                      all_files_results.extend(response.files)
+
+                      # check if there are more results to fetch
+                      if not response.has_more:
+                          break
+
+                      # increment the offset by the number of files received in the current response
+                      current_offset += len(response.files)
+
+                  print(f"Retrieved results from {len(all_files_results)} total files")
+
+            - sdk: python
+              name: Retrieving paginated results without SDK
+              code: |
+                  # The results from this endpoint are paginated.
+                  # The `has_more` field in the response indicates whether there are more results to fetch,
+                  # and `file_offset` specifies the starting point for the next set of results.
+                  # This example retrieves all results.
+                  import requests
+                  
+                  run_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                  url = f"https://aihub.instabase.com/api/v2/apps/runs/{run_id}/results"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  file_offset = 0
+                  all_files_results = []
+                  
+                  while True:
+                      params = {"file_offset": file_offset}
+                      
+                      # make the GET request
+                      response = requests.get(url, headers=headers, params=params)
+
+                      # handle the response
+                      if response.status_code == 200:
+                          print(f"Retrieved results for {len(response.json()['files'])} files")
+                          all_files_results.extend(response.json()['files'])
+                          if response.json()['has_more']:
+                              file_offset += len(response.json()['files'])
+                          else:
+                              break
+                      else:
+                          print(f"Error: {response.status_code} - {response.text}")
+                          break
+                  
+                  print(f"Retrieved results from {len(all_files_results)} total files")
+  /v2/jobs/{job_id}:
+    get:
+      operationId: jobStatus
+      x-fern-audiences:
+        - public
+      tags:
+        - Jobs
+      summary: Poll file operation job status
+      description: Poll the asynchronous job created during a file operation request such as deleting a batch or file.
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The job ID returned by a request.
+        - $ref: '#/components/parameters/ib_context'
+      responses:
+        '200':
+          description: Request successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/jobStatusResponse'
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/jobs/<JOB-ID>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  import time
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  # start asynchronous job whose status we'll check
+                  delete_response = client.batches.delete(batch_id=12345)
+                  
+                  # poll job status until done
+                  while True:
+                      status_response = client.jobs.status(job_id=delete_response.job_id)
+                      if status_response.state not in ["PENDING", "RUNNING"]:
+                          break
+                      time.sleep(3)  # pause before polling status again
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+                  
+                  # start asynchronous job whose status we'll check
+                  batch_id = 12345
+                  url = f"https://aihub.instabase.com/api/v2/batches/{batch_id}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  delete_response = requests.delete(url, headers=headers)
+
+                  url = f"https://aihub.instabase.com/api/v2/jobs/{delete_response.json()['job_id']}"
+
+                  # make the GET request
+                  status_response = requests.get(url, headers=headers)
+
+                  # handle the response
+                  if status_response.status_code == 200:
+                      print(f"Job status: {status_response.json()['state']}")
+                  else:
+                      print(f"Error: {status_response.status_code} - {status_response.text}")
+
+  /v2/files/{path}:
+    get:
+      operationId: readFile
+      x-fern-audiences:
+        - public
+      tags:
+        - Files
+      summary: Read file
+      description: |
+        Read contents from a file.
+
+        <Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>
+
+        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
+      parameters:
+        - in: path
+          name: path
+          required: true
+          schema:
+            type: string
+          description: Full path to the file.
+        - in: query
+          name: expect-node-type
+          required: true
+          schema:
+            type: string
+            enum: [file, folder]
+          description: Type of node at the target path.
+        - $ref: '#/components/parameters/ib_context'
+        - in: header
+          name: Range
+          schema:
+            type: string
+          required: false
+          description: |
+            The portion of the file to read. A single HTTP byte range, with inclusive bounds and a non-negative start value. If not provided, return the entire file. Example: `bytes=0-4`
+        - in: header
+          name: IB-Retry-Config
+          schema:
+            type: string
+          required: false
+          description: |
+            Configures retry logic if no file is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{retries:3,backoff-seconds:5}`
+      responses:
+        '200':
+          description: Indicates that the response contains the entire file contents.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                default: application/octet-stream
+            Content-Length:
+              schema:
+                type: integer
+                format: int64
+        '206':
+          description: Indicates that only a portion of the file has been returned, as requested with the Range header.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                default: application/octet-stream
+            Content-Length:
+              schema:
+                type: integer
+                format: int64
+            Content-Range:
+              schema:
+                type: string
+                description: An HTTP content range header. Contains a range representing the returned portion of the file.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v2/files/<FILE-PATH>?expect-node-type=file" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: Simple request with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "My Google Drive"
+                  folder = "My Drive/AI Hub files"
+                  file_name = "hello.txt"
+                  file_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}"
+
+                  # returns a byte literal, such as `b"foo"`
+                  file_contents = client.files.read(path=file_path, expect_node_type="file")
+                  print(f"Contents: {file_contents.decode('utf-8')}")
+
+            - sdk: python
+              name: Simple request without SDK
+              code: |
+                  import requests
+                  
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "My Google Drive"
+                  folder = "My Drive/AI Hub files"
+                  file_name = "hello.txt"
+                  file_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}"
+                  
+                  url = f"https://aihub.instabase.com/api/v2/files/{file_path}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create query parameters
+                  params = {"expect-node-type": "file"}
+                  
+                  # make the GET request
+                  response = requests.get(url, headers=headers, params=params)
+                  
+                  # handle the response
+                  if response.status_code == 200:
+                      print(f"Contents: {response.content.decode('utf-8')}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+            - sdk: python
+              name: Complex request with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "My Google Drive"
+                  folder = "My Drive/AI Hub files"
+                  file_name = "hello.txt"
+                  file_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}"
+
+                  retry_config = '{"retries": 3, "backoff-seconds": 5}'
+
+                  # returns a byte literal, such as `b"foo"`
+                  file_contents = client.files.read(
+                      path=file_path,
+                      expect_node_type="file",
+                      range="bytes=10-20",
+                      ib_retry_config=retry_config
+                  )
+                  print(f"Contents: {file_contents.decode('utf-8')}")
+
+            - sdk: python
+              name: Complex request without SDK
+              code: |
+                  import requests
+                  
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "My Google Drive"
+                  folder = "My Drive/AI Hub files"
+                  file_name = "hello.txt"
+                  file_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}"
+                  
+                  byte_range = "bytes=10-20"
+                  retry_config = '{"retries": 3, "backoff-seconds": 5}'
+                  
+                  # create query parameters
+                  params = {"expect-node-type": "file"}
+                  
+                  url = f"https://aihub.instabase.com/api/v2/files/{file_path}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com",
+                      "Range": byte_range,
+                      "IB-Retry-Config": retry_config
+                  }
+                  
+                  # make the GET request
+                  response = requests.get(url, headers=headers, params=params)
+                  
+                  # handle the response
+                  # 200 means whole content is returned
+                  # 206 means partial content is returned, due to "Range" parameter
+                  if response.status_code in [200, 206]:
+                      print(f"Contents: {response.content.decode('utf-8')}")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+    put:
+      operationId: writeFile
+      x-fern-audiences:
+        - public
+      tags:
+        - Files
+      summary: Create or overwrite file
+      description: |
+        Create a non-empty file or overwrite an existing file.
+
+        If the parent folder of the `path` parameter doesn't exist, the file system creates it before creating the file.
+
+        <Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>
+
+        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
+
+        Not all filesystem types support this operation.
+
+        | Filesystem           | Supported |
+        |----------------------|-----------|
+        | Instabase            | ✓         |
+        | Amazon S3            | ✓         |
+        | Azure Blob Storage   | ✓         |
+        | Google Cloud Storage | ✓         |
+        | Google Drive         | -         |
+
+      parameters:
+        - in: path
+          name: path
+          required: true
+          schema:
+            type: string
+          description: Full path to the file.
+        - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              description: The raw contents of the file to write.
+              type: string
+              format: binary
+      responses:
+        '201':
+          description: The request succeeded and a new file was created at the target location. AI Hub returns this status code only when the request includes an `If-None-Match` header with a value of `*`.
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Contains a URL leading to the created file.
+        '204':
+          description: The request succeeded.
+        '412':
+          description: The request failed because a file exists at the target location that matches the `If-None-Match` header.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X PUT "${API_ROOT}/v2/files/<FILE-PATH>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/octet-stream" \
+                    --data-binary "@<LOCAL_FILEPATH>"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "MyDrive"
+                  folder = "MyFolder"
+                  file_name = "hello.txt"
+                  file_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}"
+                  file_contents = bytes("Hello world", "utf-8")
+                  
+                  # returns None
+                  client.files.write(path=file_path, data=file_contents)
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "MyDrive"
+                  folder = "MyFolder"
+                  file_name = "hello.txt"
+                  file_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}"
+                  file_contents = bytes("Hello world", "utf-8")
+
+                  url = f"https://aihub.instabase.com/api/v2/files/{file_path}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com",
+                      "Content-Type": "application/octet-stream"
+                  }
+                  
+                  # make the PUT request
+                  response = requests.put(url, headers=headers, data=file_contents)
+
+                  # handle the response
+                  if response.status_code in [201, 204]:
+                      print("File written successfully")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+    head:
+      operationId: getFileMetadata
+      x-fern-audiences:
+        - public
+      tags:
+        - Files
+      summary: Read file or folder metadata
+      description: |
+        Read metadata of a file or folder at the target path.
+
+        This API operation reports whether the object at the target path is a file or folder. If a file, it also reports the file size and last modification time.
+
+        <Info>This acts on files and folders in the AI Hub filesystem, not your local filesystem.</Info>
+
+        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
+      parameters:
+        - in: path
+          name: path
+          required: true
+          schema:
+            type: string
+          description: Full path to the file or folder.
+        - $ref: '#/components/parameters/ib_context'
+        - in: header
+          name: IB-Retry-Config
+          schema:
+            type: string
+          required: false
+          description: |
+            Configures retry logic if no file or folder is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{'retries': 3, 'backoff-seconds': 5}`
+      responses:
+        '200':
+          description: Successfully retrieved metadata.
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: Returns `application/json` if it is a folder and `application/octet-stream` if it is a file.
+            Content-Length:
+              schema:
+                type: integer
+                format: int64
+              description: Optional. Only present if the target path is a file. The length of the file, in bytes.
+            last-modified:
+              schema:
+                type: string
+                format: date-time # Or http-date if more appropriate
+              description: Optional. Only present if the target path is a file. The date and time the file was last modified.
+        '404':
+          description: No file or folder was found at the target path.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -I "${API_ROOT}/v2/files/<FILE-PATH>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "Instabase Drive"
+                  folder = "MyFolder"
+                  node = "hello.txt"
+                  node_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}/{node}"
+                  
+                  # returns an object with status code and headers
+                  response = client.files.get_file_metadata(path=node_path)
+
+                  is_file = (response.headers["Content-Type"] == "application/octet-stream")
+                  is_folder = (response.headers["Content-Type"] == "application/json")
+                  
+                  if is_file:
+                      file_length = response.headers["Content-Length"]
+                      last_modified = response.headers["last-modified"]
+                      print(f"Node is a file with length {file_length} and modification date {last_modified}")
+                  else:
+                      print("Node is a folder")
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "Instabase Drive"
+                  folder = "MyFolder"
+                  file_name = "hello.txt"
+                  node_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}"
+
+                  url = f"https://aihub.instabase.com/api/v2/files/{node_path}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the HEAD request
+                  response = requests.head(url, headers=headers)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      is_file = (response.headers["Content-Type"] == "application/octet-stream")
+                      is_folder = (response.headers["Content-Type"] == "application/json")
+                  
+                      if is_file:
+                          file_length = response.headers["Content-Length"]
+                          last_modified = response.headers["last-modified"]
+                          print(f"Node is a file with length {file_length} and modification date {last_modified}")
+                      else:
+                          print("Node is a folder")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+    delete:
+      operationId: deleteFileOrFolder
+      x-fern-audiences:
+        - public
+      tags:
+        - Files
+      summary: Delete file or folder
+      description: |
+        Delete a single file or folder.
+
+        This operation is also available via the SDK method `client.files.delete()`.
+
+        <Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>
+
+        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
+
+        Not all filesystem types support this operation.
+
+        | Filesystem           | Supported |
+        |----------------------|-----------|
+        | Instabase            | ✓         |
+        | Amazon S3            | ✓         |
+        | Azure Blob Storage   | ✓         |
+        | Google Cloud Storage | ✓         |
+        | Google Drive         | -         |
+
+      parameters:
+        - in: path
+          name: path
+          required: true
+          schema:
+            type: string
+          description: Full path to the file or folder.
+        - $ref: '#/components/parameters/ib_context'
+      responses:
+        '202':
+          description: Indicates that the deletion request has been accepted. <br/> <Note>The operation returns this status code regardless of whether the file or folder exists.</Note>
+          headers:
+            Location:
+              schema:
+                type: string
+              description: A URL where the status of the deletion job can be checked.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X DELETE "${API_ROOT}/v2/files/<FILE-PATH>" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}"
+            - sdk: python
+              name: Delete file with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "Instabase Drive"
+                  folder = "my-folder"
+                  file_name = "hello.txt"
+                  file_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}"
+
+                  # returns None
+                  client.files.delete(path=file_path)
+
+            - sdk: python
+              name: Delete file without SDK
+              code: |
+                  import requests
+
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "Instabase Drive"
+                  folder = "my-folder"
+                  file_name = "hello.txt"
+                  file_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}/{file_name}"
+
+                  url = f"https://aihub.instabase.com/api/v2/files/{file_path}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the DELETE request
+                  response = requests.delete(url, headers=headers)
+
+                  # handle the response
+                  if response.status_code == 202:
+                      print("File deletion request accepted")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+            - sdk: python
+              name: Delete folder with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "Instabase Drive"
+                  folder = "MyFolder"
+                  folder_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}"
+
+                  # returns None
+                  client.files.delete(path=folder_path)
+
+            - sdk: python
+              name: Delete folder without SDK
+              code: |
+                  import requests
+
+                  organization_id = "acme_org"
+                  workspace = "MyWorkspace"
+                  drive = "Instabase Drive"
+                  folder = "MyFolder"
+                  folder_path = f"{organization_id}/{workspace}/fs/{drive}/{folder}"
+
+                  url = f"https://aihub.instabase.com/api/v2/files/{folder_path}"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # make the DELETE request
+                  response = requests.delete(url, headers=headers)
+
+                  # handle the response
+                  if response.status_code == 202:
+                      print("Folder deletion request accepted")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+  /v2/aihub/secrets:
+    get:
+      operationId: listSecrets
+      x-fern-audiences:
+        - public
+      tags:
+        - Secrets
+      summary: List secrets
+
+      description: |
+        <span class="badge">Commercial & Enterprise</span>
+
+        List secrets available to the organization, available to a given workspace, or with a given alias.
+
+        <Note>Only organization admins can list all secrets in the organization. Non-admins must specify a workspace.</Note>
+      parameters:
+        - $ref: '#/components/parameters/ib_context'
+        - in: query
+          name: workspace
+          schema:
+            type: string
+          description: |
+            Show secrets available in the specified workspace.
+
+            <Info>Only members of a workspace can access secrets that are available within that workspace.</Info>
+        - in: query
+          name: alias
+          schema:
+            type: string
+          description: |
+            Get the secret with the specified alias.
+      responses:
+        '200':
+          description: A list of secrets.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  secrets:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/secret'
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-fern-examples:
+        - code-samples:
+          - sdk: curl
+            code: |
+                curl "${API_ROOT}/v2/aihub/secrets?workspace=<WORKSPACE>" \
+                  -H "Authorization: Bearer ${API_TOKEN}" \
+                  -H "IB-Context: ${IB_CONTEXT}"
+
+          - sdk: python
+            name: with SDK
+            code: |
+                from aihub import AIHub
+                
+                client = AIHub(
+                    api_root="https://aihub.instabase.com/api",
+                    api_key="abcdefghijklmnopqrst1234567890",
+                    ib_context="john.doe_acme.com"
+                )
+                
+                response = client.secrets.list(workspace="MyWorkspace")
+                
+                for secret in response.secrets:
+                    print(f"Secret description: {secret.description}")
+
+          - sdk: python
+            name: without SDK
+            code: |
+                import requests
+
+                url = "https://aihub.instabase.com/api/v2/aihub/secrets"
+                
+                headers = {
+                    "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                    "IB-Context": "john.doe_acme.com"
+                }
+                
+                # create query parameters
+                params = {"workspace": "MyWorkspace"}
+                
+                # make the GET request
+                response = requests.get(url, headers=headers, params=params)
+
+                # handle the response
+                if response.status_code == 200:
+                    for secret in response.json()['secrets']:
+                        print(f"Secret description: {secret['description']}")
+                else:
+                    print(f"Error: {response.status_code} - {response.text}")
+
+    post:
+      operationId: createSecret
+      x-fern-audiences:
+        - public
+      tags:
+        - Secrets
+      summary: Create secret
+      description: |
+        <span class="badge">Commercial & Enterprise</span>
+
+        Create a new secret in this organization.
+
+        <Note>Only organization admins can create secrets.</Note>
+      parameters:
+        - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alias:
+                  type: string
+                  description: Name of the secret.
+                description:
+                  type: string
+                  description: Description of the secret.
+                value:
+                  type: string
+                  description: Content of the secret.
+                allowed_workspaces_type:
+                  type: string
+                  description: Which workspaces in this organization are allowed to use this secret in custom functions.
+                  enum:
+                    - ALL
+                    - SOME
+                    - NONE
+                allowed_workspaces:
+                  type: array
+                  description: Which workspaces are allowed to use this secret, if only some are allowed. Required when `allowed_workspaces_type` is `SOME`, otherwise ignored.
+                  items:
+                    type: string
+              required:
+                - alias
+                - value
+                - allowed_workspaces_type
+      responses:
+        '200':
+          description: Secret created successfully.
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X POST "${API_ROOT}/v2/aihub/secrets" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                          "alias": "my_secret",
+                          "description": "Sample secret",
+                          "value": "my password",
+                          "allowed_workspaces_type": "SOME",
+                          "allowed_workspaces": ["workspace1", "workspace2"]
+                        }'
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                
+                  # returns None
+                  client.secrets.create(
+                      alias="my_secret",
+                      description="Sample secret",
+                      value="my password",
+                      allowed_workspaces_type="SOME",
+                      allowed_workspaces=["workspace1", "workspace2"]
+                  )
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  url = "https://aihub.instabase.com/api/v2/aihub/secrets"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create the request payload
+                  data = {
+                      "alias": "my_secret",
+                      "description": "Sample secret",
+                      "value": "my password",
+                      "allowed_workspaces_type": "SOME",
+                      "allowed_workspaces": ["workspace1", "workspace2"]
+                  }
+                  
+                  # make the POST request
+                  response = requests.post(url, headers=headers, json=data)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      print("Secret created successfully")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+    patch:
+      operationId: updateSecret
+      x-fern-audiences:
+        - public
+      tags:
+        - Secrets
+      summary: Update secret
+      description: |
+        <span class="badge">Commercial & Enterprise</span>
+
+        Update the description, value, or allowed workspaces for a secret. If a value for a parameter is not specified, it will remain the same.
+
+        <Note>Only organization admins can update secrets.</Note>
+      parameters:
+        - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alias:
+                  type: string
+                  description: Name of the secret to update.
+                description:
+                  type: string
+                  description: New description of the secret.
+                value:
+                  type: string
+                  description: New content of the secret.
+                allowed_workspaces_type:
+                  type: string
+                  description: New designation of which workspaces in this organization are allowed to use this secret in custom functions.
+                  enum:
+                    - ALL
+                    - SOME
+                    - NONE
+                allowed_workspaces:
+                  type: array
+                  description: New designation of which workspaces are allowed to use this secret, if only some are.
+                  items:
+                    type: string
+              required:
+                - alias
+      responses:
+        '200':
+          description: Secret updated successfully.
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X PATCH "${API_ROOT}/v2/aihub/secrets" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                          "alias": "my_secret",
+                          "value": "new password",
+                          "allowed_workspaces_type": "ALL"
+                        }'
+
+            - sdk: python
+              name: Simple request with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  # returns None
+                  client.secrets.update(alias="password", value="abc123")
+
+            - sdk: python
+              name: Simple request without SDK
+              code: |
+                  import requests
+
+                  url = "https://aihub.instabase.com/api/v2/aihub/secrets"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create the request payload
+                  data = {
+                      "alias": "password",
+                      "value": "abc123"
+                  }
+                  
+                  # make the PATCH request
+                  response = requests.patch(url, headers=headers, json=data)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      print("Secret updated successfully")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+            - sdk: python
+              name: Advanced request with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com")
+                  
+                  # returns None
+                  client.secrets.update(
+                      alias="password",
+                      description="password",
+                      value="abc123",
+                      allowed_workspaces_type="SOME",
+                      allowed_workspaces=["WorkspaceA", "WorkspaceB"]
+                  )
+
+            - sdk: python
+              name: Advanced request without SDK
+              code: |
+                  import requests
+
+                  url = "https://aihub.instabase.com/api/v2/aihub/secrets"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create the request payload
+                  data = {
+                      "alias": "password",
+                      "value": "abc123",
+                      "allowed_workspaces_type": "SOME",
+                      "allowed_workspaces": ["WorkspaceA", "WorkspaceB"]
+                  }
+                  
+                  # make the PATCH request
+                  response = requests.patch(url, headers=headers, json=data)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      print("Secret updated successfully")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+    delete:
+      operationId: deleteSecret
+      x-fern-audiences:
+        - public
+      tags:
+        - Secrets
+      summary: Delete secret
+      description: |
+        <span class="badge">Commercial & Enterprise</span>
+
+        Delete a secret from the organization.
+
+        <Note>Only organization admins can delete secrets.</Note>
+      parameters:
+        - $ref: '#/components/parameters/ib_context'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alias:
+                  type: string
+                  description: Name of the secret to delete.
+              required:
+                - alias
+      responses:
+        '200':
+          description: Secret deleted successfully.
+        default:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl -X DELETE "${API_ROOT}/v2/aihub/secrets" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "IB-Context: ${IB_CONTEXT}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                          "alias": "my_secret"
+                        }'
+
+            - sdk: python
+              name: with SDK
+              code: |
+                  from aihub import AIHub
+                  
+                  client = AIHub(
+                      api_root="https://aihub.instabase.com/api",
+                      api_key="abcdefghijklmnopqrst1234567890",
+                      ib_context="john.doe_acme.com"
+                  )
+                  
+                  # returns None
+                  client.secrets.delete(alias="password")
+
+            - sdk: python
+              name: without SDK
+              code: |
+                  import requests
+
+                  url = "https://aihub.instabase.com/api/v2/aihub/secrets"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create the request payload
+                  data = {"alias": "password"}
+                  
+                  # make the DELETE request
+                  response = requests.delete(url, headers=headers, json=data)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      print("Secret deleted successfully")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+  /v1/auditlogs:
+    post:
+      operationId: getAuditLogs
+      x-fern-audiences:
+        - public
+      tags:
+        - Audit
+      summary: Get audit logs
+      description: |
+        Retrieve audit logs based on specified filters. Returns a paginated list of audit log entries.
+
+        <Note>This API operation is available for Enterprise-tier organizations with single-tenant environments. To use it you must have audit log access permissions. Contact Instabase Support to request access to audit logs for your organization.</Note>
+
+        <Note>This API operation is not supported by the SDK but you can access it from Python by making direct REST calls, as shown in the sample code.</Note>
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start:
+                  type: integer
+                  description: Number of results to skip for pagination
+                  nullable: true
+                size:
+                  type: integer
+                  description: Maximum number of results to return
+                  nullable: true
+                log_type:
+                  type: string
+                  description: |
+                     Type of audit log to filter by. Valid values include:
+                     - `account_v2`: User account creation logs
+                     - `api_v2`: API request logs
+                     - `app_deployment_run_v2`: Deployment run operation logs
+                     - `app_deployment_v2`: Deployment operation logs
+                     - `app_v2`: Automation app operation logs
+                     - `datasource_v2`: Data connection operation logs
+                     - `login_v2`: User login and authentication logs
+                     - `oauth2_v2`: OAuth token operation logs
+                     - `org_v2`: Organization role change logs
+                     - `org_secrets_v2`: Organization secrets operation logs
+                     - `perms_v2`: Membership and role change logs, for the organization, workspaces, and groups
+                     - `projects_v2`: Automation project operation logs
+                     - `review_v2`: Human review operation logs
+                     - `workspace_v2`: Workspace management operation logs
+
+                     For details about tracked operations, see [Viewing audit logs](/admin/audit-logs/).
+                  nullable: true
+                email:
+                  type: string
+                  description: Filter logs by user email
+                  nullable: true
+                start_time:
+                  type: string
+                  description: Start time in epoch milliseconds
+                  nullable: true
+                end_time:
+                  type: string
+                  description: End time in epoch milliseconds
+                  nullable: true
+      responses:
+        '200':
+          description: Successfully retrieved audit logs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+                  data:
+                    type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            timestamp_millis:
+                              type: string
+                              description: Timestamp in epoch milliseconds
+                            email:
+                              type: string
+                              description: User email associated with the log entry
+                            user_ip:
+                              type: string
+                              description: IP address of the user
+                            log_type:
+                              type: string
+                              description: Type of the audit log
+                          additionalProperties: true
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      x-fern-examples:
+        - code-samples:
+            - sdk: curl
+              code: |
+                  curl "${API_ROOT}/v1/auditlogs" \
+                    -H "Authorization: Bearer ${API_TOKEN}" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                          "log_type": "org_secret",
+                          "size": 50,
+                          "start_time": "1749139277810",
+                          "start": 200
+                        }'
+
+            - sdk: python
+              name: without SDK
+              # Chris can't test b/c of permissions, but the call does go through and returns 200 (with error message) on failure
+              code: |
+                  # SDK does not support this operation, so you
+                  # must make REST calls using "requests" module
+                  import requests
+
+                  url = "https://aihub.instabase.com/api/v1/auditlogs"
+                  
+                  headers = {
+                      "Authorization": "Bearer abcdefghijklmnopqrst1234567890",
+                      "IB-Context": "john.doe_acme.com"
+                  }
+                  
+                  # create the request payload
+                  data = {
+                      "log_type": "org_secret",
+                      "size": 50,
+                      "start_time": "1749139277810",
+                      "start": 200
+                  }
+                  
+                  # make the POST request
+                  response = requests.post(url, headers=headers, json=data)
+
+                  # handle the response
+                  if response.status_code == 200:
+                      audit_logs = response.json()
+                      print(f"Retrieved {len(audit_logs['data']['results'])} audit logs")
+                  else:
+                      print(f"Error: {response.status_code} - {response.text}")
+
+components:
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: auth-scheme
+      description: Bearer HTTP authentication.
+      scheme: bearer
+      type: http
+  parameters:
+    ib_context:
+      in: header
+      name: IB-Context
+      schema:
+        type: string
+      required: false
+      description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID.
+                   If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
+    batch_id:
+      in: path
+      name: batch_id
+      required: true
+      schema:
+        type: integer
+      description: The batch ID.
+    run_id:
+      in: path
+      name: run_id
+      required: true
+      schema:
+        type: string
+      description: The run ID.
+  schemas:
+    batch:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the batch.
+      required:
+        - id
+    batchInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The batch ID.
+        name:
+          type: string
+          description: The batch name.
+        workspace:
+          type: string
+          description: The name of the workspace in which the batch exists.
+        mount_point:
+          type: string
+          description: The name of the connected drive in which the batch is stored.
+        repo_owner:
+          type: string
+          description: The owner of the workspace (also known as the repo) in which the batch exists.
+        batch_owner:
+          type: string
+          description: Username of the user that created the batch.
+        created_at_ms:
+          type: integer
+          format: int64
+          description: When the batch was created, in Unix time milliseconds.
+        updated_at_ms:
+          type: integer
+          format: int64
+          description: When the batch was last updated, in Unix time milliseconds.
+        path_suffix:
+          type: string
+          description: Batch path suffix from the mount point.
+      required:
+        - id
+        - name
+    listBatchFilesResponse:
+      type: object
+      properties:
+        nodes:
+          type: array
+          description: List of files in the batch.
+          items:
+            type: object
+            properties:
+              full_path:
+                type: string
+                description: Complete path to the file in the storage system.
+              metadata:
+                type: object
+                description: Metadata information about the file.
+                properties:
+                  node_type:
+                    type: string
+                    description: Type of the node (e.g., 'file').
+                  size:
+                    type: integer
+                    description: Size of the file in bytes.
+                  modified_timestamp:
+                    type: integer
+                    description: Last modification timestamp of the file, in Unix time seconds.
+              perms:
+                type: object
+                description: Permission settings for the file.
+                properties:
+                  can_read:
+                    type: boolean
+                    description: Whether the user has read permission.
+                  can_write:
+                    type: boolean
+                    description: Whether the user has write permission.
+                  can_delete:
+                    type: boolean
+                    description: Whether the user has delete permission.
+              name:
+                type: string
+                description: Name of the file, including optional extension.
+        next_page_token:
+          type: string
+          description: Token for retrieving the next page of results.
+        has_more:
+          type: boolean
+          description: Indicates whether there are more files to be retrieved.
+    batchDeletionJobResponse:
+      type: object
+      properties:
+        job_id:
+          type: string
+          description: The job ID of the operation. Use the job ID with the [Poll batches job endpoint](/api-sdk/api-reference/batches/poll-batches-job) to check batch deletion status.
+      required:
+        - job_id
+    jobStatusResponse:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The status of the job.
+          enum:
+            - COMPLETE
+            - FAILED
+            - CANCELLED
+            - RUNNING
+            - PENDING
+        message:
+          type: string
+          description: Job status message.
+    run:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Run ID of the run.
+        status:
+          type: string
+          description: |
+            Status of the run. Possible values and meanings:
+            - `CANCELLED` -- A user cancelled the run
+            - `COMPLETE` -- The run successfully completed. A human review completed if it was required. Results are retrievable, but some fields may have failed and have the value `ERROR`.
+            - `FAILED` -- The run failed to complete
+            - `PAUSED` -- This status is reserved for future use
+            - `RUNNING` -- The run is in progress and is not paused
+            - `STOPPED_AT_CHECKPOINT` -- A validation error has paused the run for human review
+          enum:
+            - CANCELLED
+            - COMPLETE
+            - FAILED
+            - PAUSED
+            - RUNNING
+            - STOPPED_AT_CHECKPOINT
+        start_timestamp:
+          type: integer
+          format: int64
+          description: When the run started, in Unix time nanoseconds.
+        finish_timestamp:
+          type: integer
+          format: int64
+          description: When the run finished, in Unix time nanoseconds. `null` if run is still in progress.
+          nullable: true
+        msg:
+          type: string
+          description: Message about the run.
+          nullable: true
+        batch_id:
+          type: integer
+          description: The batch ID used as input for this run.
+          nullable: true
+        input_dir:
+          type: string
+          description: The path of the input folder used for this run.
+          nullable: true
+        app_id:
+          type: string
+          description: The app ID of the app that was run.
+          nullable: true
+        deployment_id:
+          type: string
+          description: The deployment ID used for this run.
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          description: List of string tags attached to this run.
+          nullable: true
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+    resultsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Run ID of the run.
+        status:
+          type: string
+          description: |
+            Status of the run. Possible values and meanings:
+            - `CANCELLED` -- A user cancelled the run
+            - `COMPLETE` -- The run successfully completed. A human review completed if it was required. Results are retrievable, but some fields may have failed and have the value `ERROR`.
+            - `FAILED` -- The run failed to complete
+            - `PAUSED` -- This status is reserved for future use
+            - `RUNNING` -- The run is in progress and is not paused
+            - `STOPPED_AT_CHECKPOINT` -- A validation error has paused the run for human review
+          enum:
+            - CANCELLED
+            - COMPLETE
+            - FAILED
+            - PAUSED
+            - RUNNING
+            - STOPPED_AT_CHECKPOINT
+        message:
+          type: string
+          description: Message about the run.
+          nullable: true
+        start_timestamp:
+          type: integer
+          format: int64
+          description: When the run started, in Unix time nanoseconds.
+        finish_timestamp:
+          type: integer
+          format: int64
+          description: When the run finished, in Unix time nanoseconds. `null` if run is still in progress.
+          nullable: true
+        batch_id:
+          type: string
+          description: The batch ID used as input for this run, if run using a batch.
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/fileWithDocuments'
+        keys:
+          type: object
+          properties:
+            custom:
+              type: object
+              description: Key/value pairs representing non-secret custom keys set for the run.
+        case_info:
+          $ref: '#/components/schemas/caseInfo'
+          description: |
+            Packet-level information (also known as case-level information) captured for the run, including optional edit history per cross-class field when `include_review_results=true`.
+
+            Cross-class fields consolidate data extracted from standard fields within a packet. For more information about packets and cross-class fields, see [Extracting data from packets](/automate/packet-schema).
+        review_completed:
+          type: boolean
+          description: Indicates whether the run or document has completed review.
+        has_more:
+          type: boolean
+          description: Indicates whether additional results are available beyond those included in the current response. Use the `file_offset` query parameter to specify the starting point when fetching the next set of results.
+    fileWithDocuments:
+      type: object
+      properties:
+        original_file_name:
+          type: string
+          description: The original name of the file processed.
+        input_file_path:
+          type: string
+          description: The file path of the input file.
+        documents:
+          type: array
+          description: An array containing each document within the file.
+          items:
+            $ref: '#/components/schemas/document'
+    document:
+      type: object
+      properties:
+        fields:
+          type: array
+          description: A list containing the extracted fields from the document, each with its field name, extracted value, and type. See `<DOCUMENT-FIELD>` structure for details.
+          items:
+            $ref: '#/components/schemas/documentField'
+        review_completed:
+          type: boolean
+          description: Indicates whether the document has been marked as reviewed.
+        class_name:
+          type: string
+          nullable: true
+          description: The classification label of the document. `null` if classification is not applicable.
+        page_numbers:
+          type: array
+          description: An array of the document's page numbers.
+          items:
+            type: integer
+        page_layouts:
+          type: array
+          description: An array with one entry per page, containing page layout information including page number, width, and height.
+          items:
+            $ref: '#/components/schemas/pageLayout'
+        post_processed_paths:
+          type: array
+          description: An array of strings, each representing a path to post-processed documents.
+          items:
+            type: string
+        post_processed_pdf_path:
+          type: string
+          description: Path to post-processed PDF.
+        class_edit_history:
+          type: array
+          description: An array containing the history of edits to the document class.
+          items:
+            $ref: '#/components/schemas/modificationObject'
+        validations:
+          type: object
+          properties:
+            final_result_pass:
+              type: boolean
+              description: Indicates whether the document has passed all validation rules.
+        classification_confidence:
+          type: object
+          properties:
+            model:
+              type: number
+              format: float
+              nullable: true
+              description: Classification confidence. Indicates the model's certainty in predicting the class of a document.
+    documentField:
+      type: object
+      properties:
+        field_name:
+          type: string
+          description: The name of the field.
+        value:
+          type: string
+          description: The extracted value of the field.
+        type:
+          type: string
+          description: The type of the field.
+        error_msg:
+          type: string
+          description: The error message for the field.
+        source_coordinates:
+          type: array
+          items:
+            $ref: '#/components/schemas/fieldSourceCoordinates'
+        edit_history:
+          type: array
+          description: An array containing the history of edits to the field.
+          items:
+            $ref: '#/components/schemas/modificationObject'
+        confidence:
+          type: object
+          properties:
+            model:
+              type: number
+              format: float
+              nullable: true
+              description: Field confidence. Indicates the model's certainty in predicting results for a given field.
+            ocr:
+              type: number
+              format: float
+              nullable: true
+              description: OCR confidence. Indicates the OCR processor's certainty in digitization accuracy.
+        validations:
+          type: object
+          properties:
+            valid:
+              type: boolean
+              description: Indicates whether the document has passed validation rules pertaining to this field.
+            alerts:
+              type: array
+              description: Alerts for field-level validation rules. Populated only if the `validations/valid` value is `false`.
+              items:
+                type: object
+                properties:
+                  alert_level:
+                    type: string
+                    description: Alert level of the validation failure. Always set to `FAILURE`.
+                  msg:
+                    type: string
+                    description: Description of alert.
+                  blocked:
+                    type: boolean
+                    description: If this validation failure is blocking.
+                  type:
+                    type: string
+                    description: Type of validation alert.
+                  locations:
+                    type: array
+                    items:
+                      type: object
+    fieldSourceCoordinates:
+      type: object
+      properties:
+        top_x:
+          type: number
+          format: float
+          nullable: false
+          description: Top-left X coordinate of the bounding box.
+        top_y:
+          type: number
+          format: float
+          nullable: false
+          description: Top-left Y coordinate of the bounding box.
+        bottom_x:
+          type: number
+          format: float
+          nullable: false
+          description: Bottom-right X coordinate of the bounding box.
+        bottom_y:
+          type: number
+          format: float
+          nullable: false
+          description: Bottom-right Y coordinate of the bounding box.
+        page_number:
+          type: integer
+          nullable: false
+          description: Zero-indexed page number of the bounding box.
+    pageLayout:
+      type: object
+      properties:
+        page_number:
+          type: integer
+          description: Zero-indexed page number.
+        width:
+          type: number
+          format: float
+          description: Width of the page.
+        height:
+          type: number
+          format: float
+          description: Height of the page.
+      required:
+        - page_number
+        - width
+        - height
+    modificationObject:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Datetime string of the edit history event.
+        user_id:
+          type: string
+          description: User ID of the user who made the edit.
+        modifications:
+          type: array
+          description: List of modifications made in this single edit history event.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Message associated with the edit history modification.
+            required:
+              - message
+      required:
+        - timestamp
+        - user_id
+    documentUploadResponse:
+      type: object
+      properties:
+        upload_status:
+          type: object
+          properties:
+            success:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the successfully uploaded document.
+            failure:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the document that failed to upload.
+                  reason:
+                    type: string
+                    description: Error message for upload failure.
+          description: Summary of the upload status for uploaded files, divided into `success` and `failure`.
+    documentMetadataResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The document ID.
+        ibdoc_path:
+          type: string
+          description: Path to the document's internal representation.
+        name:
+          type: string
+          description: The name of the document.
+        metadata:
+          type: array
+          items:
+            type: object
+            description: A collection of additional, possibly dynamic, metadata properties associated with the document. The structure of this object can vary depending on the document content and type.
+            additionalProperties: true
+    secret:
+      type: object
+      properties:
+        alias:
+          type: string
+          description: Name of the secret.
+        description:
+          type: string
+          description: Description of the secret.
+        allowed_workspaces_type:
+          type: string
+          description: Which workspaces in this organization are allowed to use this secret in custom functions.
+          enum:
+            - ALL
+            - SOME
+            - NONE
+        allowed_workspaces:
+          type: array
+          description: Which workspaces are allowed to use this secret, if only some are allowed.
+          items:
+            type: string
+        org:
+          type: string
+          description: The organization name in which this secret was created.
+        created_at:
+          type: number
+          description: When the secret was created in Unix time milliseconds.
+        created_by:
+          type: string
+          description: The user ID of the user who created the secret.
+        updated_at:
+          type: number
+          description: When the secret was last updated in Unix time milliseconds.
+        last_updated_by:
+          type: string
+          description: The user ID of the user who last edited the secret.
+
+    caseInfo:
+      type: object
+      properties:
+        fields:
+          type: array
+          description: |
+            A list of cross-class fields captured for this run. Cross-class fields consolidate data extracted from standard fields within a packet.
+          items:
+            $ref: '#/components/schemas/caseInfoField'
+
+    caseInfoField:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the cross-class field.
+        value:
+          type: string
+          description: The value of the cross-class field.
+        input_fields:
+          type: array
+          description: |
+            Only applicable for ranked cross-class fields. Input options the user can choose from
+            when determining the value of this ranked field.
+          items:
+            $ref: '#/components/schemas/caseInputField'
+        chosen_field:
+          $ref: '#/components/schemas/caseInputField'
+          nullable: true
+          description: |
+            Only applicable for ranked cross-class fields. The input option from `input_fields` that was
+            selected for the ranked field's value.
+        error_msg:
+          type: string
+          description: Error message for the cross-class field, if any.
+        edit_history:
+          type: array
+          description: The history of edits to the cross-class field. Returned when `include_review_results=true`.
+          items:
+            $ref: '#/components/schemas/modificationObject'
+        validations:
+          type: object
+          description: |
+            Validation results for the cross-class field. Returned when `include_validation_results` is `true` and field has cross-class validation results.
+
+            Cross-class validation ensures data quality and consistency across documents within a packet.
+          properties:
+            valid:
+              type: boolean
+              description: Indicates whether the cross-class field has passed all validation rules.
+            failures:
+              type: array
+              description: Array of validation failures for the cross-class field. Populated only if the `validations/valid` value is `false`.
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of validation failure (for example, "lambda_code", "all_inputs_match").
+                  msg:
+                    type: string
+                    description: Message describing the validation failure.
+                required:
+                  - type
+                  - msg
+          required:
+            - valid
+      required:
+        - name
+        - value
+
+    caseInputField:
+      type: object
+      description: Input option for ranked cross-class fields.
+      properties:
+        record_index:
+          type: integer
+          description: Index of the document used for the input option
+        refined_phrase_name:
+          type: string
+          description: Refined phrase name of the input option.
+
+    multipartUploadSessionResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: ID of the multipart upload session.
+          example: yGLRzUtS2vHm9IdxMrsKaMEOXG7hGBU7KEuvm2JujgBuO9ZAwtqTYmAYauf1RHI8bgEq7qm_UnCE5YNdMg7.1Lv_lrKRVPQ4fZpNVgF3wD5dbvz_bgbmx50a2.kcDZN7XjOI1z.NQ8_9JfOLhtYIgA6xMGLv5U0p6FitSDtFgW4-
+        part_size:
+          type: integer
+          description: The number of bytes each part should be when uploading to the session. Each part should match the part_size, except for the final part, which can be smaller than the part_size.
+          example: 10485760
+      required:
+        - part_size
+        - session_id
+
+    multipartUploadPartResponse:
+      type: object
+      properties:
+        part_id:
+          type: string
+          description: ID of the uploaded part.
+        part_num:
+          type: integer
+          description: The part number of the uploaded part, indicating upload order. Identical to the part number in the request URL.
+      required:
+        - part_id
+        - part_num

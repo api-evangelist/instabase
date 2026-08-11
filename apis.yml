@@ -150,6 +150,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/instabase-aihub-overlay.yaml
 # --- Identity / link properties ---
 - type: Website
   url: https://www.instabase.com/

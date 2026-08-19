@@ -1,0 +1,142 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AI Hub Audit Files API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Files",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Read file",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://aihub.instabase.com/api/v2/files/:path",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              },
+              {
+                "name": "Range",
+                "value": ""
+              },
+              {
+                "name": "IB-Retry-Config",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "path",
+                "value": "",
+                "type": "path",
+                "description": "Full path to the file."
+              },
+              {
+                "name": "expect-node-type",
+                "value": "",
+                "type": "query",
+                "description": "Type of node at the target path."
+              }
+            ]
+          },
+          "docs": "Read contents from a file.\n\n<Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>\n\n<Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>\n"
+        },
+        {
+          "info": {
+            "name": "Create or overwrite file",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://aihub.instabase.com/api/v2/files/:path",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "path",
+                "value": "",
+                "type": "path",
+                "description": "Full path to the file."
+              }
+            ]
+          },
+          "docs": "Create a non-empty file or overwrite an existing file.\n\nIf the parent folder of the `path` parameter doesn't exist, the file system creates it before creating the file.\n\n<Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>\n\n<Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>\n\nNot all filesystem types support this operation.\n\n| Filesystem           | Supported |\n|----------------------|-----------|\n| Instabase          "
+        },
+        {
+          "info": {
+            "name": "Delete file or folder",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://aihub.instabase.com/api/v2/files/:path",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "path",
+                "value": "",
+                "type": "path",
+                "description": "Full path to the file or folder."
+              }
+            ]
+          },
+          "docs": "Delete a single file or folder.\n\nThis operation is also available via the SDK method `client.files.delete()`.\n\n<Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>\n\n<Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>\n\nNot all filesystem types support this operation.\n\n| Filesystem           | Supported |\n|----------------------|-----------|\n| Instabase            | ✓         |\n| Amazon S3            | ✓         |\n| Azur"
+        },
+        {
+          "info": {
+            "name": "Read file or folder metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "HEAD",
+            "url": "https://aihub.instabase.com/api/v2/files/:path",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              },
+              {
+                "name": "IB-Retry-Config",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "path",
+                "value": "",
+                "type": "path",
+                "description": "Full path to the file or folder."
+              }
+            ]
+          },
+          "docs": "Read metadata of a file or folder at the target path.\n\nThis API operation reports whether the object at the target path is a file or folder. If a file, it also reports the file size and last modification time.\n\n<Info>This acts on files and folders in the AI Hub filesystem, not your local filesystem.</Info>\n\n<Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

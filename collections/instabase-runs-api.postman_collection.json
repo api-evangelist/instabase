@@ -1,0 +1,1428 @@
+{
+  "item": [
+    {
+      "id": "f7c31724-5720-4ac9-9f23-e7aa889fb7db",
+      "name": "Runs",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "28089783-e9b7-41d6-a978-b101a3b2b349",
+          "name": "Run app",
+          "request": {
+            "name": "Run app",
+            "description": {
+              "content": "Run an automation app by its name or app ID. The input for the run can be a batch ID or an input file path.\n\n<Tip>\n\n<span class=\"badge\">Commercial & Enterprise</span>\n\nRunning an automation app via a deployment is generally preferred over running an app directly.\n\nDeployments offer additional features including upstream and downstream integrations, deployment metrics, human review workflows, and secret and configuration management.\n\nLearn more about [deployments](/automate/deployments) to decide if you'd rather use the [Run deployment](/api-sdk/api-reference/runs/run-deployment) API operation.\n\n</Tip>\n\n<Note>Any specified input or output is validated against the context set by the `IB-Context` header. For example, if the context is set to your community account, but the batch ID used as input for the run is stored in your organization, the call fails.</Note>\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "apps",
+                "runs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                "key": "IB-Context",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"app_name\": \"<string>\",\n  \"app_id\": \"<string>\",\n  \"owner\": \"<string>\",\n  \"batch_id\": \"<integer>\",\n  \"input_dir\": \"<string>\",\n  \"version\": \"<string>\",\n  \"output_workspace\": \"<string>\",\n  \"output_dir\": \"<string>\",\n  \"settings\": {\n    \"keys\": {\n      \"custom\": {\n        \"key_0\": \"string\",\n        \"key_1\": 8059\n      },\n      \"secret\": {\n        \"key_0\": \"<string>\"\n      }\n    },\n    \"runtime_config\": {\n      \"generate_post_process_pdf\": \"<boolean>\",\n      \"instabase\": {\n        \"pdf\": {\n          \"passwords\": {\n            \"key_0\": \"<string>\"\n          }\n        }\n      }\n    },\n    \"tags\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c4e04572-c68a-46ba-9173-e7e98a50ddad",
+              "name": "Run started successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"app_name\": \"<string>\",\n  \"app_id\": \"<string>\",\n  \"owner\": \"<string>\",\n  \"batch_id\": \"<integer>\",\n  \"input_dir\": \"<string>\",\n  \"version\": \"<string>\",\n  \"output_workspace\": \"<string>\",\n  \"output_dir\": \"<string>\",\n  \"settings\": {\n    \"keys\": {\n      \"custom\": {\n        \"key_0\": false,\n        \"key_1\": 1521\n      },\n      \"secret\": {\n        \"key_0\": \"<string>\"\n      }\n    },\n    \"runtime_config\": {\n      \"generate_post_process_pdf\": \"<boolean>\",\n      \"instabase\": {\n        \"pdf\": {\n          \"passwords\": {\n            \"key_0\": \"<string>\",\n            \"key_1\": \"<string>\",\n            \"key_2\": \"<string>\"\n          }\n        }\n      }\n    },\n    \"tags\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"status\": \"RUNNING\",\n  \"start_timestamp\": 8735,\n  \"finish_timestamp\": 5544,\n  \"msg\": \"string\",\n  \"batch_id\": 1706,\n  \"input_dir\": \"string\",\n  \"app_id\": \"string\",\n  \"deployment_id\": \"string\",\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a843f55b-08cf-4029-8e69-d0e7b177ebd0",
+              "name": "Error response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"app_name\": \"<string>\",\n  \"app_id\": \"<string>\",\n  \"owner\": \"<string>\",\n  \"batch_id\": \"<integer>\",\n  \"input_dir\": \"<string>\",\n  \"version\": \"<string>\",\n  \"output_workspace\": \"<string>\",\n  \"output_dir\": \"<string>\",\n  \"settings\": {\n    \"keys\": {\n      \"custom\": {\n        \"key_0\": false,\n        \"key_1\": 1521\n      },\n      \"secret\": {\n        \"key_0\": \"<string>\"\n      }\n    },\n    \"runtime_config\": {\n      \"generate_post_process_pdf\": \"<boolean>\",\n      \"instabase\": {\n        \"pdf\": {\n          \"passwords\": {\n            \"key_0\": \"<string>\",\n            \"key_1\": \"<string>\",\n            \"key_2\": \"<string>\"\n          }\n        }\n      }\n    },\n    \"tags\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6e94a276-0672-49d6-a3b0-be33980c6551",
+          "name": "List runs",
+          "request": {
+            "name": "List runs",
+            "description": {
+              "content": "Return a list of runs. Use query parameters to filter results.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "apps",
+                "runs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "app_id",
+                  "value": "<string>",
+                  "description": "Filter runs by app ID."
+                },
+                {
+                  "disabled": false,
+                  "key": "app_name",
+                  "value": "<string>",
+                  "description": "Filter runs by app name."
+                },
+                {
+                  "disabled": false,
+                  "key": "deployment_id",
+                  "value": "<string>",
+                  "description": "Filter runs by deployment ID."
+                },
+                {
+                  "disabled": false,
+                  "key": "username",
+                  "value": "<string>",
+                  "description": "Filter runs initiated by the specified user (username)."
+                },
+                {
+                  "disabled": false,
+                  "key": "run_id",
+                  "value": "<string>",
+                  "description": "Filter specific run by run ID."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter jobs by status, such as COMPLETE, RUNNING, or FAILED."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter jobs by status, such as COMPLETE, RUNNING, or FAILED."
+                },
+                {
+                  "disabled": false,
+                  "key": "output_workspaces",
+                  "value": "<string>",
+                  "description": "Filter runs by the run's output workspace. By default, all runs across all workspaces you have access to are returned, use this query parameter to filter by specific workspace names. You must have access to the named workspaces."
+                },
+                {
+                  "disabled": false,
+                  "key": "output_workspaces",
+                  "value": "<string>",
+                  "description": "Filter runs by the run's output workspace. By default, all runs across all workspaces you have access to are returned, use this query parameter to filter by specific workspace names. You must have access to the named workspaces."
+                },
+                {
+                  "disabled": false,
+                  "key": "from_timestamp",
+                  "value": "<integer>",
+                  "description": "Filter runs starting from this timestamp. Timestamp in Unix time in seconds. Defaults to 24 hours before the current time."
+                },
+                {
+                  "disabled": false,
+                  "key": "to_timestamp",
+                  "value": "<integer>",
+                  "description": "Filter runs up to this timestamp. Timestamp in Unix time in seconds. Defaults to the current time."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Number of results to return."
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "<integer>",
+                  "description": "Offset of the first result to return."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_by",
+                  "value": "<string>",
+                  "description": "Field to sort results by."
+                },
+                {
+                  "disabled": false,
+                  "key": "order",
+                  "value": "<string>",
+                  "description": "Order of sorting, such as ASCENDING or DESCENDING."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                "key": "IB-Context",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "290f99c3-c649-4612-bfe0-aacbbe3fb8fb",
+              "name": "A list of all runs.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "app_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "app_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "deployment_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "username",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "run_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "output_workspaces",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "output_workspaces",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "from_timestamp",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "to_timestamp",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "order",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"runs\": [\n    {\n      \"id\": \"string\",\n      \"status\": \"PAUSED\",\n      \"start_timestamp\": 5766,\n      \"finish_timestamp\": 9313,\n      \"msg\": \"string\",\n      \"batch_id\": 7379,\n      \"input_dir\": \"string\",\n      \"app_id\": \"string\",\n      \"deployment_id\": \"string\",\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"status\": \"STOPPED_AT_CHECKPOINT\",\n      \"start_timestamp\": 8569,\n      \"finish_timestamp\": 5181,\n      \"msg\": \"string\",\n      \"batch_id\": 6081,\n      \"input_dir\": \"string\",\n      \"app_id\": \"string\",\n      \"deployment_id\": \"string\",\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ada065d5-6e98-4542-90f7-a7fd7c4d1c23",
+              "name": "Error response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "app_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "app_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "deployment_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "username",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "run_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "output_workspaces",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "output_workspaces",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "from_timestamp",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "to_timestamp",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "order",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9169ed4b-04b5-4022-ace7-1b80947b560c",
+          "name": "Run deployment",
+          "request": {
+            "name": "Run deployment",
+            "description": {
+              "content": "<span class=\"badge\">Commercial & Enterprise</span>\n\nRun an AI Hub deployment by its deployment ID. The input for the run is specified using a batch ID or file path.\n\n<Info>Use the UI to optionally [configure email notifications or webhooks](/automate/deployments#configuring-notifications) for certain events within the deployed app's lifecycle.</Info>\n\n<Note>Any specified input or output is validated against the context set by the `IB-Context` header. For example, if the context is set to your community account, but the batch ID used as input for the run is stored in your organization, the call fails.</Note>\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "apps",
+                "deployments",
+                ":deployment-id",
+                "runs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "false",
+                  "key": "deployment-id",
+                  "description": "(Required) The deployment ID.\n\n<Tip>Find the deployment ID by opening the deployment in AI Hub and looking at the site URL, such as https<span>://</span>aihub.instabase.com/deployments/**01902d6f-bb35-74cb-bd27-c09b38bbf20a**/runs.</Tip>\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                "key": "IB-Context",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"batch_id\": \"<integer>\",\n  \"input_dir\": \"<string>\",\n  \"manual_upstream_integration\": \"<boolean>\",\n  \"from_timestamp\": \"<number>\",\n  \"to_timestamp\": \"<number>\",\n  \"version\": \"<string>\",\n  \"output_dir\": \"<string>\",\n  \"settings\": {\n    \"keys\": {\n      \"custom\": {\n        \"key_0\": \"string\"\n      },\n      \"secret\": {\n        \"key_0\": \"<string>\"\n      }\n    },\n    \"runtime_config\": {\n      \"generate_post_process_pdf\": \"<boolean>\",\n      \"instabase\": {\n        \"pdf\": {\n          \"passwords\": {\n            \"key_0\": \"<string>\"\n          }\n        }\n      }\n    },\n    \"tags\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3f7bed8b-b02a-48bf-8366-cb5b9f073de7",
+              "name": "Successfully initiated an asynchronous operation to run the deployment.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "deployments",
+                    ":deployment-id",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "false",
+                      "key": "deployment-id",
+                      "description": "(Required) The deployment ID.\n\n<Tip>Find the deployment ID by opening the deployment in AI Hub and looking at the site URL, such as https<span>://</span>aihub.instabase.com/deployments/**01902d6f-bb35-74cb-bd27-c09b38bbf20a**/runs.</Tip>\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch_id\": \"<integer>\",\n  \"input_dir\": \"<string>\",\n  \"manual_upstream_integration\": \"<boolean>\",\n  \"from_timestamp\": \"<number>\",\n  \"to_timestamp\": \"<number>\",\n  \"version\": \"<string>\",\n  \"output_dir\": \"<string>\",\n  \"settings\": {\n    \"keys\": {\n      \"custom\": {\n        \"key_0\": 2615,\n        \"key_1\": \"string\",\n        \"key_2\": \"string\"\n      },\n      \"secret\": {\n        \"key_0\": \"<string>\"\n      }\n    },\n    \"runtime_config\": {\n      \"generate_post_process_pdf\": \"<boolean>\",\n      \"instabase\": {\n        \"pdf\": {\n          \"passwords\": {\n            \"key_0\": \"<string>\"\n          }\n        }\n      }\n    },\n    \"tags\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"status\": \"FAILED\",\n  \"start_timestamp\": 9894,\n  \"finish_timestamp\": 8397,\n  \"msg\": \"string\",\n  \"batch_id\": 7222,\n  \"input_dir\": \"string\",\n  \"app_id\": \"string\",\n  \"deployment_id\": \"string\",\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "65a7c7c4-864a-4e75-890a-2f57c3318dbf",
+              "name": "Error response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "deployments",
+                    ":deployment-id",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "false",
+                      "key": "deployment-id",
+                      "description": "(Required) The deployment ID.\n\n<Tip>Find the deployment ID by opening the deployment in AI Hub and looking at the site URL, such as https<span>://</span>aihub.instabase.com/deployments/**01902d6f-bb35-74cb-bd27-c09b38bbf20a**/runs.</Tip>\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch_id\": \"<integer>\",\n  \"input_dir\": \"<string>\",\n  \"manual_upstream_integration\": \"<boolean>\",\n  \"from_timestamp\": \"<number>\",\n  \"to_timestamp\": \"<number>\",\n  \"version\": \"<string>\",\n  \"output_dir\": \"<string>\",\n  \"settings\": {\n    \"keys\": {\n      \"custom\": {\n        \"key_0\": 2615,\n        \"key_1\": \"string\",\n        \"key_2\": \"string\"\n      },\n      \"secret\": {\n        \"key_0\": \"<string>\"\n      }\n    },\n    \"runtime_config\": {\n      \"generate_post_process_pdf\": \"<boolean>\",\n      \"instabase\": {\n        \"pdf\": {\n          \"passwords\": {\n            \"key_0\": \"<string>\"\n          }\n        }\n      }\n    },\n    \"tags\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e1129f6b-f27e-4cb2-90ca-140938bf9f9d",
+          "name": "Get run status",
+          "request": {
+            "name": "Get run status",
+            "description": {
+              "content": "Get the status of a run.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "apps",
+                "runs",
+                ":run_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "run_id",
+                  "description": "(Required) The run ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                "key": "IB-Context",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e2c8961b-c5bd-4ba2-b9fc-cddb759034bd",
+              "name": "Successful response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "runs",
+                    ":run_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "run_id",
+                      "description": "(Required) The run ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"status\": \"FAILED\",\n  \"start_timestamp\": 9894,\n  \"finish_timestamp\": 8397,\n  \"msg\": \"string\",\n  \"batch_id\": 7222,\n  \"input_dir\": \"string\",\n  \"app_id\": \"string\",\n  \"deployment_id\": \"string\",\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7cbc79f9-c733-4c68-8e95-07a0cc9cc8c0",
+              "name": "Error response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "runs",
+                    ":run_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "run_id",
+                      "description": "(Required) The run ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f1a3519a-c88d-4efe-8a29-c79bbbeb47f9",
+          "name": "Delete run",
+          "request": {
+            "name": "Delete run",
+            "description": {
+              "content": "Deletes a specified automation app run and optionally its associated database data, input files, output files, and logs. This is an asynchronous operation that must be [checked for completion](/api-sdk/api-reference/jobs/job-status).\n\n<Warning>Deleting the run's input files also deletes the batch that the run processed.</Warning>\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "apps",
+                "runs",
+                ":run_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "delete_db_data",
+                  "value": "true",
+                  "description": "Delete the run's database data."
+                },
+                {
+                  "disabled": false,
+                  "key": "delete_input",
+                  "value": "true",
+                  "description": "Delete the run's input files."
+                },
+                {
+                  "disabled": false,
+                  "key": "delete_output",
+                  "value": "true",
+                  "description": "Delete the run's output files."
+                },
+                {
+                  "disabled": false,
+                  "key": "delete_logs",
+                  "value": "true",
+                  "description": "Delete the run's logs."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "run_id",
+                  "description": "(Required) The run ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                "key": "IB-Context",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "15dccb8a-b529-48d8-8bf9-038f471d2bf8",
+              "name": "Run deleted successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "runs",
+                    ":run_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "delete_db_data",
+                      "value": "true"
+                    },
+                    {
+                      "key": "delete_input",
+                      "value": "true"
+                    },
+                    {
+                      "key": "delete_output",
+                      "value": "true"
+                    },
+                    {
+                      "key": "delete_logs",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "run_id",
+                      "description": "(Required) The run ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"delete_input_dir_job_id\": \"string\",\n  \"delete_output_dir_job_id\": \"string\",\n  \"delete_log_dir_job_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5120bce9-bab7-4a81-8190-f4247dc17f9d",
+              "name": "Error response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "runs",
+                    ":run_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "delete_db_data",
+                      "value": "true"
+                    },
+                    {
+                      "key": "delete_input",
+                      "value": "true"
+                    },
+                    {
+                      "key": "delete_output",
+                      "value": "true"
+                    },
+                    {
+                      "key": "delete_logs",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "run_id",
+                      "description": "(Required) The run ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5a840de5-c363-4ccb-b5a5-2e17ebf6bcf1",
+          "name": "Get run results",
+          "request": {
+            "name": "Get run results",
+            "description": {
+              "content": "Get the results of a completed automation app run.\n\n<Note>\nThe results from this endpoint are paginated. The `has_more` field in the response indicates if there are more results to fetch and the `file_offset` query parameter can be used to specify the starting point for the next set of results.\n\nFor an example of using `file_offset` to fetch all results, see the *Retrieving paginated results* code sample.\n</Note>\n\n<Info>\n\nThis API operation might return field names that differ from those in the automation project.\nThe operation converts field names to valid Python variable names by:\n\n* Allowing only letters, numbers, and underscores\n* Requiring names to start with a letter or underscore\n* Replacing invalid characters with underscores\n* Converting single underscores to double underscores\n\nExamples:\n* `due date` → `due_date`\n* `driver's license` → `driver_s_license`\n* `3rd category` → `_3rd_category`\n* `secret_id` → `secret__id`\n\nThese changes apply only to field names in the API response. The field names in the automation project are not changed.\n\n</Info>\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "apps",
+                "runs",
+                ":run_id",
+                "results"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "include_review_results",
+                  "value": "false",
+                  "description": "Whether to include human review details in the results. When set to `true`, various human review details are returned.\n\n<Note>The review process can include manually correcting values. This endpoint doesn't support returning the original and corrected values.</Note>\n\nThe following values are returned at the document level (`files/documents/...`):\n\n- `review_completed`\n- `class_edit_history`\n- `class_edit_history/timestamp`\n- `class_edit_history/user_id`\n- `class_edit_history/modifications`\n- `class_edit_history/modifications/message`\n\nThe following values are returned at the field level (`files/documents/fields/...`):\n\n- `edit_history`\n- `edit_history/timestamp`\n- `edit_history/user_id`\n- `edit_history/modifications`\n- `edit_history/modifications/message`\n\nThe following values are returned at the packet level (also known as case level) (`case_info/fields/...`):\n\n- `edit_history`\n- `edit_history/timestamp`\n- `edit_history/user_id`\n- `edit_history/modifications`\n- `edit_history/modifications/message`\n\nSee the response schema for details and descriptions.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_confidence_scores",
+                  "value": "false",
+                  "description": "Whether to include confidence scores in the results. When set to `true`, various confidence scores are returned.\n\nThe following values are returned at the document level (`files/documents/...`):\n\n- `classification_confidence`\n\nThe following values are returned at the field level (`files/documents/fields/...`):\n\n- `confidence/model`\n- `confidence/ocr`\n\nSee the response schema for details and descriptions.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_validation_results",
+                  "value": "false",
+                  "description": "Whether to include validation status in the results. When set to `true`, various validation results are returned.\n\nThe following values are returned at the document level (`files/documents/...`):\n\n- `validations/final_result_pass`\n\nThe following values are returned at the field level (`files/documents/fields/...`):\n\n- `validations/valid`\n- `validations/alerts`\n\nThe following values are returned at the packet level (also known as case level) (`case_info/fields/...`):\n\n- `validations/valid`\n- `validations/failures`\n\nCross-class validation ensures data quality and consistency across documents within a packet.\n\nSee the response schema for details and descriptions.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_source_info",
+                  "value": "false",
+                  "description": "Whether to include source information in the results. When set to `true`, various source details are returned.\n\nThe following values are returned at the document level (`files/documents/...`):\n\n- `post_processed_paths`\n- `post_processed_pdf_path`\n\n   <Note>\n   A `post_processed_pdf_path` is populated when `settings/runtime_config/generate_post_process_pdf=true`. Paths to PDFs are generated from each document, with separate PDF paths for documents split during classification.\n   </Note>\n\n- `page_layouts`\n\nThe following values are returned at the field level (`files/documents/fields/...`):\n\n- `source_coordinates/top_x`\n- `source_coordinates/top_y`\n- `source_coordinates/bottom_x`\n- `source_coordinates/bottom_y`\n- `source_coordinates/page_number`\n\nSee the response schema for details and descriptions.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "file_offset",
+                  "value": "0",
+                  "description": "The initial file index to start returning results from. Defaults to `0`."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "run_id",
+                  "description": "(Required) The run ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                "key": "IB-Context",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a836b9ee-4c62-4e82-8926-14cdf64bd453",
+              "name": "Run results retrieved successfully.\n\n<Note>\n\nIf errors occur at the class, field, or document levels, the response status code is `200` and the response body includes error details.\n\n</Note>\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "runs",
+                    ":run_id",
+                    "results"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include_review_results",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_confidence_scores",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_validation_results",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_source_info",
+                      "value": "false"
+                    },
+                    {
+                      "key": "file_offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "run_id",
+                      "description": "(Required) The run ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"status\": \"FAILED\",\n  \"message\": \"string\",\n  \"start_timestamp\": 9188,\n  \"finish_timestamp\": 9643,\n  \"batch_id\": \"string\",\n  \"files\": [\n    {\n      \"original_file_name\": \"string\",\n      \"input_file_path\": \"string\",\n      \"documents\": [\n        {\n          \"fields\": [\n            {\n              \"field_name\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"error_msg\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"source_coordinates\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"edit_history\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"confidence\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"validations\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"field_name\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"error_msg\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"source_coordinates\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"edit_history\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"confidence\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"validations\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"review_completed\": true,\n          \"class_name\": \"string\",\n          \"page_numbers\": [\n            3529,\n            919\n          ],\n          \"page_layouts\": [\n            {\n              \"page_number\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"width\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"height\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"page_number\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"width\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"height\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"post_processed_paths\": [\n            \"string\",\n            \"string\"\n          ],\n          \"post_processed_pdf_path\": \"string\",\n          \"class_edit_history\": [\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"user_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"modifications\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"user_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"modifications\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"validations\": {\n            \"final_result_pass\": false\n          },\n          \"classification_confidence\": {\n            \"model\": 4194.9474127382555\n          }\n        },\n        {\n          \"fields\": [\n            {\n              \"field_name\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"error_msg\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"source_coordinates\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"edit_history\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"confidence\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"validations\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"field_name\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"error_msg\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"source_coordinates\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"edit_history\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"confidence\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"validations\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"review_completed\": true,\n          \"class_name\": \"string\",\n          \"page_numbers\": [\n            371,\n            3279\n          ],\n          \"page_layouts\": [\n            {\n              \"page_number\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"width\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"height\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"page_number\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"width\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"height\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"post_processed_paths\": [\n            \"string\",\n            \"string\"\n          ],\n          \"post_processed_pdf_path\": \"string\",\n          \"class_edit_history\": [\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"user_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"modifications\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"user_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"modifications\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"validations\": {\n            \"final_result_pass\": true\n          },\n          \"classification_confidence\": {\n            \"model\": 8955.51236504501\n          }\n        }\n      ]\n    },\n    {\n      \"original_file_name\": \"string\",\n      \"input_file_path\": \"string\",\n      \"documents\": [\n        {\n          \"fields\": [\n            {\n              \"field_name\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"error_msg\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"source_coordinates\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"edit_history\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"confidence\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"validations\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"field_name\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"error_msg\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"source_coordinates\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"edit_history\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"confidence\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"validations\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"review_completed\": false,\n          \"class_name\": \"string\",\n          \"page_numbers\": [\n            3805,\n            3464\n          ],\n          \"page_layouts\": [\n            {\n              \"page_number\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"width\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"height\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"page_number\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"width\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"height\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"post_processed_paths\": [\n            \"string\",\n            \"string\"\n          ],\n          \"post_processed_pdf_path\": \"string\",\n          \"class_edit_history\": [\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"user_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"modifications\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"user_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"modifications\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"validations\": {\n            \"final_result_pass\": true\n          },\n          \"classification_confidence\": {\n            \"model\": 7656.669674659774\n          }\n        },\n        {\n          \"fields\": [\n            {\n              \"field_name\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"error_msg\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"source_coordinates\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"edit_history\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"confidence\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"validations\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"field_name\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"error_msg\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"source_coordinates\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"edit_history\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"confidence\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"validations\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"review_completed\": true,\n          \"class_name\": \"string\",\n          \"page_numbers\": [\n            3685,\n            1435\n          ],\n          \"page_layouts\": [\n            {\n              \"page_number\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"width\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"height\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"page_number\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"width\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"height\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"post_processed_paths\": [\n            \"string\",\n            \"string\"\n          ],\n          \"post_processed_pdf_path\": \"string\",\n          \"class_edit_history\": [\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"user_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"modifications\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"user_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"modifications\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"validations\": {\n            \"final_result_pass\": false\n          },\n          \"classification_confidence\": {\n            \"model\": 5782.589463325229\n          }\n        }\n      ]\n    }\n  ],\n  \"keys\": {\n    \"custom\": {}\n  },\n  \"case_info\": {\n    \"fields\": [\n      {\n        \"name\": \"string\",\n        \"value\": \"string\",\n        \"input_fields\": [\n          {\n            \"record_index\": 8787,\n            \"refined_phrase_name\": \"string\"\n          },\n          {\n            \"record_index\": 3399,\n            \"refined_phrase_name\": \"string\"\n          }\n        ],\n        \"chosen_field\": {\n          \"record_index\": 8282,\n          \"refined_phrase_name\": \"string\"\n        },\n        \"error_msg\": \"string\",\n        \"edit_history\": [\n          {\n            \"timestamp\": \"string\",\n            \"user_id\": \"string\",\n            \"modifications\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ]\n          },\n          {\n            \"timestamp\": \"string\",\n            \"user_id\": \"string\",\n            \"modifications\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ]\n          }\n        ],\n        \"validations\": {\n          \"valid\": false,\n          \"failures\": [\n            {\n              \"type\": \"string\",\n              \"msg\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"msg\": \"string\"\n            }\n          ]\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"value\": \"string\",\n        \"input_fields\": [\n          {\n            \"record_index\": 8819,\n            \"refined_phrase_name\": \"string\"\n          },\n          {\n            \"record_index\": 8401,\n            \"refined_phrase_name\": \"string\"\n          }\n        ],\n        \"chosen_field\": {\n          \"record_index\": 9234,\n          \"refined_phrase_name\": \"string\"\n        },\n        \"error_msg\": \"string\",\n        \"edit_history\": [\n          {\n            \"timestamp\": \"string\",\n            \"user_id\": \"string\",\n            \"modifications\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ]\n          },\n          {\n            \"timestamp\": \"string\",\n            \"user_id\": \"string\",\n            \"modifications\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ]\n          }\n        ],\n        \"validations\": {\n          \"valid\": false,\n          \"failures\": [\n            {\n              \"type\": \"string\",\n              \"msg\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"msg\": \"string\"\n            }\n          ]\n        }\n      }\n    ]\n  },\n  \"review_completed\": true,\n  \"has_more\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "66d4ab43-99ca-4d5f-a3cf-d2b7e3989821",
+              "name": "Error response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "apps",
+                    "runs",
+                    ":run_id",
+                    "results"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include_review_results",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_confidence_scores",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_validation_results",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_source_info",
+                      "value": "false"
+                    },
+                    {
+                      "key": "file_offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "run_id",
+                      "description": "(Required) The run ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                    "key": "IB-Context",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://aihub.instabase.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "aadf2f4f-afaf-498d-b7cd-2502c085acf3",
+    "name": "AI Hub Audit Runs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.\n\nContact Support:\n Name: Instabase Support",
+      "type": "text/plain"
+    }
+  }
+}

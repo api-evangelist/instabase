@@ -1,0 +1,343 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AI Hub Audit Batches API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Batches",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List batches",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://aihub.instabase.com/api/v2/batches",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "query",
+                "description": "Filter to batches in the specified workspace."
+              },
+              {
+                "name": "username",
+                "value": "",
+                "type": "query",
+                "description": "Filter to batches created by the specified username (user ID)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "If paginating results, specify how many batches to return."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "If paginating results, specify the offset of the returned list."
+              }
+            ]
+          },
+          "docs": "Return a list of batches. Use query parameters to filter results."
+        },
+        {
+          "info": {
+            "name": "Create batch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://aihub.instabase.com/api/v2/batches",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new batch.\n\n<Note>[Upload files to the batch](/api-sdk/api-reference/batches/add-file-to-batch) in a separate request.</Note>\n"
+        },
+        {
+          "info": {
+            "name": "Get batch information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://aihub.instabase.com/api/v2/batches/:batch_id",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "",
+                "type": "path",
+                "description": "The batch ID."
+              }
+            ]
+          },
+          "docs": "Retrieve information about a batch."
+        },
+        {
+          "info": {
+            "name": "Delete batch",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://aihub.instabase.com/api/v2/batches/:batch_id",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "",
+                "type": "path",
+                "description": "The batch ID."
+              }
+            ]
+          },
+          "docs": "Delete a batch and all its files. This is an asynchronous operation that must be [checked for completion](/api-sdk/api-reference/batches/poll-batches-job)."
+        },
+        {
+          "info": {
+            "name": "List files in a batch",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://aihub.instabase.com/api/v2/batches/:batch_id/files",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "",
+                "type": "path",
+                "description": "The batch ID."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "The number of files to return in each page."
+              },
+              {
+                "name": "start_token",
+                "value": "",
+                "type": "query",
+                "description": "The token to start the list from."
+              }
+            ]
+          },
+          "docs": "Return a list of files in a batch."
+        },
+        {
+          "info": {
+            "name": "Upload file to batch",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://aihub.instabase.com/api/v2/batches/:batch_id/files/:filename",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "",
+                "type": "path",
+                "description": "The batch ID."
+              },
+              {
+                "name": "filename",
+                "value": "",
+                "type": "path",
+                "description": "A user-defined name for the file on the Instabase filesystem. Include the file extension. This doesn't need to be the same as its name on your local filesystem."
+              }
+            ]
+          },
+          "docs": "Upload a file to a batch or update the contents of a previously uploaded file in a batch.\n\n<Info>Files can be uploaded one at a time and the suggested max size for each file is 10 MB. For larger files, see [Multipart file upload](/api-sdk/api-reference/batches/create-multipart-upload-session).</Info>\n\n<Note>If you upload a password-protected PDF, provide the password when you process the PDF with an AI Hub app. See instructions for configuring the `settings.runtime_config.instabase.pdf.passwords"
+        },
+        {
+          "info": {
+            "name": "Delete file from batch",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://aihub.instabase.com/api/v2/batches/:batch_id/files/:filename",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "",
+                "type": "path",
+                "description": "The batch ID."
+              },
+              {
+                "name": "filename",
+                "value": "",
+                "type": "path",
+                "description": "The name of the file."
+              }
+            ]
+          },
+          "docs": "Delete a file from a batch."
+        },
+        {
+          "info": {
+            "name": "Start multipart upload session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://aihub.instabase.com/api/v2/batches/multipart-upload",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Start a multipart upload session. Use this endpoint when you need to upload a file larger than 10 MB to a batch.\n\nThe multipart upload process consists of three steps:\n1. Create a multipart upload session (this endpoint)\n2. [Upload file parts](/api-sdk/api-reference/batches/upload-multipart-part) to the session\n3. [Commit the session](/api-sdk/api-reference/batches/commit-multipart-upload-session) to finalize the upload\n"
+        },
+        {
+          "info": {
+            "name": "Upload part to multipart session",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://aihub.instabase.com/api/v2/batches/multipart-upload/sessions/:session_id/parts/:part_num",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path",
+                "description": "The session ID obtained from the Start multipart upload session response."
+              },
+              {
+                "name": "part_num",
+                "value": "",
+                "type": "path",
+                "description": "The part number, starting at 1 and increasing consecutively for each part."
+              }
+            ]
+          },
+          "docs": "Upload part of a file to the multipart upload session. The size of each part must match the `part_size` returned by the [Start multipart upload session](/api-sdk/api-reference/batches/create-multipart-upload-session) call, except for the final part, which can be smaller.\n\nParts must be uploaded with consecutive part numbers starting at 1.\n"
+        },
+        {
+          "info": {
+            "name": "Commit or abort multipart session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://aihub.instabase.com/api/v2/batches/multipart-upload/sessions/:session_id",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path",
+                "description": "The session ID obtained from the Start multipart upload session response."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "After uploading all parts to a multipart upload session, use this endpoint to commit and close the session, or abort the session.\n\nWhen committing, provide all the uploaded parts in the correct order. When aborting, the session and all uploaded parts are discarded.\n"
+        },
+        {
+          "info": {
+            "name": "Poll batches job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://aihub.instabase.com/api/v2/batches/jobs/:job_id",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "job_id",
+                "value": "",
+                "type": "path",
+                "description": "The job ID returned by a [Delete batch](/api-sdk/api-reference/batches/delete-batch) request."
+              }
+            ]
+          },
+          "docs": "Poll the asynchronous job created when deleting a batch.\n\n<Info>This API operation and SDK method are maintained for backward compatibility, but the functionally identical API operation [poll file operation job status](/api-sdk/api-reference/jobs/job-status) and its corresponding SDK method [client.jobs.status()](/api-sdk/api-reference/jobs/job-status) are preferred.</Info>\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,49 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AI Hub Audit Jobs API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Jobs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Poll file operation job status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://aihub.instabase.com/api/v2/jobs/:job_id",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "job_id",
+                "value": "",
+                "type": "path",
+                "description": "The job ID returned by a request."
+              }
+            ]
+          },
+          "docs": "Poll the asynchronous job created during a file operation request such as deleting a batch or file."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

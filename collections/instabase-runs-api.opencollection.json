@@ -1,0 +1,300 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AI Hub Audit Runs API",
+    "version": "0.1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Runs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List runs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://aihub.instabase.com/api/v2/apps/runs",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "app_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs by app ID."
+              },
+              {
+                "name": "app_name",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs by app name."
+              },
+              {
+                "name": "deployment_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs by deployment ID."
+              },
+              {
+                "name": "username",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs initiated by the specified user (username)."
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter specific run by run ID."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter jobs by status, such as COMPLETE, RUNNING, or FAILED."
+              },
+              {
+                "name": "output_workspaces",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs by the run's output workspace. By default, all runs across all workspaces you have access to are returned, use this query parameter to filter by specific workspace names. You must have access to the named workspaces."
+              },
+              {
+                "name": "from_timestamp",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs starting from this timestamp. Timestamp in Unix time in seconds. Defaults to 24 hours before the current time."
+              },
+              {
+                "name": "to_timestamp",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs up to this timestamp. Timestamp in Unix time in seconds. Defaults to the current time."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offset of the first result to return."
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query",
+                "description": "Field to sort results by."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Order of sorting, such as ASCENDING or DESCENDING."
+              }
+            ]
+          },
+          "docs": "Return a list of runs. Use query parameters to filter results."
+        },
+        {
+          "info": {
+            "name": "Run app",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://aihub.instabase.com/api/v2/apps/runs",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Run an automation app by its name or app ID. The input for the run can be a batch ID or an input file path.\n\n<Tip>\n\n<span class=\"badge\">Commercial & Enterprise</span>\n\nRunning an automation app via a deployment is generally preferred over running an app directly.\n\nDeployments offer additional features including upstream and downstream integrations, deployment metrics, human review workflows, and secret and configuration management.\n\nLearn more about [deployments](/automate/deployments) to decide"
+        },
+        {
+          "info": {
+            "name": "Run deployment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://aihub.instabase.com/api/v2/apps/deployments/:deployment-id/runs",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "deployment-id",
+                "value": "",
+                "type": "path",
+                "description": "The deployment ID.\n\n<Tip>Find the deployment ID by opening the deployment in AI Hub and looking at the site URL, such as https<span>://</span>aihub.instabase.com/deployments/**01902d6f-bb35-74cb-bd27-c09b38bbf20a**/runs.</Tip>\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "<span class=\"badge\">Commercial & Enterprise</span>\n\nRun an AI Hub deployment by its deployment ID. The input for the run is specified using a batch ID or file path.\n\n<Info>Use the UI to optionally [configure email notifications or webhooks](/automate/deployments#configuring-notifications) for certain events within the deployed app's lifecycle.</Info>\n\n<Note>Any specified input or output is validated against the context set by the `IB-Context` header. For example, if the context is set to your co"
+        },
+        {
+          "info": {
+            "name": "Get run status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://aihub.instabase.com/api/v2/apps/runs/:run_id",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "The run ID."
+              }
+            ]
+          },
+          "docs": "Get the status of a run."
+        },
+        {
+          "info": {
+            "name": "Delete run",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://aihub.instabase.com/api/v2/apps/runs/:run_id",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "The run ID."
+              },
+              {
+                "name": "delete_db_data",
+                "value": "",
+                "type": "query",
+                "description": "Delete the run's database data."
+              },
+              {
+                "name": "delete_input",
+                "value": "",
+                "type": "query",
+                "description": "Delete the run's input files."
+              },
+              {
+                "name": "delete_output",
+                "value": "",
+                "type": "query",
+                "description": "Delete the run's output files."
+              },
+              {
+                "name": "delete_logs",
+                "value": "",
+                "type": "query",
+                "description": "Delete the run's logs."
+              }
+            ]
+          },
+          "docs": "Deletes a specified automation app run and optionally its associated database data, input files, output files, and logs. This is an asynchronous operation that must be [checked for completion](/api-sdk/api-reference/jobs/job-status).\n\n<Warning>Deleting the run's input files also deletes the batch that the run processed.</Warning>\n"
+        },
+        {
+          "info": {
+            "name": "Get run results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://aihub.instabase.com/api/v2/apps/runs/:run_id/results",
+            "headers": [
+              {
+                "name": "IB-Context",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path",
+                "description": "The run ID."
+              },
+              {
+                "name": "include_review_results",
+                "value": "",
+                "type": "query",
+                "description": "Whether to include human review details in the results. When set to `true`, various human review details are returned.\n\n<Note>The review process can include manually correcting values. This endpoint doesn't support returning the original and corrected values.</Note>\n\nThe following values are returned at the document level (`files/documents/...`):\n\n- `review_completed`\n- `class_edit_history`\n- `class_edit_history/timestamp`\n- `class_edit_history/user_id`\n- `class_edit_history/modifications`\n- `class_edit_history/modifications/message`\n\nThe following values are returned at the field level (`files/documents/fields/...`):\n\n- `edit_history`\n- `edit_history/timestamp`\n- `edit_history/user_id`\n- `edit_history/modifications`\n- `edit_history/modifications/message`\n\nThe following values are returned at the packet level (also known as case level) (`case_info/fields/...`):\n\n- `edit_history`\n- `edit_history/timestamp`\n- `edit_history/user_id`\n- `edit_history/modifications`\n- `edit_history/modifications/message`\n\nSee the response schema for details and descriptions.\n"
+              },
+              {
+                "name": "include_confidence_scores",
+                "value": "",
+                "type": "query",
+                "description": "Whether to include confidence scores in the results. When set to `true`, various confidence scores are returned.\n\nThe following values are returned at the document level (`files/documents/...`):\n\n- `classification_confidence`\n\nThe following values are returned at the field level (`files/documents/fields/...`):\n\n- `confidence/model`\n- `confidence/ocr`\n\nSee the response schema for details and descriptions.\n"
+              },
+              {
+                "name": "include_validation_results",
+                "value": "",
+                "type": "query",
+                "description": "Whether to include validation status in the results. When set to `true`, various validation results are returned.\n\nThe following values are returned at the document level (`files/documents/...`):\n\n- `validations/final_result_pass`\n\nThe following values are returned at the field level (`files/documents/fields/...`):\n\n- `validations/valid`\n- `validations/alerts`\n\nThe following values are returned at the packet level (also known as case level) (`case_info/fields/...`):\n\n- `validations/valid`\n- `validations/failures`\n\nCross-class validation ensures data quality and consistency across documents within a packet.\n\nSee the response schema for details and descriptions.\n"
+              },
+              {
+                "name": "include_source_info",
+                "value": "",
+                "type": "query",
+                "description": "Whether to include source information in the results. When set to `true`, various source details are returned.\n\nThe following values are returned at the document level (`files/documents/...`):\n\n- `post_processed_paths`\n- `post_processed_pdf_path`\n\n   <Note>\n   A `post_processed_pdf_path` is populated when `settings/runtime_config/generate_post_process_pdf=true`. Paths to PDFs are generated from each document, with separate PDF paths for documents split during classification.\n   </Note>\n\n- `page_layouts`\n\nThe following values are returned at the field level (`files/documents/fields/...`):\n\n- `source_coordinates/top_x`\n- `source_coordinates/top_y`\n- `source_coordinates/bottom_x`\n- `source_coordinates/bottom_y`\n- `source_coordinates/page_number`\n\nSee the response schema for details and descriptions.\n"
+              },
+              {
+                "name": "file_offset",
+                "value": "",
+                "type": "query",
+                "description": "The initial file index to start returning results from. Defaults to `0`."
+              }
+            ]
+          },
+          "docs": "Get the results of a completed automation app run.\n\n<Note>\nThe results from this endpoint are paginated. The `has_more` field in the response indicates if there are more results to fetch and the `file_offset` query parameter can be used to specify the starting point for the next set of results.\n\nFor an example of using `file_offset` to fetch all results, see the *Retrieving paginated results* code sample.\n</Note>\n\n<Info>\n\nThis API operation might return field names that differ from those in the "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

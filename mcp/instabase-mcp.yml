@@ -6,13 +6,14 @@ server:
   name: instabase-aihub-docs
   transport: http
   url: https://docs.instabase.com/_mcp/server
-  description: >-
-    Official Instabase AI Hub documentation MCP server. The AI Hub docs
-    site advertises an MCP endpoint for AI client integration (Claude Code,
-    Cursor, etc.) that exposes the documentation corpus. Probed HTTP 200 on
-    2026-07-19.
-notes: >-
-  This is a documentation/knowledge MCP server, not a full API-operations
-  server. A candidate operations MCP could be derived from the AI Hub
-  OpenAPI (openapi/instabase-aihub-openapi.yaml) covering batches, app runs,
-  deployments, files, and secrets.
+  description: Official Instabase AI Hub documentation MCP server. The AI Hub docs site advertises an
+    MCP endpoint for AI client integration (Claude Code, Cursor, etc.) that exposes the documentation
+    corpus. Probed HTTP 200 on 2026-07-19.
+notes: This is a documentation/knowledge MCP server, not a full API-operations server. A candidate operations
+  MCP could be derived from the AI Hub OpenAPI (openapi/instabase-aihub-openapi.yaml) covering batches,
+  app runs, deployments, files, and secrets.
+deployment:
+  mode: remote
+  verified: searched
+  checked: '2026-08-12'
+  source: catalog MCP census

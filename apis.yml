@@ -41,6 +41,17 @@ tags:
 - Intelligent Document Processing
 - Document AI
 - Artificial Intelligence
+- Machine-Learning
+- Automation
+- Data Extraction
+- LLM
+- Financial-Services
+- Insurance
+tags_raw:
+- Company
+- Intelligent Document Processing
+- Document AI
+- Artificial Intelligence
 - Machine Learning
 - Automation
 - Data Extraction
@@ -86,6 +97,8 @@ apis:
   humanURL: https://docs.instabase.com/api-sdk/
   baseURL: https://aihub.instabase.com/api
   tags:
+  - File
+  tags_raw:
   - Files
   properties:
   - type: OpenAPI
@@ -102,6 +115,8 @@ apis:
   humanURL: https://docs.instabase.com/api-sdk/
   baseURL: https://aihub.instabase.com/api
   tags:
+  - Job
+  tags_raw:
   - Jobs
   properties:
   - type: OpenAPI

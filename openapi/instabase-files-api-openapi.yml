@@ -1,6 +1,6 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  title: AI Hub Audit Files API
+  title: AI Hub Files API
   version: '0.1'
   description: The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.
   termsOfService: https://www.instabase.com/terms-of-service/
@@ -28,12 +28,10 @@ paths:
       description: 'Read contents from a file.
 
 
-        <Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>
+        This acts on files in the AI Hub filesystem, not your local filesystem.
 
 
-        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
-
-        '
+        Ensure the path is accessible within the context defined by the `IB-Context` header.'
       parameters:
       - in: path
         name: path
@@ -139,30 +137,28 @@ paths:
         If the parent folder of the `path` parameter doesn''t exist, the file system creates it before creating the file.
 
 
-        <Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>
+        This acts on files in the AI Hub filesystem, not your local filesystem.
 
 
-        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
+        Ensure the path is accessible within the context defined by the `IB-Context` header.
 
 
         Not all filesystem types support this operation.
 
 
-        | Filesystem           | Supported |
+        | Filesystem | Supported |
 
         |----------------------|-----------|
 
-        | Instabase            | ✓         |
+        | Instabase | ✓ |
 
-        | Amazon S3            | ✓         |
+        | Amazon S3 | ✓ |
 
-        | Azure Blob Storage   | ✓         |
+        | Azure Blob Storage | ✓ |
 
-        | Google Cloud Storage | ✓         |
+        | Google Cloud Storage | ✓ |
 
-        | Google Drive         | -         |
-
-        '
+        | Google Drive | - |'
       parameters:
       - in: path
         name: path
@@ -220,12 +216,10 @@ paths:
         This API operation reports whether the object at the target path is a file or folder. If a file, it also reports the file size and last modification time.
 
 
-        <Info>This acts on files and folders in the AI Hub filesystem, not your local filesystem.</Info>
+        This acts on files and folders in the AI Hub filesystem, not your local filesystem.
 
 
-        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
-
-        '
+        Ensure the path is accessible within the context defined by the `IB-Context` header.'
       parameters:
       - in: path
         name: path
@@ -291,30 +285,28 @@ paths:
         This operation is also available via the SDK method `client.files.delete()`.
 
 
-        <Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>
+        This acts on files in the AI Hub filesystem, not your local filesystem.
 
 
-        <Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>
+        Ensure the path is accessible within the context defined by the `IB-Context` header.
 
 
         Not all filesystem types support this operation.
 
 
-        | Filesystem           | Supported |
+        | Filesystem | Supported |
 
         |----------------------|-----------|
 
-        | Instabase            | ✓         |
+        | Instabase | ✓ |
 
-        | Amazon S3            | ✓         |
+        | Amazon S3 | ✓ |
 
-        | Azure Blob Storage   | ✓         |
+        | Azure Blob Storage | ✓ |
 
-        | Google Cloud Storage | ✓         |
+        | Google Cloud Storage | ✓ |
 
-        | Google Drive         | -         |
-
-        '
+        | Google Drive | - |'
       parameters:
       - in: path
         name: path

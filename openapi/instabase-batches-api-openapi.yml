@@ -1,6 +1,6 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  title: AI Hub Audit Batches API
+  title: AI Hub Batches API
   version: '0.1'
   description: The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.
   termsOfService: https://www.instabase.com/terms-of-service/
@@ -28,9 +28,7 @@ paths:
       description: 'Create a new batch.
 
 
-        <Note>[Upload files to the batch](/api-sdk/api-reference/batches/add-file-to-batch) in a separate request.</Note>
-
-        '
+        Upload files to the batch in a separate request.'
       parameters:
       - $ref: '#/components/parameters/ib_context'
       requestBody:
@@ -170,7 +168,7 @@ paths:
       tags:
       - Batches
       summary: Delete batch
-      description: Delete a batch and all its files. This is an asynchronous operation that must be [checked for completion](/api-sdk/api-reference/batches/poll-batches-job).
+      description: Delete a batch and all its files. This is an asynchronous operation that must be checked for completion.
       parameters:
       - $ref: '#/components/parameters/batch_id'
       - $ref: '#/components/parameters/ib_context'
@@ -269,12 +267,10 @@ paths:
       description: 'Upload a file to a batch or update the contents of a previously uploaded file in a batch.
 
 
-        <Info>Files can be uploaded one at a time and the suggested max size for each file is 10 MB. For larger files, see [Multipart file upload](/api-sdk/api-reference/batches/create-multipart-upload-session).</Info>
+        Files can be uploaded one at a time and the suggested max size for each file is 10 MB. For larger files, see Multipart file upload.
 
 
-        <Note>If you upload a password-protected PDF, provide the password when you process the PDF with an AI Hub app. See instructions for configuring the `settings.runtime_config.instabase.pdf.passwords` property for the [Run deployment](/api-sdk/api-reference/runs/run-deployment#request.body.settings.runtime_config.instabase.pdf.passwords) or [Run app](/api-sdk/api-reference/runs/run-app#request.body.settings.runtime_config.instabase.pdf.passwords) operations.</Note>
-
-        '
+        If you upload a password-protected PDF, provide the password when you process the PDF with an AI Hub app. See instructions for configuring the `settings.runtime_config.instabase.pdf.passwords` property for the Run deployment or Run app operations.'
       parameters:
       - $ref: '#/components/parameters/batch_id'
       - name: filename
@@ -360,11 +356,9 @@ paths:
 
         1. Create a multipart upload session (this endpoint)
 
-        2. [Upload file parts](/api-sdk/api-reference/batches/upload-multipart-part) to the session
+        2. Upload file parts to the session
 
-        3. [Commit the session](/api-sdk/api-reference/batches/commit-multipart-upload-session) to finalize the upload
-
-        '
+        3. Commit the session to finalize the upload'
       parameters:
       - $ref: '#/components/parameters/ib_context'
       requestBody:
@@ -425,12 +419,10 @@ paths:
       tags:
       - Batches
       summary: Upload part to multipart session
-      description: 'Upload part of a file to the multipart upload session. The size of each part must match the `part_size` returned by the [Start multipart upload session](/api-sdk/api-reference/batches/create-multipart-upload-session) call, except for the final part, which can be smaller.
+      description: 'Upload part of a file to the multipart upload session. The size of each part must match the `part_size` returned by the Start multipart upload session call, except for the final part, which can be smaller.
 
 
-        Parts must be uploaded with consecutive part numbers starting at 1.
-
-        '
+        Parts must be uploaded with consecutive part numbers starting at 1.'
       parameters:
       - name: session_id
         in: path
@@ -487,9 +479,7 @@ paths:
       description: 'After uploading all parts to a multipart upload session, use this endpoint to commit and close the session, or abort the session.
 
 
-        When committing, provide all the uploaded parts in the correct order. When aborting, the session and all uploaded parts are discarded.
-
-        '
+        When committing, provide all the uploaded parts in the correct order. When aborting, the session and all uploaded parts are discarded.'
       parameters:
       - name: session_id
         in: path
@@ -561,9 +551,7 @@ paths:
       description: 'Poll the asynchronous job created when deleting a batch.
 
 
-        <Info>This API operation and SDK method are maintained for backward compatibility, but the functionally identical API operation [poll file operation job status](/api-sdk/api-reference/jobs/job-status) and its corresponding SDK method [client.jobs.status()](/api-sdk/api-reference/jobs/job-status) are preferred.</Info>
-
-        '
+        This API operation and SDK method are maintained for backward compatibility, but the functionally identical API operation poll file operation job status and its corresponding SDK method client.jobs.status() are preferred.'
       parameters:
       - name: job_id
         in: path
@@ -591,6 +579,32 @@ paths:
           code: "import requests\n\njob_id = \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\nurl = f\"https://aihub.instabase.com/api/v2/batches/jobs/{job_id}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the GET request\nresponse = requests.get(url, headers=headers)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Job status: {response.json()['state']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
 components:
   schemas:
+    multipartUploadPartResponse:
+      type: object
+      properties:
+        part_id:
+          type: string
+          description: ID of the uploaded part.
+        part_num:
+          type: integer
+          description: The part number of the uploaded part, indicating upload order. Identical to the part number in the request URL.
+      required:
+      - part_id
+      - part_num
+    multipartUploadSessionResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: ID of the multipart upload session.
+          example: yGLRzUtS2vHm9IdxMrsKaMEOXG7hGBU7KEuvm2JujgBuO9ZAwtqTYmAYauf1RHI8bgEq7qm_UnCE5YNdMg7.1Lv_lrKRVPQ4fZpNVgF3wD5dbvz_bgbmx50a2.kcDZN7XjOI1z.NQ8_9JfOLhtYIgA6xMGLv5U0p6FitSDtFgW4-
+        part_size:
+          type: integer
+          description: The number of bytes each part should be when uploading to the session. Each part should match the part_size, except for the final part, which can be smaller than the part_size.
+          example: 10485760
+      required:
+      - part_size
+      - session_id
     listBatchFilesResponse:
       type: object
       properties:
@@ -638,34 +652,6 @@ components:
         has_more:
           type: boolean
           description: Indicates whether there are more files to be retrieved.
-    error:
-      type: object
-      properties:
-        message:
-          type: string
-    batch:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the batch.
-      required:
-      - id
-    jobStatusResponse:
-      type: object
-      properties:
-        state:
-          type: string
-          description: The status of the job.
-          enum:
-          - COMPLETE
-          - FAILED
-          - CANCELLED
-          - RUNNING
-          - PENDING
-        message:
-          type: string
-          description: Job status message.
     batchInfo:
       type: object
       properties:
@@ -701,20 +687,6 @@ components:
       required:
       - id
       - name
-    multipartUploadSessionResponse:
-      type: object
-      properties:
-        session_id:
-          type: string
-          description: ID of the multipart upload session.
-          example: yGLRzUtS2vHm9IdxMrsKaMEOXG7hGBU7KEuvm2JujgBuO9ZAwtqTYmAYauf1RHI8bgEq7qm_UnCE5YNdMg7.1Lv_lrKRVPQ4fZpNVgF3wD5dbvz_bgbmx50a2.kcDZN7XjOI1z.NQ8_9JfOLhtYIgA6xMGLv5U0p6FitSDtFgW4-
-        part_size:
-          type: integer
-          description: The number of bytes each part should be when uploading to the session. Each part should match the part_size, except for the final part, which can be smaller than the part_size.
-          example: 10485760
-      required:
-      - part_size
-      - session_id
     batchDeletionJobResponse:
       type: object
       properties:
@@ -723,18 +695,34 @@ components:
           description: The job ID of the operation. Use the job ID with the [Poll batches job endpoint](/api-sdk/api-reference/batches/poll-batches-job) to check batch deletion status.
       required:
       - job_id
-    multipartUploadPartResponse:
+    batch:
       type: object
       properties:
-        part_id:
-          type: string
-          description: ID of the uploaded part.
-        part_num:
+        id:
           type: integer
-          description: The part number of the uploaded part, indicating upload order. Identical to the part number in the request URL.
+          description: Unique identifier for the batch.
       required:
-      - part_id
-      - part_num
+      - id
+    jobStatusResponse:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The status of the job.
+          enum:
+          - COMPLETE
+          - FAILED
+          - CANCELLED
+          - RUNNING
+          - PENDING
+        message:
+          type: string
+          description: Job status message.
+    error:
+      type: object
+      properties:
+        message:
+          type: string
   parameters:
     batch_id:
       in: path

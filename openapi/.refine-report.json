@@ -1,12 +1,7 @@
 {
   "provider": "instabase",
   "sources": [
-    "instabase-audit-api-openapi.yml",
-    "instabase-batches-api-openapi.yml",
-    "instabase-files-api-openapi.yml",
-    "instabase-jobs-api-openapi.yml",
-    "instabase-runs-api-openapi.yml",
-    "instabase-secrets-api-openapi.yml"
+    "_original/instabase-aihub-openapi.yaml"
   ],
   "outputs": [
     "instabase-audit-api-openapi.yml",
@@ -19,6 +14,23 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "instabase-aihub-openapi.yaml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "instabase-aihub-openapi.yaml: declared missing tag: Audit",
+    "instabase-aihub-openapi.yaml: declared missing tag: Batches",
+    "instabase-aihub-openapi.yaml: declared missing tag: Files",
+    "instabase-aihub-openapi.yaml: declared missing tag: Jobs",
+    "instabase-aihub-openapi.yaml: declared missing tag: Runs",
+    "instabase-aihub-openapi.yaml: declared missing tag: Secrets",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "instabase-audit-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "instabase-batches-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "instabase-files-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "instabase-jobs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "instabase-runs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "instabase-secrets-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

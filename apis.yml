@@ -54,11 +54,11 @@ tags:
 - Intelligent Document Processing
 - Document AI
 - Artificial Intelligence
-- Machine-Learning
+- Machine Learning
 - Automation
 - Data Extraction
 - LLM
-- Financial-Services
+- Financial Services
 - Insurance
 tags_raw:
 - Company
@@ -71,6 +71,8 @@ tags_raw:
 - LLM
 - Financial Services
 - Insurance
+- Machine-Learning
+- Financial-Services
 apis:
 - aid: instabase:instabase-audit-api
   name: Instabase Audit API

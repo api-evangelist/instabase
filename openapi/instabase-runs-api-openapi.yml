@@ -931,47 +931,186 @@ paths:
           name: Retrieving paginated results without SDK
           code: "# The results from this endpoint are paginated.\n# The `has_more` field in the response indicates whether there are more results to fetch,\n# and `file_offset` specifies the starting point for the next set of results.\n# This example retrieves all results.\nimport requests\n\nrun_id = \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\nurl = f\"https://aihub.instabase.com/api/v2/apps/runs/{run_id}/results\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\nfile_offset = 0\nall_files_results = []\n\nwhile True:\n    params = {\"file_offset\": file_offset}\n    \n    # make the GET request\n    response = requests.get(url, headers=headers, params=params)\n\n    # handle the response\n    if response.status_code == 200:\n        print(f\"Retrieved results for {len(response.json()['files'])} files\")\n        all_files_results.extend(response.json()['files'])\n        if response.json()['has_more']:\n            file_offset += len(response.json()['files'])\n        else:\n            break\n    else:\n        print(f\"Error: {response.status_code} - {response.text}\")\n        break\n\nprint(f\"Retrieved results from {len(all_files_results)} total files\")\n"
 components:
+  parameters:
+    ib_context:
+      in: header
+      name: IB-Context
+      schema:
+        type: string
+      required: false
+      description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
+    run_id:
+      in: path
+      name: run_id
+      required: true
+      schema:
+        type: string
+      description: The run ID.
   schemas:
-    fieldSourceCoordinates:
+    run:
       type: object
       properties:
-        top_x:
-          type: number
-          format: float
-          description: Top-left X coordinate of the bounding box.
-        top_y:
-          type: number
-          format: float
-          description: Top-left Y coordinate of the bounding box.
-        bottom_x:
-          type: number
-          format: float
-          description: Bottom-right X coordinate of the bounding box.
-        bottom_y:
-          type: number
-          format: float
-          description: Bottom-right Y coordinate of the bounding box.
-        page_number:
+        id:
+          type: string
+          description: Run ID of the run.
+        status:
+          type: string
+          description: 'Status of the run. Possible values and meanings:
+
+            - `CANCELLED` -- A user cancelled the run
+
+            - `COMPLETE` -- The run successfully completed. A human review completed if it was required. Results are retrievable, but some fields may have failed and have the value `ERROR`.
+
+            - `FAILED` -- The run failed to complete
+
+            - `PAUSED` -- This status is reserved for future use
+
+            - `RUNNING` -- The run is in progress and is not paused
+
+            - `STOPPED_AT_CHECKPOINT` -- A validation error has paused the run for human review
+
+            '
+          enum:
+          - CANCELLED
+          - COMPLETE
+          - FAILED
+          - PAUSED
+          - RUNNING
+          - STOPPED_AT_CHECKPOINT
+        start_timestamp:
           type: integer
-          description: Zero-indexed page number of the bounding box.
-    pageLayout:
+          format: int64
+          description: When the run started, in Unix time nanoseconds.
+        finish_timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          description: When the run finished, in Unix time nanoseconds. `null` if run is still in progress.
+        msg:
+          type:
+          - string
+          - 'null'
+          description: Message about the run.
+        batch_id:
+          type:
+          - integer
+          - 'null'
+          description: The batch ID used as input for this run.
+        input_dir:
+          type:
+          - string
+          - 'null'
+          description: The path of the input folder used for this run.
+        app_id:
+          type:
+          - string
+          - 'null'
+          description: The app ID of the app that was run.
+        deployment_id:
+          type:
+          - string
+          - 'null'
+          description: The deployment ID used for this run.
+        tags:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of string tags attached to this run.
+    document:
       type: object
       properties:
-        page_number:
-          type: integer
-          description: Zero-indexed page number.
-        width:
-          type: number
-          format: float
-          description: Width of the page.
-        height:
-          type: number
-          format: float
-          description: Height of the page.
+        fields:
+          type: array
+          description: A list containing the extracted fields from the document, each with its field name, extracted value, and type. See `<DOCUMENT-FIELD>` structure for details.
+          items:
+            $ref: '#/components/schemas/documentField'
+        review_completed:
+          type: boolean
+          description: Indicates whether the document has been marked as reviewed.
+        class_name:
+          type:
+          - string
+          - 'null'
+          description: The classification label of the document. `null` if classification is not applicable.
+        page_numbers:
+          type: array
+          description: An array of the document's page numbers.
+          items:
+            type: integer
+        page_layouts:
+          type: array
+          description: An array with one entry per page, containing page layout information including page number, width, and height.
+          items:
+            $ref: '#/components/schemas/pageLayout'
+        post_processed_paths:
+          type: array
+          description: An array of strings, each representing a path to post-processed documents.
+          items:
+            type: string
+        post_processed_pdf_path:
+          type: string
+          description: Path to post-processed PDF.
+        class_edit_history:
+          type: array
+          description: An array containing the history of edits to the document class.
+          items:
+            $ref: '#/components/schemas/modificationObject'
+        validations:
+          type: object
+          properties:
+            final_result_pass:
+              type: boolean
+              description: Indicates whether the document has passed all validation rules.
+        classification_confidence:
+          type: object
+          properties:
+            model:
+              type:
+              - number
+              - 'null'
+              format: float
+              description: Classification confidence. Indicates the model's certainty in predicting the class of a document.
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+    caseInfo:
+      type: object
+      properties:
+        fields:
+          type: array
+          description: 'A list of cross-class fields captured for this run. Cross-class fields consolidate data extracted from standard fields within a packet.
+
+            '
+          items:
+            $ref: '#/components/schemas/caseInfoField'
+    modificationObject:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Datetime string of the edit history event.
+        user_id:
+          type: string
+          description: User ID of the user who made the edit.
+        modifications:
+          type: array
+          description: List of modifications made in this single edit history event.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Message associated with the edit history modification.
+            required:
+            - message
       required:
-      - page_number
-      - width
-      - height
+      - timestamp
+      - user_id
     caseInputField:
       type: object
       description: Input option for ranked cross-class fields.
@@ -1054,249 +1193,24 @@ components:
         has_more:
           type: boolean
           description: Indicates whether additional results are available beyond those included in the current response. Use the `file_offset` query parameter to specify the starting point when fetching the next set of results.
-    caseInfoField:
+    pageLayout:
       type: object
       properties:
-        name:
-          type: string
-          description: Name of the cross-class field.
-        value:
-          type: string
-          description: The value of the cross-class field.
-        input_fields:
-          type: array
-          description: 'Only applicable for ranked cross-class fields. Input options the user can choose from
-
-            when determining the value of this ranked field.
-
-            '
-          items:
-            $ref: '#/components/schemas/caseInputField'
-        chosen_field:
-          $ref: '#/components/schemas/caseInputField'
-          description: 'Only applicable for ranked cross-class fields. The input option from `input_fields` that was
-
-            selected for the ranked field''s value.
-
-            '
-        error_msg:
-          type: string
-          description: Error message for the cross-class field, if any.
-        edit_history:
-          type: array
-          description: The history of edits to the cross-class field. Returned when `include_review_results=true`.
-          items:
-            $ref: '#/components/schemas/modificationObject'
-        validations:
-          type: object
-          description: 'Validation results for the cross-class field. Returned when `include_validation_results` is `true` and field has cross-class validation results.
-
-
-            Cross-class validation ensures data quality and consistency across documents within a packet.
-
-            '
-          properties:
-            valid:
-              type: boolean
-              description: Indicates whether the cross-class field has passed all validation rules.
-            failures:
-              type: array
-              description: Array of validation failures for the cross-class field. Populated only if the `validations/valid` value is `false`.
-              items:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    description: Type of validation failure (for example, "lambda_code", "all_inputs_match").
-                  msg:
-                    type: string
-                    description: Message describing the validation failure.
-                required:
-                - type
-                - msg
-          required:
-          - valid
-      required:
-      - name
-      - value
-    modificationObject:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          description: Datetime string of the edit history event.
-        user_id:
-          type: string
-          description: User ID of the user who made the edit.
-        modifications:
-          type: array
-          description: List of modifications made in this single edit history event.
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Message associated with the edit history modification.
-            required:
-            - message
-      required:
-      - timestamp
-      - user_id
-    document:
-      type: object
-      properties:
-        fields:
-          type: array
-          description: A list containing the extracted fields from the document, each with its field name, extracted value, and type. See `<DOCUMENT-FIELD>` structure for details.
-          items:
-            $ref: '#/components/schemas/documentField'
-        review_completed:
-          type: boolean
-          description: Indicates whether the document has been marked as reviewed.
-        class_name:
-          type:
-          - string
-          - 'null'
-          description: The classification label of the document. `null` if classification is not applicable.
-        page_numbers:
-          type: array
-          description: An array of the document's page numbers.
-          items:
-            type: integer
-        page_layouts:
-          type: array
-          description: An array with one entry per page, containing page layout information including page number, width, and height.
-          items:
-            $ref: '#/components/schemas/pageLayout'
-        post_processed_paths:
-          type: array
-          description: An array of strings, each representing a path to post-processed documents.
-          items:
-            type: string
-        post_processed_pdf_path:
-          type: string
-          description: Path to post-processed PDF.
-        class_edit_history:
-          type: array
-          description: An array containing the history of edits to the document class.
-          items:
-            $ref: '#/components/schemas/modificationObject'
-        validations:
-          type: object
-          properties:
-            final_result_pass:
-              type: boolean
-              description: Indicates whether the document has passed all validation rules.
-        classification_confidence:
-          type: object
-          properties:
-            model:
-              type:
-              - number
-              - 'null'
-              format: float
-              description: Classification confidence. Indicates the model's certainty in predicting the class of a document.
-    run:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Run ID of the run.
-        status:
-          type: string
-          description: 'Status of the run. Possible values and meanings:
-
-            - `CANCELLED` -- A user cancelled the run
-
-            - `COMPLETE` -- The run successfully completed. A human review completed if it was required. Results are retrievable, but some fields may have failed and have the value `ERROR`.
-
-            - `FAILED` -- The run failed to complete
-
-            - `PAUSED` -- This status is reserved for future use
-
-            - `RUNNING` -- The run is in progress and is not paused
-
-            - `STOPPED_AT_CHECKPOINT` -- A validation error has paused the run for human review
-
-            '
-          enum:
-          - CANCELLED
-          - COMPLETE
-          - FAILED
-          - PAUSED
-          - RUNNING
-          - STOPPED_AT_CHECKPOINT
-        start_timestamp:
+        page_number:
           type: integer
-          format: int64
-          description: When the run started, in Unix time nanoseconds.
-        finish_timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
-          description: When the run finished, in Unix time nanoseconds. `null` if run is still in progress.
-        msg:
-          type:
-          - string
-          - 'null'
-          description: Message about the run.
-        batch_id:
-          type:
-          - integer
-          - 'null'
-          description: The batch ID used as input for this run.
-        input_dir:
-          type:
-          - string
-          - 'null'
-          description: The path of the input folder used for this run.
-        app_id:
-          type:
-          - string
-          - 'null'
-          description: The app ID of the app that was run.
-        deployment_id:
-          type:
-          - string
-          - 'null'
-          description: The deployment ID used for this run.
-        tags:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of string tags attached to this run.
-    fileWithDocuments:
-      type: object
-      properties:
-        original_file_name:
-          type: string
-          description: The original name of the file processed.
-        input_file_path:
-          type: string
-          description: The file path of the input file.
-        documents:
-          type: array
-          description: An array containing each document within the file.
-          items:
-            $ref: '#/components/schemas/document'
-    error:
-      type: object
-      properties:
-        message:
-          type: string
-    caseInfo:
-      type: object
-      properties:
-        fields:
-          type: array
-          description: 'A list of cross-class fields captured for this run. Cross-class fields consolidate data extracted from standard fields within a packet.
-
-            '
-          items:
-            $ref: '#/components/schemas/caseInfoField'
+          description: Zero-indexed page number.
+        width:
+          type: number
+          format: float
+          description: Width of the page.
+        height:
+          type: number
+          format: float
+          description: Height of the page.
+      required:
+      - page_number
+      - width
+      - height
     documentField:
       type: object
       properties:
@@ -1364,21 +1278,107 @@ components:
                     type: array
                     items:
                       type: object
-  parameters:
-    ib_context:
-      in: header
-      name: IB-Context
-      schema:
-        type: string
-      required: false
-      description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
-    run_id:
-      in: path
-      name: run_id
-      required: true
-      schema:
-        type: string
-      description: The run ID.
+    caseInfoField:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the cross-class field.
+        value:
+          type: string
+          description: The value of the cross-class field.
+        input_fields:
+          type: array
+          description: 'Only applicable for ranked cross-class fields. Input options the user can choose from
+
+            when determining the value of this ranked field.
+
+            '
+          items:
+            $ref: '#/components/schemas/caseInputField'
+        chosen_field:
+          $ref: '#/components/schemas/caseInputField'
+          description: 'Only applicable for ranked cross-class fields. The input option from `input_fields` that was
+
+            selected for the ranked field''s value.
+
+            '
+        error_msg:
+          type: string
+          description: Error message for the cross-class field, if any.
+        edit_history:
+          type: array
+          description: The history of edits to the cross-class field. Returned when `include_review_results=true`.
+          items:
+            $ref: '#/components/schemas/modificationObject'
+        validations:
+          type: object
+          description: 'Validation results for the cross-class field. Returned when `include_validation_results` is `true` and field has cross-class validation results.
+
+
+            Cross-class validation ensures data quality and consistency across documents within a packet.
+
+            '
+          properties:
+            valid:
+              type: boolean
+              description: Indicates whether the cross-class field has passed all validation rules.
+            failures:
+              type: array
+              description: Array of validation failures for the cross-class field. Populated only if the `validations/valid` value is `false`.
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of validation failure (for example, "lambda_code", "all_inputs_match").
+                  msg:
+                    type: string
+                    description: Message describing the validation failure.
+                required:
+                - type
+                - msg
+          required:
+          - valid
+      required:
+      - name
+      - value
+    fieldSourceCoordinates:
+      type: object
+      properties:
+        top_x:
+          type: number
+          format: float
+          description: Top-left X coordinate of the bounding box.
+        top_y:
+          type: number
+          format: float
+          description: Top-left Y coordinate of the bounding box.
+        bottom_x:
+          type: number
+          format: float
+          description: Bottom-right X coordinate of the bounding box.
+        bottom_y:
+          type: number
+          format: float
+          description: Bottom-right Y coordinate of the bounding box.
+        page_number:
+          type: integer
+          description: Zero-indexed page number of the bounding box.
+    fileWithDocuments:
+      type: object
+      properties:
+        original_file_name:
+          type: string
+          description: The original name of the file processed.
+        input_file_path:
+          type: string
+          description: The file path of the input file.
+        documents:
+          type: array
+          description: An array containing each document within the file.
+          items:
+            $ref: '#/components/schemas/document'
   securitySchemes:
     bearerAuth:
       bearerFormat: auth-scheme

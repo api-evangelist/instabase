@@ -52,14 +52,6 @@ paths:
           name: without SDK
           code: "import requests\n\n# start asynchronous job whose status we'll check\nbatch_id = 12345\nurl = f\"https://aihub.instabase.com/api/v2/batches/{batch_id}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\ndelete_response = requests.delete(url, headers=headers)\n\nurl = f\"https://aihub.instabase.com/api/v2/jobs/{delete_response.json()['job_id']}\"\n\n# make the GET request\nstatus_response = requests.get(url, headers=headers)\n\n# handle the response\nif status_response.status_code == 200:\n    print(f\"Job status: {status_response.json()['state']}\")\nelse:\n    print(f\"Error: {status_response.status_code} - {status_response.text}\")\n"
 components:
-  parameters:
-    ib_context:
-      in: header
-      name: IB-Context
-      schema:
-        type: string
-      required: false
-      description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
   schemas:
     jobStatusResponse:
       type: object
@@ -76,6 +68,14 @@ components:
         message:
           type: string
           description: Job status message.
+  parameters:
+    ib_context:
+      in: header
+      name: IB-Context
+      schema:
+        type: string
+      required: false
+      description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
   securitySchemes:
     bearerAuth:
       bearerFormat: auth-scheme

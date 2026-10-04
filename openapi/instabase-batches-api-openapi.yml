@@ -579,6 +579,22 @@ paths:
           code: "import requests\n\njob_id = \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"\nurl = f\"https://aihub.instabase.com/api/v2/batches/jobs/{job_id}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the GET request\nresponse = requests.get(url, headers=headers)\n\n# handle the response\nif response.status_code == 200:\n    print(f\"Job status: {response.json()['state']}\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
 components:
   schemas:
+    batchDeletionJobResponse:
+      type: object
+      properties:
+        job_id:
+          type: string
+          description: The job ID of the operation. Use the job ID with the [Poll batches job endpoint](/api-sdk/api-reference/batches/poll-batches-job) to check batch deletion status.
+      required:
+      - job_id
+    batch:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the batch.
+      required:
+      - id
     batchInfo:
       type: object
       properties:
@@ -614,29 +630,6 @@ components:
       required:
       - id
       - name
-    jobStatusResponse:
-      type: object
-      properties:
-        state:
-          type: string
-          description: The status of the job.
-          enum:
-          - COMPLETE
-          - FAILED
-          - CANCELLED
-          - RUNNING
-          - PENDING
-        message:
-          type: string
-          description: Job status message.
-    batch:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the batch.
-      required:
-      - id
     multipartUploadSessionResponse:
       type: object
       properties:
@@ -651,14 +644,6 @@ components:
       required:
       - part_size
       - session_id
-    batchDeletionJobResponse:
-      type: object
-      properties:
-        job_id:
-          type: string
-          description: The job ID of the operation. Use the job ID with the [Poll batches job endpoint](/api-sdk/api-reference/batches/poll-batches-job) to check batch deletion status.
-      required:
-      - job_id
     multipartUploadPartResponse:
       type: object
       properties:
@@ -671,11 +656,6 @@ components:
       required:
       - part_id
       - part_num
-    error:
-      type: object
-      properties:
-        message:
-          type: string
     listBatchFilesResponse:
       type: object
       properties:
@@ -723,14 +703,27 @@ components:
         has_more:
           type: boolean
           description: Indicates whether there are more files to be retrieved.
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+    jobStatusResponse:
+      type: object
+      properties:
+        state:
+          type: string
+          description: The status of the job.
+          enum:
+          - COMPLETE
+          - FAILED
+          - CANCELLED
+          - RUNNING
+          - PENDING
+        message:
+          type: string
+          description: Job status message.
   parameters:
-    batch_id:
-      in: path
-      name: batch_id
-      required: true
-      schema:
-        type: integer
-      description: The batch ID.
     ib_context:
       in: header
       name: IB-Context
@@ -738,6 +731,13 @@ components:
         type: string
       required: false
       description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
+    batch_id:
+      in: path
+      name: batch_id
+      required: true
+      schema:
+        type: integer
+      description: The batch ID.
   securitySchemes:
     bearerAuth:
       bearerFormat: auth-scheme

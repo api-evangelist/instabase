@@ -346,6 +346,12 @@ paths:
           name: Delete folder without SDK
           code: "import requests\n\norganization_id = \"acme_org\"\nworkspace = \"MyWorkspace\"\ndrive = \"Instabase Drive\"\nfolder = \"MyFolder\"\nfolder_path = f\"{organization_id}/{workspace}/fs/{drive}/{folder}\"\n\nurl = f\"https://aihub.instabase.com/api/v2/files/{folder_path}\"\n\nheaders = {\n    \"Authorization\": \"Bearer abcdefghijklmnopqrst1234567890\",\n    \"IB-Context\": \"john.doe_acme.com\"\n}\n\n# make the DELETE request\nresponse = requests.delete(url, headers=headers)\n\n# handle the response\nif response.status_code == 202:\n    print(\"Folder deletion request accepted\")\nelse:\n    print(f\"Error: {response.status_code} - {response.text}\")\n"
 components:
+  schemas:
+    error:
+      type: object
+      properties:
+        message:
+          type: string
   parameters:
     ib_context:
       in: header
@@ -354,12 +360,6 @@ components:
         type: string
       required: false
       description: Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.
-  schemas:
-    error:
-      type: object
-      properties:
-        message:
-          type: string
   securitySchemes:
     bearerAuth:
       bearerFormat: auth-scheme

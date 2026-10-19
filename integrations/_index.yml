@@ -28,3 +28,43 @@
     builder: unknown (not in the directory record)
   status: not-a-workflow
   arazzo: null
+- slug: instabase-pypi
+  label: PyPI
+  partner: pypi
+  partner_name: PyPI
+  category: official SDK (Python)
+  type: register
+  channel: package-registry
+  evidence: https://pypi.org/project/instabase/
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public registry JSON)
+    spec_file: null
+    language: Python
+    packages:
+    - name: instabase
+      version: 0.0.3
+      released: '2022-09-20'
+      released_field: upload_time
+      lapsed: true
+      page: https://pypi.org/project/instabase/
+      repo_leg: github-org:instabase
+      publisher_leg: email:instabase.com
+      matched_by: domain
+    - name: instabase-aihub
+      version: 0.14.0
+      released: '2026-03-03'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/instabase-aihub/
+      repo_leg: domain:instabase.com
+      publisher_leg: email:instabase.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null

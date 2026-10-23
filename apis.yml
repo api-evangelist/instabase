@@ -184,6 +184,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: PostmanWorkspace
+  url: https://www.postman.com/kinlaneapi/instabase/overview
 - type: Overlay
   url: overlays/instabase-aihub-overlay.yaml
 # --- Identity / link properties ---

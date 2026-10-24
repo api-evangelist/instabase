@@ -1,1062 +1,1040 @@
 {
+  "info": {
+    "_postman_id": "11b88510-fafc-4ae9-8201-be63d52f6095",
+    "name": "AI Hub Files API",
+    "description": "The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.\n\nContact Support:\n Name: Instabase Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-22T01:17:47.000Z",
+    "updatedAt": "2026-10-22T01:17:47.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-11b88510-fafc-4ae9-8201-be63d52f6095"
+  },
   "item": [
     {
-      "id": "cfa0a347-6cf1-4edd-b58f-4e9517aa007a",
-      "name": "Files",
-      "description": {
-        "content": "",
-        "type": "text/plain"
-      },
+      "name": "v2",
       "item": [
         {
-          "id": "d7c4ac5f-7c0b-4de4-9e47-4a7b681c96ad",
-          "name": "Read file",
-          "request": {
-            "name": "Read file",
-            "description": {
-              "content": "Read contents from a file.\n\n<Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>\n\n<Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>\n",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v2",
-                "files",
-                ":path"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [
-                {
-                  "disabled": false,
-                  "key": "expect-node-type",
-                  "value": "<string>",
-                  "description": "(Required) Type of node at the target path."
-                }
-              ],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "path",
-                  "description": "(Required) Full path to the file."
-                }
-              ]
-            },
-            "header": [
-              {
-                "disabled": false,
-                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                "key": "IB-Context",
-                "value": "<string>"
-              },
-              {
-                "disabled": false,
-                "description": "The portion of the file to read. A single HTTP byte range, with inclusive bounds and a non-negative start value. If not provided, return the entire file. Example: `bytes=0-4`\n",
-                "key": "Range",
-                "value": "<string>"
-              },
-              {
-                "disabled": false,
-                "description": "Configures retry logic if no file is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{retries:3,backoff-seconds:5}`\n",
-                "key": "IB-Retry-Config",
-                "value": "<string>"
-              },
-              {
-                "key": "Accept",
-                "value": "application/octet-stream"
-              }
-            ],
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
+          "name": "files",
+          "item": [
             {
-              "id": "2d8d3dfe-a2af-459a-9a6b-8f0c7871d567",
-              "name": "Indicates that the response contains the entire file contents.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "expect-node-type",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
+              "name": "{path}",
+              "item": [
+                {
+                  "name": "Read file",
+                  "id": "4518344f-47b8-476e-9bc3-412cdf86b8c7",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                        "key": "IB-Context",
+                        "value": "<string>"
+                      },
+                      {
+                        "description": "The portion of the file to read. A single HTTP byte range, with inclusive bounds and a non-negative start value. If not provided, return the entire file. Example: `bytes=0-4`\n",
+                        "key": "Range",
+                        "value": "<string>"
+                      },
+                      {
+                        "description": "Configures retry logic if no file is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{retries:3,backoff-seconds:5}`\n",
+                        "key": "IB-Retry-Config",
+                        "value": "<string>"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/octet-stream"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/files/:path?expect-node-type=file",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "files",
+                        ":path"
+                      ],
+                      "query": [
+                        {
+                          "description": "(Required) Type of node at the target path.",
+                          "key": "expect-node-type",
+                          "value": "file"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "id": "edf85c34-6bde-4ec3-a914-22839dc9a8d7",
+                          "key": "path",
+                          "value": "<string>",
+                          "description": "(Required) Full path to the file."
+                        }
+                      ]
                     },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
+                    "description": "Read contents from a file.\n\nThis acts on files in the AI Hub filesystem, not your local filesystem.\n\nEnsure the path is accessible within the context defined by the `IB-Context` header."
                   },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "The portion of the file to read. A single HTTP byte range, with inclusive bounds and a non-negative start value. If not provided, return the entire file. Example: `bytes=0-4`\n",
-                    "key": "Range",
-                    "value": "<string>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Configures retry logic if no file is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{retries:3,backoff-seconds:5}`\n",
-                    "key": "IB-Retry-Config",
-                    "value": "<string>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/octet-stream"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "disabled": false,
-                  "key": "Content-Length",
-                  "value": "1571",
-                  "description": ""
+                  "response": [
+                    {
+                      "id": "b6623c6f-df43-455c-a350-48f8416564e8",
+                      "name": "Indicates that the response contains the entire file contents.",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "The portion of the file to read. A single HTTP byte range, with inclusive bounds and a non-negative start value. If not provided, return the entire file. Example: `bytes=0-4`\n",
+                            "key": "Range",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "Configures retry logic if no file is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{retries:3,backoff-seconds:5}`\n",
+                            "key": "IB-Retry-Config",
+                            "value": "<string>"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/octet-stream"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path?expect-node-type=file",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "query": [
+                            {
+                              "description": "(Required) Type of node at the target path.",
+                              "key": "expect-node-type",
+                              "value": "file"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/octet-stream"
+                        },
+                        {
+                          "disabled": false,
+                          "description": {
+                            "content": "",
+                            "type": "text/plain"
+                          },
+                          "key": "Content-Type",
+                          "value": "application/octet-stream"
+                        },
+                        {
+                          "disabled": false,
+                          "description": {
+                            "content": "",
+                            "type": "text/plain"
+                          },
+                          "key": "Content-Length",
+                          "value": "<long>"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "<binary>",
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-b6623c6f-df43-455c-a350-48f8416564e8"
+                    },
+                    {
+                      "id": "d6d608ad-888d-479e-8a59-f93a8d64004b",
+                      "name": "Indicates that only a portion of the file has been returned, as requested with the Range header.",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "The portion of the file to read. A single HTTP byte range, with inclusive bounds and a non-negative start value. If not provided, return the entire file. Example: `bytes=0-4`\n",
+                            "key": "Range",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "Configures retry logic if no file is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{retries:3,backoff-seconds:5}`\n",
+                            "key": "IB-Retry-Config",
+                            "value": "<string>"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/octet-stream"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path?expect-node-type=file",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "query": [
+                            {
+                              "description": "(Required) Type of node at the target path.",
+                              "key": "expect-node-type",
+                              "value": "file"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Partial Content",
+                      "code": 206,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/octet-stream"
+                        },
+                        {
+                          "disabled": false,
+                          "description": {
+                            "content": "",
+                            "type": "text/plain"
+                          },
+                          "key": "Content-Type",
+                          "value": "application/octet-stream"
+                        },
+                        {
+                          "disabled": false,
+                          "description": {
+                            "content": "",
+                            "type": "text/plain"
+                          },
+                          "key": "Content-Length",
+                          "value": "<long>"
+                        },
+                        {
+                          "disabled": false,
+                          "description": {
+                            "content": "",
+                            "type": "text/plain"
+                          },
+                          "key": "Content-Range",
+                          "value": "<string>"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "<binary>",
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-d6d608ad-888d-479e-8a59-f93a8d64004b"
+                    },
+                    {
+                      "id": "7453326e-db4c-467c-9a7e-731831f3dff6",
+                      "name": "Error response.",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "The portion of the file to read. A single HTTP byte range, with inclusive bounds and a non-negative start value. If not provided, return the entire file. Example: `bytes=0-4`\n",
+                            "key": "Range",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "Configures retry logic if no file is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{retries:3,backoff-seconds:5}`\n",
+                            "key": "IB-Retry-Config",
+                            "value": "<string>"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path?expect-node-type=file",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "query": [
+                            {
+                              "description": "(Required) Type of node at the target path.",
+                              "key": "expect-node-type",
+                              "value": "file"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"message\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-7453326e-db4c-467c-9a7e-731831f3dff6"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T01:17:48.000Z",
+                  "updatedAt": "2026-10-22T01:17:48.000Z",
+                  "uid": "35240-4518344f-47b8-476e-9bc3-412cdf86b8c7"
                 },
                 {
-                  "key": "Content-Type",
-                  "value": "application/octet-stream"
+                  "name": "Create or overwrite file",
+                  "id": "3648fcb5-c70e-4dc1-9368-0afe7788113f",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                        "key": "IB-Context",
+                        "value": "<string>"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/octet-stream"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "file",
+                      "file": {}
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/files/:path",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "files",
+                        ":path"
+                      ],
+                      "variable": [
+                        {
+                          "id": "28381b72-0bf1-402b-8553-74658aef11f4",
+                          "key": "path",
+                          "value": "<string>",
+                          "description": "(Required) Full path to the file."
+                        }
+                      ]
+                    },
+                    "description": "Create a non-empty file or overwrite an existing file.\n\nIf the parent folder of the `path` parameter doesn't exist, the file system creates it before creating the file.\n\nThis acts on files in the AI Hub filesystem, not your local filesystem.\n\nEnsure the path is accessible within the context defined by the `IB-Context` header.\n\nNot all filesystem types support this operation.\n\n| Filesystem | Supported |\n|----------------------|-----------|\n| Instabase | \u2713 |\n| Amazon S3 | \u2713 |\n| Azure Blob Storage | \u2713 |\n| Google Cloud Storage | \u2713 |\n| Google Drive | - |"
+                  },
+                  "response": [
+                    {
+                      "id": "f50ecc7e-975d-4e6b-92c5-053024d36977",
+                      "name": "The request succeeded and a new file was created at the target location. AI Hub returns this status code only when the request includes an `If-None-Match` header with a value of `*`.",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/octet-stream"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "file",
+                          "file": {}
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Created",
+                      "code": 201,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "disabled": false,
+                          "description": {
+                            "content": "Contains a URL leading to the created file.",
+                            "type": "text/plain"
+                          },
+                          "key": "Location",
+                          "value": "<string>"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-f50ecc7e-975d-4e6b-92c5-053024d36977"
+                    },
+                    {
+                      "id": "d7c597b4-659b-499c-bd18-69a785ed5ba1",
+                      "name": "The request succeeded.",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/octet-stream"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "file",
+                          "file": {}
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "No Content",
+                      "code": 204,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-d7c597b4-659b-499c-bd18-69a785ed5ba1"
+                    },
+                    {
+                      "id": "2e1420b7-66c4-47de-a734-878faa9610b3",
+                      "name": "The request failed because a file exists at the target location that matches the `If-None-Match` header.",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/octet-stream"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "file",
+                          "file": {}
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Precondition Failed",
+                      "code": 412,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-2e1420b7-66c4-47de-a734-878faa9610b3"
+                    },
+                    {
+                      "id": "9a23268b-4402-4da4-bf84-5076b277737a",
+                      "name": "Error response.",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "key": "Content-Type",
+                            "value": "application/octet-stream"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "file",
+                          "file": {}
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"message\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-9a23268b-4402-4da4-bf84-5076b277737a"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T01:17:48.000Z",
+                  "updatedAt": "2026-10-22T01:17:48.000Z",
+                  "uid": "35240-3648fcb5-c70e-4dc1-9368-0afe7788113f"
+                },
+                {
+                  "name": "Read file or folder metadata",
+                  "id": "97c53392-2c5b-4ce4-a345-11eaefe7669b",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "HEAD",
+                    "header": [
+                      {
+                        "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                        "key": "IB-Context",
+                        "value": "<string>"
+                      },
+                      {
+                        "description": "Configures retry logic if no file or folder is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{'retries': 3, 'backoff-seconds': 5}`\n",
+                        "key": "IB-Retry-Config",
+                        "value": "<string>"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/files/:path",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "files",
+                        ":path"
+                      ],
+                      "variable": [
+                        {
+                          "id": "35dd85c6-1447-4dc3-a478-16d3db2b77fb",
+                          "key": "path",
+                          "value": "<string>",
+                          "description": "(Required) Full path to the file or folder."
+                        }
+                      ]
+                    },
+                    "description": "Read metadata of a file or folder at the target path.\n\nThis API operation reports whether the object at the target path is a file or folder. If a file, it also reports the file size and last modification time.\n\nThis acts on files and folders in the AI Hub filesystem, not your local filesystem.\n\nEnsure the path is accessible within the context defined by the `IB-Context` header."
+                  },
+                  "response": [
+                    {
+                      "id": "2cb04423-b05b-4c6d-a8a7-5f34d69634f5",
+                      "name": "Successfully retrieved metadata.",
+                      "originalRequest": {
+                        "method": "HEAD",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "Configures retry logic if no file or folder is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{'retries': 3, 'backoff-seconds': 5}`\n",
+                            "key": "IB-Retry-Config",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "disabled": false,
+                          "description": {
+                            "content": "Returns `application/json` if it is a folder and `application/octet-stream` if it is a file.",
+                            "type": "text/plain"
+                          },
+                          "key": "Content-Type",
+                          "value": "<string>"
+                        },
+                        {
+                          "disabled": false,
+                          "description": {
+                            "content": "Optional. Only present if the target path is a file. The length of the file, in bytes.",
+                            "type": "text/plain"
+                          },
+                          "key": "Content-Length",
+                          "value": "<long>"
+                        },
+                        {
+                          "disabled": false,
+                          "description": {
+                            "content": "Optional. Only present if the target path is a file. The date and time the file was last modified.",
+                            "type": "text/plain"
+                          },
+                          "key": "last-modified",
+                          "value": "<dateTime>"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-2cb04423-b05b-4c6d-a8a7-5f34d69634f5"
+                    },
+                    {
+                      "id": "027c4624-9d31-4d44-b927-2d6854e70f90",
+                      "name": "No file or folder was found at the target path.",
+                      "originalRequest": {
+                        "method": "HEAD",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "Configures retry logic if no file or folder is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{'retries': 3, 'backoff-seconds': 5}`\n",
+                            "key": "IB-Retry-Config",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-027c4624-9d31-4d44-b927-2d6854e70f90"
+                    },
+                    {
+                      "id": "15d675de-284c-418a-82f1-dc0920dc2203",
+                      "name": "Error response.",
+                      "originalRequest": {
+                        "method": "HEAD",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "Configures retry logic if no file or folder is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{'retries': 3, 'backoff-seconds': 5}`\n",
+                            "key": "IB-Retry-Config",
+                            "value": "<string>"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"message\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-15d675de-284c-418a-82f1-dc0920dc2203"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T01:17:48.000Z",
+                  "updatedAt": "2026-10-22T01:17:48.000Z",
+                  "uid": "35240-97c53392-2c5b-4ce4-a345-11eaefe7669b"
+                },
+                {
+                  "name": "Delete file or folder",
+                  "id": "5065d50d-e4a2-4ac0-a031-07d8e14ce43e",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                        "key": "IB-Context",
+                        "value": "<string>"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/files/:path",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "files",
+                        ":path"
+                      ],
+                      "variable": [
+                        {
+                          "id": "cadee5b4-67bf-414a-b07d-1084bc989975",
+                          "key": "path",
+                          "value": "<string>",
+                          "description": "(Required) Full path to the file or folder."
+                        }
+                      ]
+                    },
+                    "description": "Delete a single file or folder.\n\nThis operation is also available via the SDK method `client.files.delete()`.\n\nThis acts on files in the AI Hub filesystem, not your local filesystem.\n\nEnsure the path is accessible within the context defined by the `IB-Context` header.\n\nNot all filesystem types support this operation.\n\n| Filesystem | Supported |\n|----------------------|-----------|\n| Instabase | \u2713 |\n| Amazon S3 | \u2713 |\n| Azure Blob Storage | \u2713 |\n| Google Cloud Storage | \u2713 |\n| Google Drive | - |"
+                  },
+                  "response": [
+                    {
+                      "id": "02d3d204-36d8-4153-960d-e81bf4c137e7",
+                      "name": "Indicates that the deletion request has been accepted. <br/> <Note>The operation returns this status code regardless of whether the file or folder exists.</Note>",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Accepted",
+                      "code": 202,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "disabled": false,
+                          "description": {
+                            "content": "A URL where the status of the deletion job can be checked.",
+                            "type": "text/plain"
+                          },
+                          "key": "Location",
+                          "value": "<string>"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-02d3d204-36d8-4153-960d-e81bf4c137e7"
+                    },
+                    {
+                      "id": "a401537e-1fb2-4534-9d84-fa488a24e07f",
+                      "name": "Error response.",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/files/:path",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "files",
+                            ":path"
+                          ],
+                          "variable": [
+                            {
+                              "key": "path"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"message\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:17:48.000Z",
+                      "updatedAt": "2026-10-22T01:17:48.000Z",
+                      "uid": "35240-a401537e-1fb2-4534-9d84-fa488a24e07f"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T01:17:48.000Z",
+                  "updatedAt": "2026-10-22T01:17:48.000Z",
+                  "uid": "35240-5065d50d-e4a2-4ac0-a031-07d8e14ce43e"
                 }
               ],
-              "body": "string",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            },
-            {
-              "id": "29f8d088-8369-4b88-b5ee-e22a106704a6",
-              "name": "Indicates that only a portion of the file has been returned, as requested with the Range header.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "expect-node-type",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "The portion of the file to read. A single HTTP byte range, with inclusive bounds and a non-negative start value. If not provided, return the entire file. Example: `bytes=0-4`\n",
-                    "key": "Range",
-                    "value": "<string>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Configures retry logic if no file is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{retries:3,backoff-seconds:5}`\n",
-                    "key": "IB-Retry-Config",
-                    "value": "<string>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/octet-stream"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Partial Content",
-              "code": 206,
-              "header": [
-                {
-                  "disabled": false,
-                  "key": "Content-Length",
-                  "value": "1571",
-                  "description": ""
-                },
-                {
-                  "disabled": false,
-                  "key": "Content-Range",
-                  "value": "string",
-                  "description": ""
-                },
-                {
-                  "key": "Content-Type",
-                  "value": "application/octet-stream"
-                }
-              ],
-              "body": "string",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            },
-            {
-              "id": "c8ee5827-f0f2-4147-9a76-2c4b93fe7ac9",
-              "name": "Error response.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "expect-node-type",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "The portion of the file to read. A single HTTP byte range, with inclusive bounds and a non-negative start value. If not provided, return the entire file. Example: `bytes=0-4`\n",
-                    "key": "Range",
-                    "value": "<string>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Configures retry logic if no file is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{retries:3,backoff-seconds:5}`\n",
-                    "key": "IB-Retry-Config",
-                    "value": "<string>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Internal Server Error",
-              "code": 500,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"message\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
+              "id": "4e8cfe28-3183-4e4f-b57d-bd731fa9dc00",
+              "createdAt": "2026-10-22T01:17:48.000Z",
+              "updatedAt": "2026-10-22T01:17:48.000Z",
+              "uid": "35240-4e8cfe28-3183-4e4f-b57d-bd731fa9dc00"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "4c528c19-a2b9-4f3d-ba91-e8ab04c16a00",
-          "name": "Create or overwrite file",
-          "request": {
-            "name": "Create or overwrite file",
-            "description": {
-              "content": "Create a non-empty file or overwrite an existing file.\n\nIf the parent folder of the `path` parameter doesn't exist, the file system creates it before creating the file.\n\n<Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>\n\n<Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>\n\nNot all filesystem types support this operation.\n\n| Filesystem           | Supported |\n|----------------------|-----------|\n| Instabase            | ✓         |\n| Amazon S3            | ✓         |\n| Azure Blob Storage   | ✓         |\n| Google Cloud Storage | ✓         |\n| Google Drive         | -         |\n",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v2",
-                "files",
-                ":path"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "path",
-                  "description": "(Required) Full path to the file."
-                }
-              ]
-            },
-            "header": [
-              {
-                "disabled": false,
-                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                "key": "IB-Context",
-                "value": "<string>"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/octet-stream"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "PUT",
-            "auth": null,
-            "body": {
-              "mode": "file"
-            }
-          },
-          "response": [
-            {
-              "id": "ba6c48fd-3a0a-443f-9f08-201bf320b310",
-              "name": "The request succeeded and a new file was created at the target location. AI Hub returns this status code only when the request includes an `If-None-Match` header with a value of `*`.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  }
-                ],
-                "method": "PUT",
-                "body": {
-                  "mode": "file"
-                }
-              },
-              "status": "Created",
-              "code": 201,
-              "header": [
-                {
-                  "disabled": false,
-                  "description": "Contains a URL leading to the created file.",
-                  "key": "Location",
-                  "value": "string"
-                },
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            },
-            {
-              "id": "c509bfa0-05d7-4d83-af4c-73540912bf98",
-              "name": "The request succeeded.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  }
-                ],
-                "method": "PUT",
-                "body": {
-                  "mode": "file"
-                }
-              },
-              "status": "No Content",
-              "code": 204,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            },
-            {
-              "id": "e219d71b-5b11-458a-81ba-efe8ceca33b6",
-              "name": "The request failed because a file exists at the target location that matches the `If-None-Match` header.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  }
-                ],
-                "method": "PUT",
-                "body": {
-                  "mode": "file"
-                }
-              },
-              "status": "Precondition Failed",
-              "code": 412,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            },
-            {
-              "id": "8afc918c-869f-434c-8037-703da00b341c",
-              "name": "Error response.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "PUT",
-                "body": {
-                  "mode": "file"
-                }
-              },
-              "status": "Internal Server Error",
-              "code": 500,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"message\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "69f29313-6f0c-4aea-9fa2-cb9f268ae419",
-          "name": "Read file or folder metadata",
-          "request": {
-            "name": "Read file or folder metadata",
-            "description": {
-              "content": "Read metadata of a file or folder at the target path.\n\nThis API operation reports whether the object at the target path is a file or folder. If a file, it also reports the file size and last modification time.\n\n<Info>This acts on files and folders in the AI Hub filesystem, not your local filesystem.</Info>\n\n<Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>\n",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v2",
-                "files",
-                ":path"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "path",
-                  "description": "(Required) Full path to the file or folder."
-                }
-              ]
-            },
-            "header": [
-              {
-                "disabled": false,
-                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                "key": "IB-Context",
-                "value": "<string>"
-              },
-              {
-                "disabled": false,
-                "description": "Configures retry logic if no file or folder is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{'retries': 3, 'backoff-seconds': 5}`\n",
-                "key": "IB-Retry-Config",
-                "value": "<string>"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "HEAD",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "7d39c3f0-d12e-4ba7-8d0d-71f50001510d",
-              "name": "Successfully retrieved metadata.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file or folder."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Configures retry logic if no file or folder is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{'retries': 3, 'backoff-seconds': 5}`\n",
-                    "key": "IB-Retry-Config",
-                    "value": "<string>"
-                  }
-                ],
-                "method": "HEAD",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "disabled": false,
-                  "description": "Optional. Only present if the target path is a file. The length of the file, in bytes.",
-                  "key": "Content-Length",
-                  "value": "1571"
-                },
-                {
-                  "disabled": false,
-                  "description": "Optional. Only present if the target path is a file. The date and time the file was last modified.",
-                  "key": "last-modified",
-                  "value": "1978-02-12T17:41:30.488Z"
-                },
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            },
-            {
-              "id": "4e7b5d44-0fa6-412d-9a27-1b8ef6593a78",
-              "name": "No file or folder was found at the target path.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file or folder."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Configures retry logic if no file or folder is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{'retries': 3, 'backoff-seconds': 5}`\n",
-                    "key": "IB-Retry-Config",
-                    "value": "<string>"
-                  }
-                ],
-                "method": "HEAD",
-                "body": {}
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            },
-            {
-              "id": "786ece33-6a92-4bc9-a146-1246b76756f6",
-              "name": "Error response.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file or folder."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Configures retry logic if no file or folder is found at the target path. Uses a constant backoff algorithm. Don't retry if this header isn't provided. Example: `{'retries': 3, 'backoff-seconds': 5}`\n",
-                    "key": "IB-Retry-Config",
-                    "value": "<string>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "HEAD",
-                "body": {}
-              },
-              "status": "Internal Server Error",
-              "code": 500,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"message\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "c7963f24-1c49-4d74-948f-509caf2c8d09",
-          "name": "Delete file or folder",
-          "request": {
-            "name": "Delete file or folder",
-            "description": {
-              "content": "Delete a single file or folder.\n\nThis operation is also available via the SDK method `client.files.delete()`.\n\n<Info>This acts on files in the AI Hub filesystem, not your local filesystem.</Info>\n\n<Note>Ensure the path is accessible within the context defined by the `IB-Context` header.</Note>\n\nNot all filesystem types support this operation.\n\n| Filesystem           | Supported |\n|----------------------|-----------|\n| Instabase            | ✓         |\n| Amazon S3            | ✓         |\n| Azure Blob Storage   | ✓         |\n| Google Cloud Storage | ✓         |\n| Google Drive         | -         |\n",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v2",
-                "files",
-                ":path"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "path",
-                  "description": "(Required) Full path to the file or folder."
-                }
-              ]
-            },
-            "header": [
-              {
-                "disabled": false,
-                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                "key": "IB-Context",
-                "value": "<string>"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "DELETE",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "5e1bc6d4-7235-4e4c-a079-79f111b7d098",
-              "name": "Indicates that the deletion request has been accepted. <br/> <Note>The operation returns this status code regardless of whether the file or folder exists.</Note>",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file or folder."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "Accepted",
-              "code": 202,
-              "header": [
-                {
-                  "disabled": false,
-                  "description": "A URL where the status of the deletion job can be checked.",
-                  "key": "Location",
-                  "value": "string"
-                },
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            },
-            {
-              "id": "2a173b07-3eb5-4c97-85fa-7ad39ec50f33",
-              "name": "Error response.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "files",
-                    ":path"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "path",
-                      "description": "(Required) Full path to the file or folder."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "Internal Server Error",
-              "code": 500,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"message\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "1689dc07-5415-4489-800d-961f23bedc6e",
+          "createdAt": "2026-10-22T01:17:48.000Z",
+          "updatedAt": "2026-10-22T01:17:48.000Z",
+          "uid": "35240-1689dc07-5415-4489-800d-961f23bedc6e"
         }
       ],
-      "event": []
-    }
-  ],
-  "event": [],
-  "variable": [
-    {
-      "type": "string",
-      "value": "https://aihub.instabase.com/api",
-      "key": "baseUrl"
+      "id": "3577d232-1408-4199-a230-a4c5f7d34f5a",
+      "createdAt": "2026-10-22T01:17:48.000Z",
+      "updatedAt": "2026-10-22T01:17:48.000Z",
+      "uid": "35240-3577d232-1408-4199-a230-a4c5f7d34f5a"
     }
   ],
   "auth": {
@@ -1064,17 +1042,15 @@
     "bearer": [
       {
         "key": "token",
-        "value": "{{bearerToken}}"
+        "value": "{{bearerToken}}",
+        "type": "string"
       }
     ]
   },
-  "info": {
-    "_postman_id": "4b41d581-fe9e-4739-aed2-e4b051c044e5",
-    "name": "AI Hub Audit Files API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": {
-      "content": "The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.\n\nContact Support:\n Name: Instabase Support",
-      "type": "text/plain"
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://aihub.instabase.com/api"
     }
-  }
+  ]
 }

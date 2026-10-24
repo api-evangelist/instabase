@@ -1,176 +1,192 @@
 {
+  "info": {
+    "_postman_id": "ea253cd8-777a-4b41-b09f-428fbae7667e",
+    "name": "AI Hub Audit API",
+    "description": "The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.\n\nContact Support:\n Name: Instabase Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-22T01:17:35.000Z",
+    "updatedAt": "2026-10-22T01:17:35.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-ea253cd8-777a-4b41-b09f-428fbae7667e"
+  },
   "item": [
     {
-      "id": "4eaf2ee8-26ba-4411-a999-0e320080d6dd",
-      "name": "Audit",
-      "description": {
-        "content": "",
-        "type": "text/plain"
-      },
+      "name": "v1",
       "item": [
         {
-          "id": "4755c25b-1dab-4bc4-ac33-41738930572a",
-          "name": "Get audit logs",
-          "request": {
-            "name": "Get audit logs",
-            "description": {
-              "content": "Retrieve audit logs based on specified filters. Returns a paginated list of audit log entries.\n\n<Note>This API operation is available for Enterprise-tier organizations with single-tenant environments. To use it you must have audit log access permissions. Contact Instabase Support to request access to audit logs for your organization.</Note>\n\n<Note>This API operation is not supported by the SDK but you can access it from Python by making direct REST calls, as shown in the sample code.</Note>\n",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "auditlogs"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "POST",
-            "auth": null,
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"start\": \"<integer>\",\n  \"size\": \"<integer>\",\n  \"log_type\": \"<string>\",\n  \"email\": \"<string>\",\n  \"start_time\": \"<string>\",\n  \"end_time\": \"<string>\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "response": [
+          "name": "auditlogs",
+          "item": [
             {
-              "id": "53158fc3-8576-4ad8-8f0a-5f7f7813a26d",
-              "name": "Successfully retrieved audit logs",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "auditlogs"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
+              "name": "Get audit logs",
+              "id": "244ed48d-5ec8-4997-9924-d29a281a5611",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
                 "header": [
                   {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
+                    "key": "Content-Type",
+                    "value": "application/json"
                   },
                   {
                     "key": "Accept",
                     "value": "application/json"
                   }
                 ],
-                "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"start\": \"<integer>\",\n  \"size\": \"<integer>\",\n  \"log_type\": \"<string>\",\n  \"email\": \"<string>\",\n  \"start_time\": \"<string>\",\n  \"end_time\": \"<string>\"\n}",
+                  "raw": "{\n  \"start\": \"<integer,null>\",\n  \"size\": \"<integer,null>\",\n  \"log_type\": \"<string,null>\",\n  \"email\": \"<string,null>\",\n  \"start_time\": \"<string,null>\",\n  \"end_time\": \"<string,null>\"\n}",
                   "options": {
                     "raw": {
+                      "headerFamily": "json",
                       "language": "json"
                     }
                   }
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"status\": \"OK\",\n  \"data\": {\n    \"results\": [\n      {\n        \"timestamp_millis\": \"string\",\n        \"email\": \"string\",\n        \"user_ip\": \"string\",\n        \"log_type\": \"string\"\n      },\n      {\n        \"timestamp_millis\": \"string\",\n        \"email\": \"string\",\n        \"user_ip\": \"string\",\n        \"log_type\": \"string\"\n      }\n    ]\n  }\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "021b227b-bf4a-4751-aada-8b9a98ce048a",
-              "name": "Error response",
-              "originalRequest": {
+                },
                 "url": {
-                  "path": [
-                    "v1",
-                    "auditlogs"
-                  ],
+                  "raw": "{{baseUrl}}/v1/auditlogs",
                   "host": [
                     "{{baseUrl}}"
                   ],
-                  "query": [],
-                  "variable": []
+                  "path": [
+                    "v1",
+                    "auditlogs"
+                  ]
                 },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"start\": \"<integer>\",\n  \"size\": \"<integer>\",\n  \"log_type\": \"<string>\",\n  \"email\": \"<string>\",\n  \"start_time\": \"<string>\",\n  \"end_time\": \"<string>\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Retrieve audit logs based on specified filters. Returns a paginated list of audit log entries.\n\nThis API operation is available for Enterprise-tier organizations with single-tenant environments. To use it you must have audit log access permissions. Contact Instabase Support to request access to audit logs for your organization.\n\nThis API operation is not supported by the SDK but you can access it from Python by making direct REST calls, as shown in the sample code."
               },
-              "status": "Internal Server Error",
-              "code": 500,
-              "header": [
+              "response": [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
+                  "id": "bd5e7bc6-9518-4ee1-beb8-e0a34b14050a",
+                  "name": "Successfully retrieved audit logs",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"start\": \"<integer,null>\",\n  \"size\": \"<integer,null>\",\n  \"log_type\": \"<string,null>\",\n  \"email\": \"<string,null>\",\n  \"start_time\": \"<string,null>\",\n  \"end_time\": \"<string,null>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/auditlogs",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "auditlogs"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"status\": \"<string>\",\n  \"data\": {\n    \"results\": [\n      {\n        \"timestamp_millis\": \"<string>\",\n        \"email\": \"<string>\",\n        \"user_ip\": \"<string>\",\n        \"log_type\": \"<string>\"\n      },\n      {\n        \"timestamp_millis\": \"<string>\",\n        \"email\": \"<string>\",\n        \"user_ip\": \"<string>\",\n        \"log_type\": \"<string>\"\n      }\n    ]\n  }\n}",
+                  "createdAt": "2026-10-22T01:17:35.000Z",
+                  "updatedAt": "2026-10-22T01:17:35.000Z",
+                  "uid": "35240-bd5e7bc6-9518-4ee1-beb8-e0a34b14050a"
+                },
+                {
+                  "id": "4c090dc8-0c3d-401c-8380-c3b6320c16c3",
+                  "name": "Error response",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"start\": \"<integer,null>\",\n  \"size\": \"<integer,null>\",\n  \"log_type\": \"<string,null>\",\n  \"email\": \"<string,null>\",\n  \"start_time\": \"<string,null>\",\n  \"end_time\": \"<string,null>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/auditlogs",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "auditlogs"
+                      ]
+                    }
+                  },
+                  "status": "Internal Server Error",
+                  "code": 500,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"message\": \"<string>\"\n}",
+                  "createdAt": "2026-10-22T01:17:35.000Z",
+                  "updatedAt": "2026-10-22T01:17:35.000Z",
+                  "uid": "35240-4c090dc8-0c3d-401c-8380-c3b6320c16c3"
                 }
               ],
-              "body": "{\n  \"message\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
+              "createdAt": "2026-10-22T01:17:35.000Z",
+              "updatedAt": "2026-10-22T01:17:35.000Z",
+              "uid": "35240-244ed48d-5ec8-4997-9924-d29a281a5611"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "9acca0de-4085-448c-9861-6e7ad469bbc0",
+          "createdAt": "2026-10-22T01:17:35.000Z",
+          "updatedAt": "2026-10-22T01:17:35.000Z",
+          "uid": "35240-9acca0de-4085-448c-9861-6e7ad469bbc0"
         }
       ],
-      "event": []
-    }
-  ],
-  "event": [],
-  "variable": [
-    {
-      "type": "string",
-      "value": "https://aihub.instabase.com/api",
-      "key": "baseUrl"
+      "id": "cff772aa-0ea9-4529-879e-31f7d6947716",
+      "createdAt": "2026-10-22T01:17:35.000Z",
+      "updatedAt": "2026-10-22T01:17:35.000Z",
+      "uid": "35240-cff772aa-0ea9-4529-879e-31f7d6947716"
     }
   ],
   "auth": {
@@ -178,17 +194,15 @@
     "bearer": [
       {
         "key": "token",
-        "value": "{{bearerToken}}"
+        "value": "{{bearerToken}}",
+        "type": "string"
       }
     ]
   },
-  "info": {
-    "_postman_id": "a642d8af-2b20-45b9-b17f-d77292122442",
-    "name": "AI Hub Audit API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": {
-      "content": "The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.\n\nContact Support:\n Name: Instabase Support",
-      "type": "text/plain"
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://aihub.instabase.com/api"
     }
-  }
+  ]
 }

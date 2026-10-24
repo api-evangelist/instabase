@@ -1,133 +1,141 @@
 {
+  "info": {
+    "_postman_id": "249fa65d-3ea2-4d89-8b88-c2109cc03a6a",
+    "name": "AI Hub Jobs API",
+    "description": "The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.\n\nContact Support:\n Name: Instabase Support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-22T01:17:52.000Z",
+    "updatedAt": "2026-10-22T01:17:52.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-249fa65d-3ea2-4d89-8b88-c2109cc03a6a"
+  },
   "item": [
     {
-      "id": "2cd12857-b02d-4efe-9055-98b6df5f645c",
-      "name": "Jobs",
-      "description": {
-        "content": "",
-        "type": "text/plain"
-      },
+      "name": "v2",
       "item": [
         {
-          "id": "30fb43e9-e46a-44a3-aa94-a8a195e91b3e",
-          "name": "Poll file operation job status",
-          "request": {
-            "name": "Poll file operation job status",
-            "description": {
-              "content": "Poll the asynchronous job created during a file operation request such as deleting a batch or file.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v2",
-                "jobs",
-                ":job_id"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "job_id",
-                  "description": "(Required) The job ID returned by a request."
-                }
-              ]
-            },
-            "header": [
-              {
-                "disabled": false,
-                "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                "key": "IB-Context",
-                "value": "<string>"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
+          "name": "jobs",
+          "item": [
             {
-              "id": "571765a6-41a1-4940-b3e5-2b5747844e81",
-              "name": "Request successful",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v2",
-                    "jobs",
-                    ":job_id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "job_id",
-                      "description": "(Required) The job ID returned by a request."
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "disabled": false,
-                    "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
-                    "key": "IB-Context",
-                    "value": "<string>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
+              "name": "{job_id}",
+              "item": [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
+                  "name": "Poll file operation job status",
+                  "id": "23420f30-ee89-4fc8-8f0a-4bee4ac74335",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                        "key": "IB-Context",
+                        "value": "<string>"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/jobs/:job_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "jobs",
+                        ":job_id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "a01dbf88-fa74-4e63-8836-0370e6676f24",
+                          "key": "job_id",
+                          "value": "<string>",
+                          "description": "(Required) The job ID returned by a request."
+                        }
+                      ]
+                    },
+                    "description": "Poll the asynchronous job created during a file operation request such as deleting a batch or file."
+                  },
+                  "response": [
+                    {
+                      "id": "d65863e0-b74e-47ec-910e-9d3b4bd3fd8b",
+                      "name": "Request successful",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "description": "Specify whether to use your community account or organization account to complete the request. To use your community account, define as your user ID. To use your organization account, define as your organization ID. If unspecified, defaults to community account context. See [Authorization and context identification](/api-sdk/authorization#ib-context-header) for details.",
+                            "key": "IB-Context",
+                            "value": "<string>"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/jobs/:job_id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "jobs",
+                            ":job_id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "job_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"state\": \"FAILED\",\n  \"message\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T01:17:53.000Z",
+                      "updatedAt": "2026-10-22T01:17:53.000Z",
+                      "uid": "35240-d65863e0-b74e-47ec-910e-9d3b4bd3fd8b"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T01:17:53.000Z",
+                  "updatedAt": "2026-10-22T01:17:53.000Z",
+                  "uid": "35240-23420f30-ee89-4fc8-8f0a-4bee4ac74335"
                 }
               ],
-              "body": "{\n  \"state\": \"RUNNING\",\n  \"message\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
+              "id": "21b5638a-e6c7-4c73-a11a-1a465520c5ad",
+              "createdAt": "2026-10-22T01:17:53.000Z",
+              "updatedAt": "2026-10-22T01:17:53.000Z",
+              "uid": "35240-21b5638a-e6c7-4c73-a11a-1a465520c5ad"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "e9da197c-dad7-4717-8a1f-324cab42fc2e",
+          "createdAt": "2026-10-22T01:17:53.000Z",
+          "updatedAt": "2026-10-22T01:17:53.000Z",
+          "uid": "35240-e9da197c-dad7-4717-8a1f-324cab42fc2e"
         }
       ],
-      "event": []
-    }
-  ],
-  "event": [],
-  "variable": [
-    {
-      "type": "string",
-      "value": "https://aihub.instabase.com/api",
-      "key": "baseUrl"
+      "id": "eeea2456-303a-49de-940c-a0e9e6c9e72d",
+      "createdAt": "2026-10-22T01:17:53.000Z",
+      "updatedAt": "2026-10-22T01:17:53.000Z",
+      "uid": "35240-eeea2456-303a-49de-940c-a0e9e6c9e72d"
     }
   ],
   "auth": {
@@ -135,17 +143,15 @@
     "bearer": [
       {
         "key": "token",
-        "value": "{{bearerToken}}"
+        "value": "{{bearerToken}}",
+        "type": "string"
       }
     ]
   },
-  "info": {
-    "_postman_id": "fd6de4bf-8cc3-4382-9ff1-60ba8e2ad9c0",
-    "name": "AI Hub Audit Jobs API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": {
-      "content": "The AI Hub REST API. See https://docs.instabase.com/api-sdk/ for more details.\n\nContact Support:\n Name: Instabase Support",
-      "type": "text/plain"
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://aihub.instabase.com/api"
     }
-  }
+  ]
 }

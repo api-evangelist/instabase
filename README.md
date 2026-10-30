@@ -64,6 +64,139 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Instabase is a company surfaced as a portfolio company of a16z, greylock, index-ventures and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+Instabase is an agentic automation platform that transforms complex, document-heavy workflows using AI. Its AI Hub product uses large language models and packet-aware AI agents to extract, classify, validate, and reason over unstructured document packets (PDFs, images, spreadsheets, emails, scans, and more), turning them into structured, verifiable intelligence. AI Hub exposes a REST API and Python SDK for creating file batches, running automation apps and production deployments, reading and writing workspace files, and managing secrets, with industry solutions for financial services, insurance, healthcare, and the public sector. Instabase is venture-backed (a16z, Greylock, Index Ventures).
 
-Backed by: a16z, greylock, index-ventures — https://www.instabase.com/
+**Areas:** Company · Intelligent Document Processing · Document AI · Artificial Intelligence · Machine Learning · Automation · Data Extraction · LLM · Financial Services · Insurance
+
+## Instabase on APIs.io
+
+Everything profiled for Instabase is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/instabase/](https://apis.io/providers/instabase/)** — or go straight to one of the APIs or properties below.
+
+### APIs (6)
+
+- [Instabase Audit API](https://apis.io/apis/instabase/instabase-audit-api/) — The Audit API from Instabase — 1 operation(s) for audit.
+- [Instabase Batches API](https://apis.io/apis/instabase/instabase-batches-api/) — The Batches API from Instabase — 8 operation(s) for batches.
+- [Instabase Files API](https://apis.io/apis/instabase/instabase-files-api/) — The Files API from Instabase — 1 operation(s) for files.
+- [Instabase Jobs API](https://apis.io/apis/instabase/instabase-jobs-api/) — The Jobs API from Instabase — 1 operation(s) for jobs.
+- [Instabase Runs API](https://apis.io/apis/instabase/instabase-runs-api/) — The Runs API from Instabase — 4 operation(s) for runs.
+- [Instabase Secrets API](https://apis.io/apis/instabase/instabase-secrets-api/) — The Secrets API from Instabase — 1 operation(s) for secrets.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Instabase Webhooks](https://apis.io/asyncapis/instabase/instabase-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [instabase-aihub-docs](https://apis.io/servers/instabase/instabase-aihub-docs/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Instabase Agentic Access](https://apis.io/agentic-access/instabase/instabase-agentic-access/)
+
+#### Collections (6)
+
+Postman and Open Collection request collections.
+
+- [AI Hub Audit API](https://apis.io/collections/instabase/open-instabase-audit-api/)
+- [AI Hub Audit Batches API](https://apis.io/collections/instabase/open-instabase-batches-api/)
+- [AI Hub Audit Files API](https://apis.io/collections/instabase/open-instabase-files-api/)
+- [AI Hub Audit Jobs API](https://apis.io/collections/instabase/open-instabase-jobs-api/)
+- [AI Hub Audit Runs API](https://apis.io/collections/instabase/open-instabase-runs-api/)
+- [AI Hub Audit Secrets API](https://apis.io/collections/instabase/open-instabase-secrets-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Instabase Aihub Overlay](https://apis.io/overlays/instabase/instabase-aihub-overlay/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Instabase Authentication](https://apis.io/security/instabase/instabase-authentication/)
+- [Instabase Domain Security](https://apis.io/security/instabase/instabase-domain-security/)
+- [Instabase Trust Center](https://apis.io/security/instabase/instabase-trust-center/)
+- [Instabase Vulnerability Disclosure](https://apis.io/security/instabase/instabase-vulnerability-disclosure/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.instabase.com/)
+- [Documentation](https://docs.instabase.com/)
+- [Getting started](https://docs.instabase.com/overview/getting-started)
+- [API reference](https://docs.instabase.com/api-sdk/api-reference/)
+- [Sign up](https://aihub.instabase.com/)
+- [Support](https://support.instabase.com/hc/en-us)
+- [Blog](https://www.instabase.com/blog)
+- [Security](https://trust.instabase.com/)
+- [Compliance](https://trust.instabase.com/)
+- [Trust centre](https://trust.instabase.com/)
+- [Privacy policy](https://www.instabase.com/privacy-policy)
+- [GitHub](https://github.com/instabase)
+
+## API Evangelist rating
+
+**Kin Score 52.0** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 71.7 |
+| Contract quality | 59.1 |
+| Contract governance | 18.2 |
+| Operational transparency | 44.7 |
+| Developer ergonomics | 67.3 |
+| Access clarity | 39.5 |
+
+**Agent readiness 30.7** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | — |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 26.2** — Insurance
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/instabase/](https://apis.io/providers/instabase/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Instabase: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/instabase/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
